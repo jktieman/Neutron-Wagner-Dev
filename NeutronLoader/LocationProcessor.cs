@@ -14,14 +14,17 @@ namespace NeutronLoader
 {
     public class LocationProcessor
     {
-        private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+        private readonly GenericRepository<Location> _repoLocation;
         private ISlotNameFactory _slotNameFactory;
         private readonly IJsonData _jsonData;
         private IDynamicLogger _logger;
 
-        public LocationProcessor(IJsonData jsonData)
+        public LocationProcessor(IJsonData jsonData, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            
             _jsonData = jsonData;
+            _repoLocation = new GenericRepository<Location>(contextFactory);
             _logger = NeutronCore.Global.Logger.SetupLogger("LocationProcessor");
         }
         public Location GetOrCreate(HostOrder hostOrder)

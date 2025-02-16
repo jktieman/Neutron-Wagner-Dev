@@ -13,6 +13,7 @@ using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.DataContexts;
 using NeutronData.ModelViews;
 using NeutronEvents;
 using Timer = System.Timers.Timer;
@@ -36,9 +37,12 @@ namespace NeutronLoader
         private const string FolderName = "Neutron Loader";
         private IFileProcessor _fileProcessor;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly Func<NeutronDb> _contextFactory;
+
         public InterfaceProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData
-            , WorkstationView workstationView)
+            , WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory)); 
 
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -54,7 +58,7 @@ namespace NeutronLoader
             LoaderSettings.Init();
             _hostOrderDirectory = new DirectoryInfo(LoaderSettings.GetHostOrderDirectory());
             _inputFileFilter = LoaderSettings.GetHostOrderFileFilter();
-            _fileProcessor = new Pr1FileProcessor(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+            _fileProcessor = new Pr1FileProcessor(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
         }
 
         public async Task StartProcessingInterfaceFiles()

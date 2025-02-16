@@ -24,10 +24,12 @@ namespace NeutronLoader
         private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _uploadBusy;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public UploadProcessorSfh(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IDynamicLogger logger, WorkstationView workstationView)
+            IDynamicLogger logger, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
@@ -84,7 +86,7 @@ namespace NeutronLoader
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
                     if (recs.Count > 0)
                     {
-                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables, _workstationView);
+                        var hostFile = new HostFileSfh(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                         var result = hostFile.CreateHostFile(recs);
                         if (result)
                         {

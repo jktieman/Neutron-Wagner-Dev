@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
 using JsonManager;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 using NeutronEvents;
@@ -21,10 +23,12 @@ namespace NeutronLoader
         private readonly WorkstationView _workstationView;
         private readonly IOrdersRepository _ordersRepository;
         private ISapService _sapService;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, WorkstationView workstationView, IOrdersRepository ordersRepository)
+            NeutronLicense neutronLicense, WorkstationView workstationView, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -50,38 +54,38 @@ namespace NeutronLoader
             {
                 case "SFH":
                     {
-                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorSfh(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
                 case "TOP":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorTop(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
                 case "TMG":
                     {
-                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorTmg(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
                 case "PR1":
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
                 case "MET":
                     {
-                        _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
                 case "WAG":
                     {
                         _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
-                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _ordersRepository);
+                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _ordersRepository, _contextFactory);
                         break;
                     }
                 default:
                     {
-                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView);
+                        _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
                         break;
                     }
             }

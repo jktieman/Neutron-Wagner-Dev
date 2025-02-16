@@ -15,23 +15,36 @@ namespace NeutronLoader
 {
     public class HostOrderListProcessor
     {
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
-        private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Location> _repoLocation;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<SizeCode> _repoSizeCode;
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
+        private readonly GenericRepository<HeightCode> _repoHeightCode;
+        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue;
 
         private IDynamicLogger _logger;
+        private readonly Func<NeutronDb> _contextFactory;
         private readonly IJsonData _jsonData;
 
-        public HostOrderListProcessor(List<HostOrder> hostOrderlist, IJsonData jsonData, IDynamicLogger logger)
+        public HostOrderListProcessor(List<HostOrder> hostOrderlist, IJsonData jsonData, IDynamicLogger logger, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            
             _jsonData = jsonData;
             _logger = logger;
+            _contextFactory = contextFactory;
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoLocation = new GenericRepository<Location>(contextFactory);
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
+            _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(contextFactory);
 
             if (hostOrderlist != null) ProcessHostOrderList(hostOrderlist);
         }
@@ -210,8 +223,8 @@ namespace NeutronLoader
                         //make sure the ItemDefinition and Location are defined
                         if (order != null)
                         {
-                            var itemDef = new ItemDefinitionProcessor(_jsonData).GetOrCreate(hostOrder);
-                            var location = new LocationProcessor(_jsonData).GetOrCreate(hostOrder);
+                            var itemDef = new ItemDefinitionProcessor(_jsonData,_contextFactory ).GetOrCreate(hostOrder);
+                            var location = new LocationProcessor(_jsonData, _contextFactory).GetOrCreate(hostOrder);
 
                             if (itemDef != null && location != null)
                             {

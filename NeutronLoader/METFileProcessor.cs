@@ -15,31 +15,43 @@ using JsonManager;
 using NeutronCore.Enums;
 using NeutronCore.Global;
 using NeutronData.ModelViews;
+using NeutronData.Interfaces;
 
 namespace NeutronLoader
 {
     public class METFileProcessor : IFileProcessor
     {
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Workstation> _repoWorkstation = new GenericRepository<Workstation>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Workstation> _repoWorkstation;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public METFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IDynamicLogger logger,
-            IJsonData jsonData, WorkstationView workstationView)
+            IJsonData jsonData, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoWorkstation = new GenericRepository<Workstation>(contextFactory);
+
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = logger;
             _jsonData = jsonData;
             _workstationView = workstationView;
+            _contextFactory = contextFactory;
         }
 
         public void LoadFiles(List<FileInfo> files)
@@ -541,7 +553,7 @@ namespace NeutronLoader
                     int areaId = _workstationView.AreaId;
                     //try to find it anywhere first
                     item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
-                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description, areaId);
+                           new ItemDefinitionProcessor(_jsonData, _contextFactory).GetOrCreate(partNum, description, areaId);
                 }
                 catch (Exception ex)
                 {
@@ -553,7 +565,7 @@ namespace NeutronLoader
                 try
                 {
                     item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == partNum.ToLower().Trim()).FirstOrDefault() ??
-                           new ItemDefinitionProcessor(_jsonData).GetOrCreate(partNum, description);
+                           new ItemDefinitionProcessor(_jsonData, _contextFactory).GetOrCreate(partNum, description);
                 }
                 catch (Exception ex)
                 {
@@ -574,7 +586,7 @@ namespace NeutronLoader
             {
                 try
                 {
-                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == sku).FirstOrDefault() ?? new ItemDefinitionProcessor(_jsonData).GetOrCreate(sku, des);
+                    item = _repoItemDefinition.FindBy(r => r.Item.ToLower().Trim() == sku).FirstOrDefault() ?? new ItemDefinitionProcessor(_jsonData, _contextFactory).GetOrCreate(sku, des);
                 }
                 catch (Exception ex)
                 {

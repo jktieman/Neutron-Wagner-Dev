@@ -14,6 +14,7 @@ using JsonManager;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronData.DataContexts;
 using NeutronData.ModelViews;
 using NeutronEvents;
 
@@ -35,11 +36,13 @@ namespace NeutronLoader
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
         private TopFileProcessor _fileProcessor;
+        private readonly Func<NeutronDb> _contextFactory;
         private const string FolderName = "Neutron Loader";
 
         public InterfaceProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView)
+            IJsonData jsonData, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             Initialize();            
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -54,7 +57,7 @@ namespace NeutronLoader
             LoaderSettings.Init();
             _hostOrderDirectory = new DirectoryInfo(LoaderSettings.GetHostOrderDirectory());
             _inputFileFilter = LoaderSettings.GetHostOrderFileFilter();
-            _fileProcessor = new TopFileProcessor(_neutronVariables, _neutronLicense,_jsonData, _workstationView);
+            _fileProcessor = new TopFileProcessor(_neutronVariables, _neutronLicense,_jsonData, _workstationView, _contextFactory);
         }
 
         public void ErrorAlert(string err)

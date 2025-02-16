@@ -23,23 +23,28 @@ namespace NeutronLoader
         private DirectoryInfo _hostUploadDirectory;
         private DirectoryInfo _logFileDirectory;
         private bool _usePr1Processor;
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrders;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
+        private readonly GenericRepository<User> _repoUser;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
         private string _neutronUpFileName;
 
-        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables, WorkstationView workstationView)
+        public HostFile(NeutronLicense neutronLicense, NeutronVariables neutronVariables
+            , WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
             LoaderSettings.Init();
             _hostUploadDirectory = GetDirectory(LoaderSettings.GetHostUploadDirectory());
             _logger = NeutronCore.Global.Logger.SetupLogger("HostFile");
+            _repoOrders = new GenericRepository<Order>(contextFactory);
+            _repoReplenOrders = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoUser = new GenericRepository<User>(contextFactory);
         }
 
         public bool CreateHostFile(List<History> historyRecs)

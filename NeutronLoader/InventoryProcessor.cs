@@ -12,13 +12,17 @@ namespace NeutronLoader
 {
     public class InventoryProcessor
     {
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory;
 
 
         private readonly IDynamicLogger _logger;
 
-        public InventoryProcessor()
+        public InventoryProcessor( Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+
+
             _logger = NeutronCore.Global.Logger.SetupLogger("InventoryProcessor");
         }
 

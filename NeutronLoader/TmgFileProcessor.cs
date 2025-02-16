@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using JsonManager;
 using NeutronCore.Global;
+using NeutronData.DataContexts;
 
 namespace NeutronLoader
 {
@@ -18,9 +19,12 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public TmgFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense, IJsonData jsonData, IDynamicLogger logger)
+        public TmgFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense
+            , IJsonData jsonData, IDynamicLogger logger, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
@@ -37,7 +41,7 @@ namespace NeutronLoader
                     var hostOrderList = ProcessFile(file);
                     if (hostOrderList.Count > 0)
                     {
-                        var hostOrderListProcessor = new HostOrderListProcessor(hostOrderList, _jsonData, _logger);
+                        var hostOrderListProcessor = new HostOrderListProcessor(hostOrderList, _jsonData, _logger, _contextFactory);
                     }
                     ArchiveFile.Archive(file, _logger);
                 }

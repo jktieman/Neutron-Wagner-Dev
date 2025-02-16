@@ -14,12 +14,14 @@ namespace NeutronLoader
 {
     public class ItemDefinitionProcessor
     {
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
         private readonly IJsonData _jsonData;
         private readonly IDynamicLogger _logger;
 
-        public ItemDefinitionProcessor(IJsonData jsonData)
+        public ItemDefinitionProcessor(IJsonData jsonData, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
             _jsonData = jsonData;
             _logger = NeutronCore.Global.Logger.SetupLogger("ItemDefinitionProcessor");
         }

@@ -17,33 +17,43 @@ using System.Threading;
 using System.Windows.Forms;
 using NeutronCore.Enums;
 using NeutronData.ModelViews;
+using NeutronData.Interfaces;
 
 namespace NeutronLoader
 {
     internal class TopFileProcessor 
     {
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Location> _repoLocation = new GenericRepository<Location>(new NeutronDb());
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Location> _repoLocation;
 
         readonly NeutronVariables _neutronVariables;
         readonly NeutronLicense _neutronLicense;
         private readonly IDynamicLogger _logger;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public TopFileProcessor(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView)
+            IJsonData jsonData, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _logger = NeutronCore.Global.Logger.SetupLogger("FileProcessor");
             _jsonData = jsonData;
             _workstationView = workstationView;
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoLocation = new GenericRepository<Location>(contextFactory);
         }
 
         public void LoadFile(FileInfo fileInfo)
@@ -237,7 +247,7 @@ namespace NeutronLoader
                         hostOrder.TroubleBit = "1";
                         hostOrder.EmpId = ($"EmpId:--- Note: Item Not Found At That Location");
                         
-                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                        var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                         hostFile.CreateHostFile(hostOrder);
                     }
                 }
@@ -346,7 +356,7 @@ namespace NeutronLoader
                                  _ = _logger.LogDetailAsync($"{hostOrder.PrimeBin} is not set up in Locations. ");
                                     hostOrder.TroubleBit = "1";
                                     hostOrder.EmpId = ($"EmpId:--- Note: Location is not set up in Neutron");
-                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                                     hostFile.CreateHostFile(hostOrder);
                                 }
                             }
@@ -356,7 +366,7 @@ namespace NeutronLoader
                          _ = _logger.LogDetailAsync($"{hostOrder.PartNum} is not set up in the System.");
                             hostOrder.TroubleBit = "1";
                             hostOrder.EmpId = ($"EmpId:--- Note: Item Not Defined in Shuttle");
-                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                             hostFile.CreateHostFile(hostOrder);
                         }
                     }
@@ -450,7 +460,7 @@ namespace NeutronLoader
         {
 
             var distinctOrders = hostOrderLines.Select(s => s.JobNum).Distinct();
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
 
             foreach (var item in distinctOrders)
             {

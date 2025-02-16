@@ -27,10 +27,12 @@ namespace NeutronLoader
         private Timer _timer;
         private bool _uploadBusy;
         private DirectoryInfo _hostUploadDirectory;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public UploadProcessorPr1(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IDynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository)
+            IDynamicLogger logger, WorkstationView workstationView, IWorkstationRepository workstationRepository, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
@@ -112,7 +114,7 @@ namespace NeutronLoader
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
                     if (recs.Count > 0)
                     {
-                        var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository);
+                        var hostFile = new HostFilePr1(_neutronLicense, _neutronVariables, _workstationRepository, _contextFactory);
                         var result = await hostFile.CreateHostFile(recs);
                         if (result)
                         {

@@ -28,10 +28,12 @@ namespace NeutronLoader
 
         public bool UploadBusy;
         public bool ReplenBusy;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public UploadProcessorMet(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IDynamicLogger logger, WorkstationView workstationView)
+            IDynamicLogger logger, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
@@ -92,7 +94,7 @@ namespace NeutronLoader
                         .ToList();
                     _logger.LogDetailAsync($"History Record Count: {recs.Count}").SafeFireAndForget();
                     if (recs.Count <= 0) return;
-                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                     hostFile.CreateMetHostFile(recs);
 
                     foreach (var rec in recs)

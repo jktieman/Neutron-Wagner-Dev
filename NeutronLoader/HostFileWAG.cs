@@ -19,9 +19,7 @@ namespace NeutronLoader
     {
         private readonly DirectoryInfo _hostUploadDirectory;
         private bool _usePr1Processor;
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
+        private readonly GenericRepository<User> _repoUser;
         private readonly IWorkstationRepository _workstationRepository;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
@@ -31,8 +29,11 @@ namespace NeutronLoader
         private readonly IDynamicLogger _logger;
 
         public HostFileWAG(NeutronLicense neutronLicense, NeutronVariables neutronVariables
-            , IWorkstationRepository workstationRepository , Workstation rackStation = null)
+            , IWorkstationRepository workstationRepository, Func<NeutronDb> contextFactory , Workstation rackStation = null)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            _repoUser = new GenericRepository<User>(contextFactory);
+            
             //_workstationRepository = workstationRepository;
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;

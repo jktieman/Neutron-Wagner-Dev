@@ -24,40 +24,47 @@ namespace NeutronLoader
 {
     public class InterfaceProcessorMET : IInterfaceProcessor
     {
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
-        private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Shipper> _repoShippers;
+        private readonly GenericRepository<ShipMethod> _repoShipMethods;
 
         private IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
+        private readonly Func<NeutronDb> _contextFactory;
         private Timer _timer;
         private bool _loadOrdersBusy;
         private IFileProcessor _fileProcessor;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         
         public InterfaceProcessorMET(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView)
+            IJsonData jsonData, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
-          
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));           
+            
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
-             Init();            
+
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoShippers = new GenericRepository<Shipper>(contextFactory);
+            _repoShipMethods = new GenericRepository<ShipMethod>(contextFactory);
+
+            Init();            
         }
 
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("InterfaceProcessor");
  
-            _fileProcessor = new METFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView);
+            _fileProcessor = new METFileProcessor(_neutronVariables, _neutronLicense, _logger, _jsonData, _workstationView, _contextFactory);
         }
 
         public async Task StartProcessingInterfaceFiles()

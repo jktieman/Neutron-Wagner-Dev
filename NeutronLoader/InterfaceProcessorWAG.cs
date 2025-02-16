@@ -33,13 +33,13 @@ namespace NeutronLoader
     // ReSharper disable once InconsistentNaming
     public class InterfaceProcessorWAG : IInterfaceProcessor
     {
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<Shipper> _repoShippers = new GenericRepository<Shipper>(new NeutronDb());
-        private readonly GenericRepository<ShipMethod> _repoShipMethods = new GenericRepository<ShipMethod>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<Shipper> _repoShippers;
+        private readonly GenericRepository<ShipMethod> _repoShipMethods;
         private ReplenProcessor _replenProcessor;
         private ItemDefinitionProcessor _itemDefinitionProcessor;
         private const int AreaEight = AreaNumber.Eight;
@@ -55,15 +55,26 @@ namespace NeutronLoader
         private DocumentToPrint _documentToPrint;
         private DocumentPrinterPreferences _documentPrinter;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
+        private readonly Func<NeutronDb> _contextFactory;
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView, ISapService sapService, IOrdersRepository ordersRepository)
+            IJsonData jsonData, WorkstationView workstationView, ISapService sapService, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+            
+            _contextFactory = contextFactory;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
             _sapService = sapService;
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoShippers = new GenericRepository<Shipper>(contextFactory);
+            _repoShipMethods = new GenericRepository<ShipMethod>(contextFactory);
+
             _ordersRepository = ordersRepository;
 
             Init();
@@ -72,10 +83,10 @@ namespace NeutronLoader
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("NeutronLoader");
-            _replenProcessor = new ReplenProcessor();
+            _replenProcessor = new ReplenProcessor(_contextFactory);
             _documentToPrint = new DocumentToPrint();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
-            _itemDefinitionProcessor = new ItemDefinitionProcessor(_jsonData);
+            _itemDefinitionProcessor = new ItemDefinitionProcessor(_jsonData, _contextFactory);
             try
             {
                 _sapService.Init();

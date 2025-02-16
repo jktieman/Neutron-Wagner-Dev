@@ -24,16 +24,24 @@ namespace NeutronLoader
         private System.Timers.Timer _timer;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private bool _uploadBusy;
-        private readonly GenericRepository<NOVA_INPUT> _repoNovaInput = new GenericRepository<NOVA_INPUT>(new NeutronDb());
-        private readonly GenericRepository<NOVA_OUTPUT> _repoNovaOutput = new GenericRepository<NOVA_OUTPUT>(new NeutronDb());
-        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<NOVA_INPUT> _repoNovaInput;
+        private readonly GenericRepository<NOVA_OUTPUT> _repoNovaOutput;
+        private readonly GenericRepository<History> _repoHistory;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public UploadProcessorWAG(NeutronVariables neutronVariables, IDynamicLogger logger)
+        public UploadProcessorWAG(NeutronVariables neutronVariables, IDynamicLogger logger, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronVariables = neutronVariables;
             _logger = logger;
+            _repoNovaInput = new GenericRepository<NOVA_INPUT>(contextFactory);
+            _repoNovaOutput = new GenericRepository<NOVA_OUTPUT>(contextFactory);
+            _repoHistory = new GenericRepository<History>(contextFactory);
+            _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory);
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+
         }
 
         public async Task RunUploadOnce()

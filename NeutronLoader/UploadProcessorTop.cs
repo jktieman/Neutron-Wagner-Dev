@@ -25,10 +25,12 @@ namespace NeutronLoader
         private readonly WorkstationView _workstationView;
         private Timer _timer;
         private bool _uploadBusy;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public UploadProcessorTop(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IDynamicLogger logger, WorkstationView workstationView)
+            IDynamicLogger logger, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _logger = logger;
@@ -72,7 +74,7 @@ namespace NeutronLoader
                 {
                     var recs = db.History.Where(h => !h.TransmitDateTime.HasValue && actionCodes.Contains(h.ActionCode)).ToList();
                     if (recs.Count <= 0) return;
-                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                    var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                     var result = hostFile.CreateHostFile(recs);
                     if (result == true)
                     {
@@ -111,7 +113,7 @@ namespace NeutronLoader
                 DateTime = detail.DateTime,
                 EmpId = detail.EmpId
             };
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
             hostFile.CreateHostFile(ord);
         }
 
@@ -132,7 +134,7 @@ namespace NeutronLoader
                     DateTime = detail.DateTime,
                     EmpId = ($"EmpId:{detail.EmpId} Note: Returned to Stock")
                 };
-                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                 hostFile.CreateHostFile(ord);
             }
         }
@@ -154,7 +156,7 @@ namespace NeutronLoader
                     DateTime = detail.DateTime,
                     EmpId = ($"EmpId:{detail.EmpId} Note: Returned to Stock")
                 };
-                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                 hostFile.CreateHostFile(ord);
             }
         }
@@ -196,7 +198,7 @@ namespace NeutronLoader
 
             if (!hostOrders.Any()) return;
             _ = _logger.LogDetailAsync("Calling HostFile");
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
             hostFile.CreateHostFile(hostOrders);
         }
 
@@ -231,7 +233,7 @@ namespace NeutronLoader
 
             if (!hostOrders.Any()) return;
             _ = _logger.LogDetailAsync("Calling HostFile");
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
             hostFile.CreateHostFile(hostOrders);
         }
 
@@ -264,7 +266,7 @@ namespace NeutronLoader
 
             if (!hostOrders.Any()) return;
             _ = _logger.LogDetailAsync("Calling HostFile");
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
             hostFile.CreateHostFile(hostOrders);
         }
 
@@ -299,7 +301,7 @@ namespace NeutronLoader
                 };
 
                 _ = _logger.LogDetailAsync("CreateHostFile(PickStop pickStop) Call HostFile");
-                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+                var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
                 hostFile.CreateHostFile(ord);
                 // Didn't pick from PrimeBin and it IS a new item
                 //if (pickView.Slot != pickView.OrderDetail.PrimeBin && pickView.Item.Substring(0, 1) == "9")
@@ -368,7 +370,7 @@ namespace NeutronLoader
 
             if (!hostOrders.Any()) return;
             _ = _logger.LogDetailAsync("Calling HostFile");
-            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView);
+            var hostFile = new HostFile(_neutronLicense, _neutronVariables, _workstationView, _contextFactory);
             hostFile.CreateHostFile(hostOrders);
         }
 

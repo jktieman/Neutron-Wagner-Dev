@@ -7,6 +7,8 @@ using NeutronData.ModelViews;
 using NeutronData.Repositories;
 using NeutronEvents;
 using AsyncAwaitBestPractices;
+using NeutronData.DataContexts;
+using System;
 
 namespace NeutronLoader
 {
@@ -19,10 +21,12 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
         private IWorkstationRepository _workstationRepository;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public StartStopUploadManager(IJsonData jsonData, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, WorkstationView workstationView)
+            NeutronLicense neutronLicense, WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -34,7 +38,7 @@ namespace NeutronLoader
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("UploadManager");
-             _workstationRepository = new WorkstationRepository(_neutronVariables);
+             _workstationRepository = new WorkstationRepository(_neutronVariables, _contextFactory);
             InitInterfaceFile();
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopAction(e.StartStop);
             Mediator.GetInstance().RunUploadOnce += async (s, e) => await _uploadProcessor.RunUploadOnce();
@@ -48,37 +52,37 @@ namespace NeutronLoader
                 case "SFH":
                     {
                         _uploadProcessor = new UploadProcessorSfh(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView);
+                            , _workstationView, _contextFactory);
                         break;
                     }
                 case "TOP":
                     {
                         _uploadProcessor = new UploadProcessorTop(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView);
+                            , _workstationView, _contextFactory);
                         break;
                     }
                 case "MET":  
                     {
                         _uploadProcessor = new UploadProcessorMet(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView);
+                            , _workstationView, _contextFactory);
                         break;
                     }
                 case "PR1":
                     {
                         _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView, _workstationRepository);
+                            , _workstationView, _workstationRepository, _contextFactory);
                         break;
                     }
                 case "WAG":
                 {
                  _logger.LogDetailAsync($"WAG - UploadProcessorWAG").SafeFireAndForget();
-                        _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger);
+                        _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger, _contextFactory);
                     break;
                 }
                 default:
                     {
                         _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView, _workstationRepository);
+                            , _workstationView, _workstationRepository, _contextFactory);
                         break;
                     }
             }

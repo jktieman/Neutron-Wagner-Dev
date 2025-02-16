@@ -18,17 +18,19 @@ namespace NeutronLoader
     public class HostFileSfh
     {
         private readonly DirectoryInfo _hostUploadDirectory;
-        private readonly GenericRepository<Order> _repoOrders = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<User> _repoUser = new GenericRepository<User>(new NeutronDb());
+        private readonly GenericRepository<User> _repoUser;
         private readonly NeutronLicense _neutronLicense;
         private readonly NeutronVariables _neutronVariables;
         private readonly WorkstationView _workstationView;
         private readonly IDynamicLogger _logger;
 
         public HostFileSfh( NeutronLicense neutronLicense, NeutronVariables neutronVariables
-            , WorkstationView workstationView)
+            , WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+
+
+            _repoUser = new GenericRepository<User>(contextFactory);
             _neutronLicense = neutronLicense;
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
