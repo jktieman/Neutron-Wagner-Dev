@@ -12,11 +12,19 @@ using NeutronEvents;
 
 namespace Neutron.Classes
 {
-    public static class CsvUtility
+    public class CsvUtility
     {
-        private static readonly GenericRepository<Inventory> RepoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private static readonly char quote = '"';
-        public static void SaveToCsv(DataGridView dgv)
+        private Func<NeutronDb> _contextFactory;
+        private  readonly GenericRepository<Inventory> _repoInventory;
+        private readonly char quote = '"';
+
+        public CsvUtility(Func<NeutronDb> contextFactory)
+        {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+        }
+        
+        public void SaveToCsv(DataGridView dgv)
         {
 
             string rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\CSV\");
@@ -74,11 +82,11 @@ namespace Neutron.Classes
             }
         }
 
-        public static void SaveToCsv(string fileName, int areaId)
+        public void SaveToCsv(string fileName, int areaId)
         {
             try
             {
-                var inventory = RepoInventory.All().Where(r => r.AreaId == areaId).OrderBy(o => o.ItemDefinition.Item).ToList();
+                var inventory = _repoInventory.All().Where(r => r.AreaId == areaId).OrderBy(o => o.ItemDefinition.Item).ToList();
                 const string columnNames = "sku" +
                                            ",Description" +
                                            ",Unit-Of_Issue" +
