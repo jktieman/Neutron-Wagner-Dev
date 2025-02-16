@@ -17,14 +17,22 @@ namespace NeutronData.Repositories
 {
     public class InventoryRepository : IDisposable, IInventoryRepository
     {
-        private readonly IDynamicLogger _logger;
+        private readonly Func<NeutronDb> _contextFactory;
+        private IDynamicLogger _logger;
 
-        private readonly GenericRepository<Inventory> _repo = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly NeutronDb _context = new NeutronDb();
+        private GenericRepository<Inventory> _repo;
 
-        public InventoryRepository(IDynamicLogger logger)
+        public InventoryRepository(Func<NeutronDb> contextFactory, IDynamicLogger logger)
         {
+            if (contextFactory == null)
+            {
+                throw new ArgumentNullException("contextFactory");
+            }
+
+            _repo = new GenericRepository<Inventory>(contextFactory);
+            _contextFactory = contextFactory;
             _logger = logger;
+
         }
         public List<InventoryView> GetInventoryViewAll()
         {
@@ -32,45 +40,47 @@ namespace NeutronData.Repositories
 
             IEnumerable<Inventory> task = _repo.All().ToList();
 
-                projection = task.Select(r => new InventoryView
-                {
-                    Id = r.Id,
-                    Item = r.ItemDefinition.Item,
-                    Description = r.ItemDefinition.Description,
-                    Quantity = r.Quantity,
-                    AreaId = r.Location.AreaId,
-                    AreaName = r.Location.Area.Name,
-                    AreaNumber = r.Location.Area.AreaNumber,
-                    Loc1 = r.Location.Loc1,
-                    Loc2 = r.Location.Loc2,
-                    Loc3 = r.Location.Loc3,
-                    Loc4 = r.Location.Loc4,
-                    Loc5 = r.Location.Loc5,
-                    Slot = r.Location.Slot,
-                    SizeCodeId = r.Location.SizeCodeId,
-                    VelocityCodeId = r.Location.VelocityCodeId,
-                    HeightCodeId = r.Location.HeightCodeId,
-                    StorageTypeId = r.StorageTypeId,
-                    ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
-                    SizeCodeName = r.Location.SizeCode.Name,
-                    VelocityCodeName = r.Location.VelocityCode.Name,
-                    HeightCodeName = r.Location.HeightCode.Name,
-                    PickMax = r.ItemDefinition.PickMax,
-                    LocationCode = r.Location.LocationCode,
-                    StorageTypeName = r.StorageType.Name,
-                    LocationId = r.LocationId,
-                    ItemDefinitionId = r.ItemDefinitionId,
-                    RFID = r.RFID,
-                    ItemDefinition = r.ItemDefinition,
-                    Location = r.Location
-                }).ToList();
+            projection = task.Select(r => new InventoryView
+            {
+                Id = r.Id,
+                Item = r.ItemDefinition.Item,
+                Description = r.ItemDefinition.Description,
+                Quantity = r.Quantity,
+                AreaId = r.Location.AreaId,
+                AreaName = r.Location.Area.Name,
+                AreaNumber = r.Location.Area.AreaNumber,
+                Loc1 = r.Location.Loc1,
+                Loc2 = r.Location.Loc2,
+                Loc3 = r.Location.Loc3,
+                Loc4 = r.Location.Loc4,
+                Loc5 = r.Location.Loc5,
+                Slot = r.Location.Slot,
+                SizeCodeId = r.Location.SizeCodeId,
+                VelocityCodeId = r.Location.VelocityCodeId,
+                HeightCodeId = r.Location.HeightCodeId,
+                StorageTypeId = r.StorageTypeId,
+                ReceivedDate = r.ReceivedDate.ToString(CultureInfo.CurrentCulture),
+                SizeCodeName = r.Location.SizeCode.Name,
+                VelocityCodeName = r.Location.VelocityCode.Name,
+                HeightCodeName = r.Location.HeightCode.Name,
+                PickMax = r.ItemDefinition.PickMax,
+                LocationCode = r.Location.LocationCode,
+                StorageTypeName = r.StorageType.Name,
+                LocationId = r.LocationId,
+                ItemDefinitionId = r.ItemDefinitionId,
+                RFID = r.RFID,
+                ItemDefinition = r.ItemDefinition,
+                Location = r.Location
+            }).ToList();
             return projection;
         }
 
         public Inventory GetInventoryById(int id)
         {
-            var inventory = _context.Inventory.Find(id);
-            return inventory;
+            using (var context = _contextFactory())
+            {
+                return context.Inventory.Find(id);
+            }
         }
         public InventoryView GetInventoryViewById(int id)
         {
@@ -119,9 +129,10 @@ namespace NeutronData.Repositories
         public List<InventoryView> GetInventoryViewByItem(string item)
         {
             List<InventoryView> inventoryViews = new List<InventoryView>();
-            using (var db = new NeutronDb())
+            using (var context = _contextFactory())
             {
-                var recs = db.Inventory.Include("ItemDefinition")
+                var recs = context.Inventory.Include("ItemDefinition").Include(inventory => inventory.StorageType).Include(inventory => inventory.Location.Area).Include(inventory => inventory.Location.SizeCode).Include(inventory => inventory.Location.VelocityCode).Include(inventory =>
+                        inventory.Location.HeightCode)
                     .Where(r => r.ItemDefinition.Item == item).ToList();
 
                 foreach (var r in recs)
@@ -190,12 +201,12 @@ namespace NeutronData.Repositories
             return projection;
         }
 
-       public async Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find, int areaId)
+        public async Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find, int areaId)
         {
             var recs = new List<SqlInventoryView>();
             try
             {
-                using (var context = new NeutronDb())
+                using (var context = _contextFactory())
                 {
                     var param = new SqlParameter(parameterName: "@FIND", value: find);
                     var paramArea = new SqlParameter(parameterName: "@AREAID", value: areaId);
@@ -204,7 +215,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -215,15 +226,15 @@ namespace NeutronData.Repositories
             var recs = new List<SqlInventoryView>();
             try
             {
-                using (var context = new NeutronDb())
+                using (var context = _contextFactory())
                 {
                     var param = new SqlParameter("@Find", find);
-                   recs = await context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToListAsync();
+                    recs = await context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToListAsync();
                 }
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -234,7 +245,7 @@ namespace NeutronData.Repositories
             var recs = new List<SqlInventoryView>();
             try
             {
-                using (var context = new NeutronDb())
+                using (var context = _contextFactory())
                 {
                     var param = new SqlParameter("@ItemId", id);
                     recs = context.Database.SqlQuery<SqlInventoryView>("usp_GetAllInventoryViewsByItemDefinitionId @ItemId", param).ToList();
@@ -242,7 +253,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return recs;
@@ -253,7 +264,7 @@ namespace NeutronData.Repositories
             var rec = new SqlInventoryView();
             try
             {
-                using (var context = new NeutronDb())
+                using (var context = _contextFactory())
                 {
                     var paramItemId = new SqlParameter("@ITEMID", itemId);
                     var paramLocationId = new SqlParameter("@LOCATIONID", locationId);
@@ -262,7 +273,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
+                _ = _logger.LogDetailAsync("Get All Location Views Error. " + ex.Message + " " + ex.InnerException);
             }
 
             return rec;
@@ -298,8 +309,11 @@ namespace NeutronData.Repositories
 
         public async Task<List<Inventory>> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId)
         {
-            return await _context.Inventory.Where(i => i.AreaId == areaId && i.Quantity == 0 &&
-                                                 i.StorageTypeId == (int)StorageType.Release).ToListAsync();
+            using (var context = _contextFactory())
+            {
+                return await context.Inventory.Where(i => i.AreaId == areaId && i.Quantity == 0 &&
+                                                          i.StorageTypeId == (int)StorageType.Release).ToListAsync();
+            }
         }
 
         public int GetAreaNumber(int itemDefinitionId)
@@ -317,6 +331,8 @@ namespace NeutronData.Repositories
 
         public void Dispose()
         {
+            _contextFactory?.Invoke()?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
