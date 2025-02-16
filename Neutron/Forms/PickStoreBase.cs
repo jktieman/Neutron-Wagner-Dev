@@ -25,7 +25,8 @@ namespace Neutron.Forms
                     OrderId = 0,
                     Ord1 = string.Empty,
                     Ord2 = string.Empty,
-                    OrderComplete = false
+                    OrderComplete = false,
+                    RowIndex = 0
                 };
                 ordersToPick.Add(batchPosition);
             }
