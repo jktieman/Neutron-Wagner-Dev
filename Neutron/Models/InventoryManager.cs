@@ -35,7 +35,7 @@ namespace Neutron.Models
             {
                 await _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
             }
-            return await _inventoryUnitOfWork.Inventory.DeleteAsync(invId);
+            return await _inventoryUnitOfWork.Inventory.DeleteWithReturnAsync(invId);
         }
 
         public async Task<bool> ReleaseCheckAsync(Inventory inventory)

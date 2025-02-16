@@ -149,7 +149,7 @@ namespace Neutron.Models
             }
         }
 
-        public void ResetMoveNext(int moveNext = default(int))
+        public void ResetMoveNext(int moveNext = default)
         {
             _logger.LogDetailAsync($"Reset MoveNext: {moveNext}").SafeFireAndForget();
             foreach (var kvp in _currentLocations)
