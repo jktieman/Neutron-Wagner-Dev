@@ -22,7 +22,6 @@ namespace Neutron.Forms
         private readonly int _id;
         private CultureInfo _cultureInfo;
         private ResourceManager _resourceManager;
-        private readonly NeutronDb _context = new NeutronDb();
         private readonly GenericRepository<SizeCode> _repoSizeCode;
         private readonly GenericRepository<VelocityCode> _repoVelocityCode;
         private readonly GenericRepository<HeightCode> _repoHeightCode;
@@ -30,16 +29,18 @@ namespace Neutron.Forms
         private readonly GenericRepository<StorageDevice> _repoStorageDevice;
 
         private Location _location;
+        private readonly Func<NeutronDb> _contextFactory;
 
-        public FrmEditLocationDefinition(int id)
+        public FrmEditLocationDefinition(int id, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
             _id = id;
-            _repoSizeCode = new GenericRepository<SizeCode>(_context);
-            _repoVelocityCode = new GenericRepository<VelocityCode>(_context);
-            _repoHeightCode = new GenericRepository<HeightCode>(_context);
-            _repoLocation = new GenericRepository<Location>(_context);
-            _repoStorageDevice = new GenericRepository<StorageDevice>(_context);
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
+            _repoLocation = new GenericRepository<Location>(contextFactory);
+            _repoStorageDevice = new GenericRepository<StorageDevice>(contextFactory);
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             SetupViewEditForm();
