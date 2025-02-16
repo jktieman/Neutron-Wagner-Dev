@@ -19,23 +19,21 @@ namespace NeutronData.Repositories
 {
     public class WorkstationRepository : IWorkstationRepository
     {
-        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-
-        private readonly GenericRepository<Workstation> _repoWorkstation = new GenericRepository<Workstation>(new NeutronDb());
-        private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
-        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
-        private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
-        private readonly GenericRepository<SerialConfiguration> _repoSerialConfiguration = new GenericRepository<SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices;
+        private readonly GenericRepository<Workstation> _repoWorkstation;
+        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes;
 
         private readonly IDynamicLogger _logger;
         private readonly NeutronVariables _neutronVariables;
-
-
-
-        public WorkstationRepository(NeutronVariables neutronVariables)
+        public WorkstationRepository(NeutronVariables neutronVariables, Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
             _logger = Logger.SetupLogger("WorkStationRepository");
             _neutronVariables = neutronVariables;
+
+            _repoHardwareDevices = new GenericRepository<HardwareDevice>(contextFactory);
+            _repoWorkstation = new GenericRepository<Workstation>(contextFactory);
+            _repoCommunicationTypes = new GenericRepository<CommunicationType>(contextFactory);
         }
         /// <summary>
         /// Based on the workstationId, get the workstation and all the hardware devices associated with it.

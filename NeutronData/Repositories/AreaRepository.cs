@@ -18,8 +18,15 @@ namespace NeutronData.Repositories;
 
 public class AreaRepository : IAreaRepository
 {
-    private readonly GenericRepository<Area> _repoArea = new GenericRepository<Area>(new NeutronDb());
+    private readonly GenericRepository<Area> _repoArea;
 
+    public AreaRepository(Func<NeutronDb> contextFactory)
+    {
+        if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+
+        _repoArea = new GenericRepository<Area>(contextFactory);
+    }
+    
     public int GetAreaId(int areaNumber)
     {
         var areaId = 0;
