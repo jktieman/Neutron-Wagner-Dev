@@ -28,14 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.HotPick = new System.Windows.Forms.TabPage();
+            this.PanelForDataGridViewHot = new System.Windows.Forms.Panel();
+            this.DataGridViewHot = new System.Windows.Forms.DataGridView();
             this.LabelOf = new System.Windows.Forms.Label();
             this.TextBoxTotalPages = new System.Windows.Forms.TextBox();
             this.TextBoxGoTo = new System.Windows.Forms.TextBox();
@@ -57,6 +59,8 @@
             this.MBCurrentLocations = new MetroFramework.Controls.MetroButton();
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.HotAction = new System.Windows.Forms.TabPage();
+            this.TextBoxCostCenter = new System.Windows.Forms.TextBox();
+            this.LabelCostCenter = new System.Windows.Forms.Label();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
             this.LabelLocationCode = new System.Windows.Forms.Label();
             this.ComboBoxHeightCodeLocation = new System.Windows.Forms.ComboBox();
@@ -174,12 +178,10 @@
             this.LabelFormTitle = new System.Windows.Forms.Label();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
-            this.PanelForDataGridViewHot = new System.Windows.Forms.Panel();
-            this.DataGridViewHot = new System.Windows.Forms.DataGridView();
-            this.LabelCostCenter = new System.Windows.Forms.Label();
-            this.TextBoxCostCenter = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.HotPick.SuspendLayout();
+            this.PanelForDataGridViewHot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
             this.HotAction.SuspendLayout();
             this.GroupBoxHotPickLocation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemHotImage)).BeginInit();
@@ -188,8 +190,6 @@
             this.groupBox1.SuspendLayout();
             this.HotRackTray.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.PanelForDataGridViewHot.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelRecordCount
@@ -244,6 +244,61 @@
             this.HotPick.Size = new System.Drawing.Size(1235, 674);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
+            // 
+            // PanelForDataGridViewHot
+            // 
+            this.PanelForDataGridViewHot.AutoScroll = true;
+            this.PanelForDataGridViewHot.Controls.Add(this.DataGridViewHot);
+            this.PanelForDataGridViewHot.Location = new System.Drawing.Point(3, 156);
+            this.PanelForDataGridViewHot.Name = "PanelForDataGridViewHot";
+            this.PanelForDataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.PanelForDataGridViewHot.TabIndex = 37;
+            // 
+            // DataGridViewHot
+            // 
+            this.DataGridViewHot.AllowUserToAddRows = false;
+            this.DataGridViewHot.AllowUserToDeleteRows = false;
+            this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.DataGridViewHot.ColumnHeadersHeight = 28;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle10;
+            this.DataGridViewHot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DataGridViewHot.Location = new System.Drawing.Point(0, 0);
+            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridViewHot.MultiSelect = false;
+            this.DataGridViewHot.Name = "DataGridViewHot";
+            this.DataGridViewHot.ReadOnly = true;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowTemplate.Height = 28;
+            this.DataGridViewHot.RowTemplate.ReadOnly = true;
+            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.DataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.DataGridViewHot.TabIndex = 6;
+            this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
             // 
             // LabelOf
             // 
@@ -363,6 +418,7 @@
             this.MBHotStore.Text = "Hot Store";
             this.MBHotStore.UseCustomBackColor = true;
             this.MBHotStore.UseSelectable = true;
+            this.MBHotStore.UseVisualStyleBackColor = false;
             this.MBHotStore.Click += new System.EventHandler(this.MBHotStore_Click);
             // 
             // MBHotPick
@@ -379,6 +435,7 @@
             this.MBHotPick.Text = "Hot Pick";
             this.MBHotPick.UseCustomBackColor = true;
             this.MBHotPick.UseSelectable = true;
+            this.MBHotPick.UseVisualStyleBackColor = false;
             this.MBHotPick.Click += new System.EventHandler(this.MBHotPick_Click);
             // 
             // LabelSearch
@@ -439,6 +496,7 @@
             this.MBHotActionClose.TabIndex = 9;
             this.MBHotActionClose.Text = "Close";
             this.MBHotActionClose.UseSelectable = true;
+            this.MBHotActionClose.UseVisualStyleBackColor = false;
             this.MBHotActionClose.Click += new System.EventHandler(this.MBHotActionClose_Click);
             // 
             // MBNewLocations
@@ -453,6 +511,7 @@
             this.MBNewLocations.TabIndex = 7;
             this.MBNewLocations.Text = "New Locations";
             this.MBNewLocations.UseSelectable = true;
+            this.MBNewLocations.UseVisualStyleBackColor = false;
             this.MBNewLocations.Click += new System.EventHandler(this.MBNewLocations_Click);
             // 
             // MBCurrentLocations
@@ -468,6 +527,7 @@
             this.MBCurrentLocations.TabIndex = 6;
             this.MBCurrentLocations.Text = "Current Locations";
             this.MBCurrentLocations.UseSelectable = true;
+            this.MBCurrentLocations.UseVisualStyleBackColor = false;
             this.MBCurrentLocations.Click += new System.EventHandler(this.MBCurrentLocations_Click);
             // 
             // MBFindItem
@@ -512,6 +572,27 @@
             this.HotAction.Size = new System.Drawing.Size(1235, 674);
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
+            // 
+            // TextBoxCostCenter
+            // 
+            this.TextBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxCostCenter.Location = new System.Drawing.Point(137, 221);
+            this.TextBoxCostCenter.Name = "TextBoxCostCenter";
+            this.TextBoxCostCenter.ReadOnly = true;
+            this.TextBoxCostCenter.Size = new System.Drawing.Size(311, 22);
+            this.TextBoxCostCenter.TabIndex = 168;
+            this.TextBoxCostCenter.TabStop = false;
+            this.TextBoxCostCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelCostCenter
+            // 
+            this.LabelCostCenter.AutoSize = true;
+            this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelCostCenter.Location = new System.Drawing.Point(37, 224);
+            this.LabelCostCenter.Name = "LabelCostCenter";
+            this.LabelCostCenter.Size = new System.Drawing.Size(87, 16);
+            this.LabelCostCenter.TabIndex = 167;
+            this.LabelCostCenter.Text = "Cost Center";
             // 
             // GroupBoxHotPickLocation
             // 
@@ -954,7 +1035,6 @@
             this.LabelHotPickItem.Size = new System.Drawing.Size(280, 66);
             this.LabelHotPickItem.TabIndex = 16;
             this.LabelHotPickItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.LabelHotPickItem.DoubleClick += new System.EventHandler(this.LabelHotPickItem_Click);
             // 
             // LabelMainDescription
             // 
@@ -1882,82 +1962,6 @@
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // PanelForDataGridViewHot
-            // 
-            this.PanelForDataGridViewHot.AutoScroll = true;
-            this.PanelForDataGridViewHot.Controls.Add(this.DataGridViewHot);
-            this.PanelForDataGridViewHot.Location = new System.Drawing.Point(3, 156);
-            this.PanelForDataGridViewHot.Name = "PanelForDataGridViewHot";
-            this.PanelForDataGridViewHot.Size = new System.Drawing.Size(1227, 480);
-            this.PanelForDataGridViewHot.TabIndex = 37;
-            // 
-            // DataGridViewHot
-            // 
-            this.DataGridViewHot.AllowUserToAddRows = false;
-            this.DataGridViewHot.AllowUserToDeleteRows = false;
-            this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle10;
-            this.DataGridViewHot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGridViewHot.Location = new System.Drawing.Point(0, 0);
-            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.DataGridViewHot.MultiSelect = false;
-            this.DataGridViewHot.Name = "DataGridViewHot";
-            this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle12;
-            this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowTemplate.Height = 28;
-            this.DataGridViewHot.RowTemplate.ReadOnly = true;
-            this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewHot.Size = new System.Drawing.Size(1227, 480);
-            this.DataGridViewHot.TabIndex = 6;
-            this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
-            // 
-            // LabelCostCenter
-            // 
-            this.LabelCostCenter.AutoSize = true;
-            this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCostCenter.Location = new System.Drawing.Point(37, 224);
-            this.LabelCostCenter.Name = "LabelCostCenter";
-            this.LabelCostCenter.Size = new System.Drawing.Size(87, 16);
-            this.LabelCostCenter.TabIndex = 167;
-            this.LabelCostCenter.Text = "Cost Center";
-            // 
-            // TextBoxCostCenter
-            // 
-            this.TextBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxCostCenter.Location = new System.Drawing.Point(137, 221);
-            this.TextBoxCostCenter.Name = "TextBoxCostCenter";
-            this.TextBoxCostCenter.ReadOnly = true;
-            this.TextBoxCostCenter.Size = new System.Drawing.Size(311, 22);
-            this.TextBoxCostCenter.TabIndex = 168;
-            this.TextBoxCostCenter.TabStop = false;
-            this.TextBoxCostCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // FrmHotAction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1976,6 +1980,8 @@
             this.tabControl1.ResumeLayout(false);
             this.HotPick.ResumeLayout(false);
             this.HotPick.PerformLayout();
+            this.PanelForDataGridViewHot.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).EndInit();
             this.HotAction.ResumeLayout(false);
             this.HotAction.PerformLayout();
             this.GroupBoxHotPickLocation.ResumeLayout(false);
@@ -1989,8 +1995,6 @@
             this.HotRackTray.ResumeLayout(false);
             this.HotRackTray.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.PanelForDataGridViewHot.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewHot)).EndInit();
             this.ResumeLayout(false);
 
         }
