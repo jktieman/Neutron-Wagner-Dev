@@ -8,7 +8,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AsyncAwaitBestPractices;
 using Logger = NeutronCore.Global.Logger;
 
 namespace ReplenService
@@ -83,7 +82,7 @@ namespace ReplenService
             }
             catch (Exception ex)
             {
-                _logger.LogDetailAsync($"Delete Replenishments Error. {Environment.NewLine} {ex.Message}  {Environment.NewLine}{ex.InnerException} ").SafeFireAndForget();
+               await _logger.LogDetailAsync($"Delete Replenishments Error. {Environment.NewLine} {ex.Message}  {Environment.NewLine}{ex.InnerException} ");
             }
         }
 
