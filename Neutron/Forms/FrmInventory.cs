@@ -117,6 +117,7 @@ namespace Neutron.Forms
         private readonly int[] _moveableAreas = new int[] { 1, 2, 3, 4 };
         private ItemDefinition _workingItemDefinition = null;
         private string _newOrViewEdit = "New";
+        private readonly Func<NeutronDb> _contextFactory;
 
         public FrmInventory(IJsonData jsonData, IAkaRepository akaRepository,
                 ILacProcessor lacProcessor, IWorkstationRepository workstationRepository
@@ -124,8 +125,10 @@ namespace Neutron.Forms
                 , IAreaRepository areaRepository
                 , IRFIDManager rfidManager, ILocationsRepository locationsRepository
                 , IInventoryUnitOfWork inventoryUnitOfWork
-                , IIptiDisplayFunctions iptiDisplayFunctions)
+                , IIptiDisplayFunctions iptiDisplayFunctions, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
@@ -223,7 +226,7 @@ namespace Neutron.Forms
             //{
             //    await RefreshData();
             //}).Wait();
-            RefreshData();
+             RefreshData();
             _startup = false;
             _logger.LogDetailAsync($"After Constructor Refresh");
         }
@@ -289,7 +292,7 @@ namespace Neutron.Forms
 
         private void InitializeInventoryRepository()
         {
-            _inventoryRepository = new InventoryRepository(_logger);
+            _inventoryRepository = new InventoryRepository(_contextFactory, _logger);
         }
 
         private void ConfigureRfidControls()
@@ -360,6 +363,7 @@ namespace Neutron.Forms
 
         private async Task RefreshData(int recId = 0)
         {
+            Cursor.Current = Cursors.WaitCursor;
             _logger.LogDetailAsync("Start Refresh").SafeFireAndForget();
             var findWhat = TextBoxFind.Text.ToLower().Trim();
             TextBoxFind.Text = string.Empty;
@@ -391,6 +395,7 @@ namespace Neutron.Forms
                 Mediator.GetInstance().OnGeneralError(this, message);
             }
             _logger.LogDetailAsync("End Refresh").SafeFireAndForget();
+            Cursor.Current = Cursors.Default;
         }
 
         private async Task LoadData(string find, int recId)
@@ -725,7 +730,7 @@ namespace Neutron.Forms
 
                 if (_iptiDisplayFunctions != null)
                 {
-                    await _iptiDisplayFunctions.ClearBlastzone();
+                    _iptiDisplayFunctions.ClearBlastzone();
                 }
 
                 CloseButtonPressed = true;
@@ -903,7 +908,7 @@ namespace Neutron.Forms
 
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.ClearBlastzone();
+                _iptiDisplayFunctions.ClearBlastzone();
             }
 
 
@@ -2619,7 +2624,7 @@ namespace Neutron.Forms
 
             if (_iptiDisplayFunctions != null)
             {
-                await _iptiDisplayFunctions.ClearBlastzone();
+                _iptiDisplayFunctions.ClearBlastzone();
             }
 
             tabControl1.SelectedTab = tabPage2;
@@ -2774,9 +2779,9 @@ namespace Neutron.Forms
                 {
                     if (_iptiDisplayFunctions != null)
                     {
-                        await _iptiDisplayFunctions.ClearBlastzone();
-                        await _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
-                        await _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
+                        _iptiDisplayFunctions.ClearBlastzone();
+                        _iptiDisplayFunctions.TurnOnBlastzoneDisplay(trayNumber, part, quantity);
+                        _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(trayNumber, $"Qty: {quantity}");
                     }
                 }
 
@@ -2900,7 +2905,7 @@ namespace Neutron.Forms
 
         //private void MBPrintInventory_Click(object sender, EventArgs e)
         //{
-        //    CsvUtility.SaveToCsv(DataGridView1);
+        //    new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
         //}
 
         private void DataGridViewInventoryLocations_Click(object sender, EventArgs e)
