@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AlliedLogger;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
+using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronEvents;
@@ -14,17 +15,25 @@ namespace ReplenService
 {
     public class ReplenProcessor
     {
-        private readonly GenericRepository<Order> _repoOrder = new GenericRepository<Order>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetail = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrder = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinitions = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<Order> _repoOrder;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetail;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrder;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinitions;
 
         private ReplenRepository _replenRepository;
         private IDynamicLogger _logger;
 
-        public ReplenProcessor()
+        public ReplenProcessor(Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+           
+            _repoOrder = new GenericRepository<Order>(contextFactory);
+            _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
+            _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoReplenOrderDetail = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoItemDefinitions = new GenericRepository<ItemDefinition>(contextFactory);
+            
             Init();
         }
         private void Init()
