@@ -26,7 +26,6 @@ using SlotNameFactory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using AlliedPostOffice;
 using AlliedPostOffice.Concrete;
 using Neutron.Classes;
@@ -37,7 +36,7 @@ using SqlSchemaManager;
 using NeutronData.Repositories;
 using NeutronData.Models.Lookups;
 //using ProLiteController;
-using StationType = NeutronCore.Enums.StationType;
+
 using Application = System.Windows.Forms.Application;
 using ProliteController;
 using IPTI.Models;
@@ -46,6 +45,7 @@ using AsyncAwaitBestPractices;
 using LogFileMaintenance;
 using System.Runtime.InteropServices;
 using NeutronData.UnitOfWorks;
+
 
 #endregion
 
@@ -83,11 +83,8 @@ namespace Neutron
         private StartStopUploadManager _startStopUploadManager;
         private IHistoryManager _historyManager;
         private IDisplayController _tcpIptiController;
-        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices = new GenericRepository<HardwareDevice>(new NeutronDb());
-        private readonly GenericRepository<NeutronData.Models.Lookups.DeviceType> _repoDeviceTypes = new GenericRepository<NeutronData.Models.Lookups.DeviceType>(new NeutronDb());
-        private readonly GenericRepository<CommunicationType> _repoCommunicationTypes = new GenericRepository<CommunicationType>(new NeutronDb());
-        private readonly GenericRepository<TcpConfiguration> _repoTcpConfiguration = new GenericRepository<TcpConfiguration>(new NeutronDb());
-        private readonly GenericRepository<NeutronData.Models.SerialConfiguration> _repoSerialConfiguration = new GenericRepository<NeutronData.Models.SerialConfiguration>(new NeutronDb());
+        private readonly GenericRepository<HardwareDevice> _repoHardwareDevices;
+
         private string _lastEmailMessage;
         private int _lastEmailMessageCounter;
         private IptiConfig _iptiConfig;
@@ -96,6 +93,7 @@ namespace Neutron
         private bool _isClientConnected;
         private readonly IDynamicLogger _loggerExceptions;
         private IInventoryUnitOfWork _inventoryUnitOfWork;
+        private readonly Func<NeutronDb> _contextFactory;
         private static readonly object _userLock = new object();
 
         /// <summary>
@@ -118,6 +116,7 @@ namespace Neutron
         /// <param name="locationsRepository"></param>
         /// <param name="inventoryRepository"></param>
         /// <param name="inventoryUnitOfWork"></param>
+        /// <param name="contextFactory"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
@@ -128,8 +127,9 @@ namespace Neutron
             , IAreaRepository areaRepository
             , ILocationsRepository locationsRepository
             , IInventoryRepository inventoryRepository
-            , IInventoryUnitOfWork inventoryUnitOfWork) : base()
+            , IInventoryUnitOfWork inventoryUnitOfWork, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _jsonData = jsonData ?? throw new ArgumentNullException(nameof(jsonData));
             _akaRepository = akaRepository ?? throw new ArgumentNullException(nameof(akaRepository));
             _securityProcessor = securityProcessor ?? throw new ArgumentNullException(nameof(securityProcessor));
@@ -148,12 +148,14 @@ namespace Neutron
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _inventoryUnitOfWork = inventoryUnitOfWork ?? throw new ArgumentNullException(nameof(inventoryUnitOfWork));
 
-            // _tcpIptiCommandCenter = null;
 
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             KeyPreview = true;
+
+            _repoHardwareDevices = new GenericRepository<HardwareDevice>(contextFactory);
+
             _lacProcessor.UseLacProcessor = _neutronVariables.UseLAC;
 
             _logger = NeutronCore.Global.Logger.SetupLogger("Main") ?? throw new InvalidOperationException("Logger setup failed.");
@@ -1077,13 +1079,13 @@ namespace Neutron
                 {
                     MtLogOff.Invoke(new Action(() =>
                     {
-                        MtLogOff.Text = _resourceManager.GetString("LogOff");
+                        MtLogOff.Text = _resourceManager.GetString($"LogOff");
                         MtLogOff.Refresh();
                     }));
                 }
                 else
                 {
-                    MtLogOff.Text = _resourceManager.GetString("LogOff");
+                    MtLogOff.Text = _resourceManager.GetString($"LogOff");
                     MtLogOff.Refresh();
                 }
 
@@ -1204,7 +1206,7 @@ namespace Neutron
             {
                 Hide();
                 using (MetroForm frm = new FrmItemDefinitions(_workstationRepository, _jsonData, _workstationView
-                           , _akaRepository, _imageManager, _areaRepository, _historyManager))
+                           , _akaRepository, _imageManager, _areaRepository, _historyManager, _contextFactory))
                 {
                     frm.ShowDialog();
                     Show();
@@ -1301,7 +1303,8 @@ namespace Neutron
             Hide();
             using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                        , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository))
+                       , _neutronLicense, _workstationView, _historyManager, _locationsRepository
+                       , _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository, _contextFactory))
             {
                 frm.ShowDialog();
                 Show();
@@ -1465,7 +1468,7 @@ namespace Neutron
 
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ViewHistory]) return;
             Hide();
-            using (MetroForm frm = new FrmHistory(_akaRepository, _historyManager, _workstationView))
+            using (MetroForm frm = new FrmHistory(_akaRepository, _historyManager, _workstationView, _contextFactory))
             {
                 frm.ShowDialog();
                 Show();
@@ -1488,7 +1491,7 @@ namespace Neutron
 
             if (!_securityProcessor.SecurityProfile[(int)NeutronSecurity.ManageUsers]) return;
             Hide();
-            using (MetroForm frm = new FrmProductivity(_jsonData, _neutronVariables))
+            using (MetroForm frm = new FrmProductivity(_jsonData, _neutronVariables, _contextFactory))
             {
                 frm.ShowDialog();
                 Show();
@@ -1644,7 +1647,8 @@ namespace Neutron
             {
                 using (MetroForm frm = new FrmHotAction(_jsonData, _akaRepository
                            , _lacProcessor, _imageManager, _itemDefinitionsRepository, _neutronVariables
-                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository, _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository))
+                           , _neutronLicense, _workstationView, _historyManager, _locationsRepository
+                           , _inventoryUnitOfWork, _iptiDisplayFunctions, _inventoryRepository, _contextFactory))
                 {
                     frm.ShowDialog();
                     Show();
