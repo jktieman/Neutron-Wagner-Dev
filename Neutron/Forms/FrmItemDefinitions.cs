@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Neutron.Extensions;
 using NeutronEvents;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace Neutron.Forms
 {
@@ -44,17 +45,16 @@ namespace Neutron.Forms
         private BindingSource _existingItemsBindingSource = new BindingSource();
 
 
-        private readonly ItemDefinitionsRepository _itemDefinitionsRepository = new ItemDefinitionsRepository();
-        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode = new GenericRepository<VelocityCode>(new NeutronDb());
-        private readonly GenericRepository<HeightCode> _repoHeightCode = new GenericRepository<HeightCode>(new NeutronDb());
-        private readonly GenericRepository<Area> _repoArea = new GenericRepository<Area>(new NeutronDb());
-
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
-        private readonly GenericRepository<StorageType> _repoStorageType = new GenericRepository<StorageType>(new NeutronDb());
-        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(new NeutronDb());
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
+        private readonly ItemDefinitionsRepository _itemDefinitionsRepository;
+        private readonly GenericRepository<SizeCode> _repoSizeCode;
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
+        private readonly GenericRepository<HeightCode> _repoHeightCode;
+        private readonly GenericRepository<Area> _repoArea;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<StorageType> _repoStorageType;
+        private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails;
         private IDynamicLogger _logger;
         readonly IJsonData _jsonData;
         private readonly WorkstationView _workstation;
@@ -68,12 +68,15 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
         private BackgroundWorker _dgvColumnWidthSizer;
         private bool _startup = true;
+
+        private readonly Func<NeutronDb> _contextFactory;
         // private readonly List<Workstation> _pickStations;
 
         public FrmItemDefinitions(IWorkstationRepository workstationRepository, IJsonData jsonData, WorkstationView workstation
             , IAkaRepository akaRepository, IImageManager imageManager
-            , IAreaRepository areaRepository, IHistoryManager historyManager)
+            , IAreaRepository areaRepository, IHistoryManager historyManager, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
             _workstationRepository = workstationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -89,6 +92,18 @@ namespace Neutron.Forms
             CloseButtonPressed = false;
             SetupGrid();
             SetupTabControl();
+
+
+            _itemDefinitionsRepository = new ItemDefinitionsRepository();
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
+            _repoArea = new GenericRepository<Area>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoStorageType = new GenericRepository<StorageType>(contextFactory);
+            _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(contextFactory);
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory);
 
             _akaRepository = akaRepository;
             _imageManager = imageManager;
@@ -1106,7 +1121,7 @@ namespace Neutron.Forms
             if (result != DialogResult.Yes) return;
 
             await _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
-            var deleted = await _repoItemDefinition.DeleteAsync(itemDefinition.Id);
+            await _repoItemDefinition.DeleteAsync(itemDefinition.Id);
 
             TextBoxFind.Text = string.Empty;
             RefreshData();
@@ -1182,7 +1197,7 @@ namespace Neutron.Forms
         }
         private void MBPrintItemDefinitions_Click(object sender, EventArgs e)
         {
-            CsvUtility.SaveToCsv(DataGridView1);
+            new CsvUtility(_contextFactory).SaveToCsv(DataGridView1);
         }
         private void MbSaveAsDefault_Click(object sender, EventArgs e)
         {
