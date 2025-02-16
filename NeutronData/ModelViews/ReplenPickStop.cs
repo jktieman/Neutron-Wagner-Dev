@@ -11,8 +11,16 @@ namespace NeutronData.ModelViews
 {
     public class ReplenPickStop
     {
-        private readonly GenericRepository<ReplenOrder> _repoOrders = new(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails = new(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoOrders;
+        private readonly GenericRepository<ReplenOrderDetail> _repoOrderDetails;
+        public ReplenPickStop(Func<NeutronDb> contextFactory)
+        {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
+
+            _repoOrders = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+        }
+
         public List<ReplenPickView> PickViews { get; set; } = [];
         public int Sequence { get; set; }
         public int OrderId { get; set; }

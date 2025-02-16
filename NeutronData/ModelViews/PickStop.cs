@@ -3,25 +3,29 @@ using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using NeutronCore.Enums;
 
 namespace NeutronData.ModelViews
 {
+
     public class PickStop
     {
-        private readonly GenericRepository<OrderDetail> _repoOrderDetails = new GenericRepository<OrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly GenericRepository<OrderDetail> _repoOrderDetails;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
         private IDynamicLogger _logger;
 
-        public PickStop()
+        public PickStop(Func<NeutronDb> contextFactory)
         {
-           // Inventory = new List<Inventory>();
-           // Images = new List<ItemImage>();
-           // PickViews = [];
+            var contextFactory1 = contextFactory;
+            _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory1);
+            _repoReplenOrders = new GenericRepository<ReplenOrder>(contextFactory1);
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory1);
         }
 
         public List<PickView> PickViews { get; set; } = [];
@@ -64,23 +68,23 @@ namespace NeutronData.ModelViews
 
         public void UpdatePickView(PickView pickView, User user)
         {
-                var pickLocation = new PickLocation
-                {
-                    Inventory = CurrentInventoryLocation
-                    ,
-                    Quantity = pickView.QuantityToBePicked
-                    ,
-                    PickDate = DateTime.Now
-                    ,
-                    RequestedQuantity = pickView.QuantityToBePicked
-                    ,
-                    User = user
-                };
-                pickView.PickLocations.Add(pickLocation);
-                pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
-                pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty <= 0
-                    ? 0
-                    : pickView.Quantity - pickView.PickedQty;
+            var pickLocation = new PickLocation
+            {
+                Inventory = CurrentInventoryLocation
+                ,
+                Quantity = pickView.QuantityToBePicked
+                ,
+                PickDate = DateTime.Now
+                ,
+                RequestedQuantity = pickView.QuantityToBePicked
+                ,
+                User = user
+            };
+            pickView.PickLocations.Add(pickLocation);
+            pickView.PickedQty = pickView.PickLocations.Sum(p => p.Quantity);
+            pickView.QuantityToBePicked = pickView.Quantity - pickView.PickedQty <= 0
+                ? 0
+                : pickView.Quantity - pickView.PickedQty;
 
 
         }
@@ -112,20 +116,13 @@ namespace NeutronData.ModelViews
 
         public int GetPickViewTotal(PickView pickview)
         {
-            var total = 0;
-            foreach (var pickLocation in pickview.PickLocations)
-            {
-                total += pickLocation.Quantity;
-            }
-            return total;
+            return pickview.PickLocations.Sum(pickLocation => pickLocation.Quantity);
         }
 
         public void SetPickViewsComplete(User user, IDynamicLogger logger)
         {
             _logger = logger;
 
-            var sb = new StringBuilder();
-            sb.AppendLine($"Set Pick Views Complete, Update OrderDetail Record");
             try
             {
                 foreach (var pickView in PickViews)
@@ -133,31 +130,25 @@ namespace NeutronData.ModelViews
                     var total = GetPickViewTotal(pickView);
                     pickView.OrderDetail.PickedQuantity = total;
                     pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
-                    
-                    
+                    pickView.OrderDetail.EmpId = user.EmpId;
+                    _repoOrderDetails.Update(pickView.OrderDetail);
+
                     // If this is a Transfer Order and the PickView is complete, then Create a new Replenishment Order
                     if (pickView.Ord1.Equals("TRANSFER", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        _ = _logger.LogDetailAsync($"Transfer Order: {pickView.Ord1}");
                         CreateReplenOrder(pickView);
                     }
-
-                    pickView.OrderDetail.EmpId = user.EmpId;
-                    _repoOrderDetails.Update(pickView.OrderDetail);
-                    sb.AppendLine(
-                        $"pickView: {pickView.Item}  Picked Qty: {pickView.OrderDetail.PickedQuantity} Line Status: {pickView.OrderDetail.LineStatusId}  Emp: {user.Fullname} ");
                 }
             }
             catch (Exception ex)
             {
-               _ = _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
+                _ = _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
             }
-            _ = _logger.LogDetailAsync($"{sb.ToString()}");
         }
 
         private void CreateReplenOrder(PickView pickView)
         {
-            var sb = new StringBuilder();
+            //var sb = new StringBuilder();
             try
             {
                 var replenOrder = new ReplenOrder
@@ -180,7 +171,7 @@ namespace NeutronData.ModelViews
                     Quantity = pickView.OrderDetail.Quantity,
                     PickedQuantity = 0,
                     LineStatusId = (int)LineStatus.Available,
-                    DateTime = DateTime.Now.ToString(),
+                    DateTime = DateTime.Now.ToString(CultureInfo.CurrentCulture),
                     OrderDetailInfo = "Transfer Order",
                     AreaId = pickView.OrderDetail.AreaId,
                     PartNum = pickView.OrderDetail.PartNum,
@@ -190,14 +181,14 @@ namespace NeutronData.ModelViews
                 };
                 _repoReplenOrderDetails.Insert(replenOrderDetail);
 
-                sb.AppendLine(
-                    $"Create Replenishment Order: {replenOrder.Ord1}  Description: {replenOrderDetail.PartDesc}  Item: {replenOrderDetail.PartNum}  Qty: {replenOrderDetail.Quantity}");
+                //sb.AppendLine(
+                //    $"Create Replenishment Order: {replenOrder.Ord1}  Description: {replenOrderDetail.PartDesc}  Item: {replenOrderDetail.PartNum}  Qty: {replenOrderDetail.Quantity}");
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ");
+                _logger.LogDetailAsync($"Error Updating Order Details. {Environment.NewLine} {ex.Message} ").SafeFireAndForget();
             }
-            _ = _logger.LogDetailAsync($"{sb.ToString()}");
+            //_ = _logger.LogDetailAsync($"{sb.ToString()}");
         }
     }
 }
