@@ -9,7 +9,7 @@ namespace IPTI.Models
     {
         void CloseController();
         bool Ready { get; set; }
-        Task SendText(string text);
+        void SendText(string text);
         Task TurnOnAllBli();
         Task ClearAllBli();
         Task ClearAllShi();

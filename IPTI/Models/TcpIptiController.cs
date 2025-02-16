@@ -106,27 +106,22 @@ namespace IPTI.Models
             IptiControllerInit();
         }
 
-        public Task SendText(string text)
+        public void SendText(string text)
         {
-
-            _logger.LogDetailAsync($"IPTI Controller - Text: {text}").SafeFireAndForget();
-
 
             if (_tcpServer != null)
             {
                 _tcpServer.SendData(text);
-               // Task.Delay(_iptiConfig.TransmitDelay).Wait();
+                // Task.Delay(_iptiConfig.TransmitDelay).Wait();
             }
             else
             {
                 _logger.LogDetailAsync($"Interface Client is Not Connected.").SafeFireAndForget();
 
             }
-            _logger.LogDetailAsync($"IPTI Controller - SendText - END").SafeFireAndForget();
-            return Task.CompletedTask;
         }
 
-        public Task TurnOnAllBli()
+     public Task TurnOnAllBli()
         {
             throw new NotImplementedException();
         }

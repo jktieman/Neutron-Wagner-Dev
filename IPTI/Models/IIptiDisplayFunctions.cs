@@ -4,17 +4,17 @@ namespace IPTI.Models
 {
     public interface IIptiDisplayFunctions
     {
-        Task TurnOnBlastzoneDisplay(int bayController, int position, string text);
-        Task TurnOffBlastzoneDisplay(int bayController, int position);
-        Task TurnOnBlastzoneOrderControl(int bayController, string text);
-        Task TurnOffBlastzoneOrderControl(int bayController);
-        Task ClearBlastzone();
-        Task ClearBatchTable();
-        Task TurnOnBatchDisplay(int position, string text);
-        Task TurnOffBatchDisplay(int position);
-        Task TurnOnBatchOrderControl(string text);
-        Task TurnOffBatchOrderControl();
-        Task TurnOnBatchDisplayEnd(int positionNumber);
+        void TurnOnBlastzoneDisplay(int bayController, int position, string text);
+        void TurnOffBlastzoneDisplay(int bayController, int position);
+        void TurnOnBlastzoneOrderControl(int bayController, string text);
+        void TurnOffBlastzoneOrderControl(int bayController);
+        void ClearBlastzone();
+        void ClearBatchTable();
+        void TurnOnBatchDisplay(int position, string text);
+        void TurnOffBatchDisplay(int position);
+        void TurnOnBatchOrderControl(string text);
+        void TurnOffBatchOrderControl();
+        void TurnOnBatchDisplayEnd(int positionNumber);
         void DisposeServer();
         bool IsClientConnected();
     }

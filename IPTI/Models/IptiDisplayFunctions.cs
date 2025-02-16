@@ -86,7 +86,7 @@ namespace IPTI.Models
             _tcpIptiController.DisposeServer();
         }
         
-        public async Task TurnOnBlastzoneDisplay(int bayController, int position, string text)
+        public void TurnOnBlastzoneDisplay(int bayController, int position, string text)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
 
@@ -103,7 +103,7 @@ namespace IPTI.Models
                 var command = controller.TurnOnDisplay(position, text);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -112,7 +112,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOffBlastzoneDisplay(int bayController, int position)
+        public void TurnOffBlastzoneDisplay(int bayController, int position)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -125,7 +125,7 @@ namespace IPTI.Models
                 var command = controller.TurnOffDisplay(position);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -134,7 +134,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOnBlastzoneOrderControl(int bayController, string text)
+        public void TurnOnBlastzoneOrderControl(int bayController, string text)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -147,7 +147,7 @@ namespace IPTI.Models
                 var command = controller.TurnOnOrderControlModule(text);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -156,7 +156,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOffBlastzoneOrderControl(int bayController)
+        public void TurnOffBlastzoneOrderControl(int bayController)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -169,18 +169,18 @@ namespace IPTI.Models
                 var command = controller.TurnOffOrderControlModule();
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Turn Off Blastzone Order Control Function Failed:{Environment.NewLine}{ex.Message}");
+                _logger.LogDetailAsync($"Turn Off Blastzone Order Control Function Failed:{Environment.NewLine}{ex.Message}");
             }
-            await _logger.LogDetailAsync($"END");
+            _logger.LogDetailAsync($"END");
         }
-        public async Task ClearBlastzone()
+        public void ClearBlastzone()
         {
-            await _logger.LogDetailAsync($"START");
+            _logger.LogDetailAsync($"START");
             try
             {
                 if (!_workstationView.Blastzones.Any()) return;
@@ -189,9 +189,9 @@ namespace IPTI.Models
                 {
                     if (!bayController.Enabled) continue;
                     var text = bayController.ClearDisplays();
-                    await _tcpIptiController.SendText(text);
+                    _tcpIptiController.SendText(text);
                     //await Task.Delay(100);
-                    await TurnOffBlastzoneOrderControl(bayController.BayId.ParseInt());
+                    TurnOffBlastzoneOrderControl(bayController.BayId.ParseInt());
                 }
             }
             catch (Exception ex)
@@ -201,7 +201,7 @@ namespace IPTI.Models
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
 
-        public async Task ClearBlastzone(int bayId)
+        public void ClearBlastzone(int bayId)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -212,7 +212,7 @@ namespace IPTI.Models
 
                 if (!bayController.Enabled) return;
                 var text = bayController.ClearDisplays();
-                await _tcpIptiController.SendText(text);
+                _tcpIptiController.SendText(text);
                 //await Task.Delay(500);
                 //text = bayController.TurnOffOrderControlModule();
                 //await _tcpIptiController.SendText(text);
@@ -224,7 +224,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task ClearBatchTable()
+        public void ClearBatchTable()
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -234,7 +234,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.ClearDisplays();
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -243,7 +243,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOnBatchDisplay(int position, string text)
+        public void TurnOnBatchDisplay(int position, string text)
         {
             text = text.Replace("-", " ");
             _logger.LogDetailAsync($"START: Position: {position}  Text: {text}").SafeFireAndForget();
@@ -255,7 +255,7 @@ namespace IPTI.Models
                 if (command != string.Empty)
                 {
                     _logger.LogDetailAsync($"Command: {command}").SafeFireAndForget();
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
 
             }
@@ -265,7 +265,8 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOffBatchDisplay(int position)
+
+        public void TurnOffBatchDisplay(int position)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -275,7 +276,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.TurnOffDisplay(position);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -284,7 +285,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOnBatchOrderControl(string text)
+        public void TurnOnBatchOrderControl(string text)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -294,7 +295,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.TurnOnOrderControlModule(text);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -303,7 +304,7 @@ namespace IPTI.Models
             }
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
-        public async Task TurnOffBatchOrderControl()
+        public void TurnOffBatchOrderControl()
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -313,7 +314,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.TurnOffOrderControlModule();
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                     _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
@@ -323,7 +324,7 @@ namespace IPTI.Models
             _logger.LogDetailAsync($"END").SafeFireAndForget();
         }
 
-        public async Task TurnOnBatchDisplayEnd(int positionNumber)
+        public void TurnOnBatchDisplayEnd(int positionNumber)
         {
             _logger.LogDetailAsync($"START").SafeFireAndForget();
             try
@@ -333,7 +334,7 @@ namespace IPTI.Models
                 var command = _tcpIptiCommandCenter.BatchBayController.TurnOnDisplayEnd(positionNumber);
                 if (command != string.Empty)
                 {
-                    await _tcpIptiController.SendText(command);
+                    _tcpIptiController.SendText(command);
                 }
             }
             catch (Exception ex)
