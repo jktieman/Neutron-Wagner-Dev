@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
-using CurrentDeviceIndicator;
+//using CurrentDeviceIndicator;
 using DeviceIndicatorService;
 using EnumsNET;
 using Equin.ApplicationFramework;
@@ -57,23 +57,13 @@ namespace Neutron.Forms
         private ResourceManager _enumResourceManager;
         private ResourceManager _gridResourceManager;
 
-        private readonly AkaRepository _repoAka = new AkaRepository();
-        private readonly GenericRepository<SizeCode> _repoSizeCode = new GenericRepository<SizeCode>(new NeutronDb());
-
-        private readonly GenericRepository<VelocityCode> _repoVelocityCode =
-            new GenericRepository<VelocityCode>(new NeutronDb());
-
-        private readonly GenericRepository<HeightCode> _repoHeightCode =
-            new GenericRepository<HeightCode>(new NeutronDb());
-
-        private readonly GenericRepository<Inventory>
-            _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition =
-            new GenericRepository<ItemDefinition>(new NeutronDb());
-
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails =
-            new GenericRepository<ReplenOrderDetail>(new NeutronDb());
+        private readonly AkaRepository _repoAka;
+        private readonly GenericRepository<SizeCode> _repoSizeCode;
+        private readonly GenericRepository<VelocityCode> _repoVelocityCode;
+        private readonly GenericRepository<HeightCode> _repoHeightCode;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
 
         //private readonly LocationsRepository _repoLocation = new LocationsRepository();
         //private readonly GenericRepository<LocationCount> _repoLocationCount = new GenericRepository<LocationCount>(new NeutronDb());
@@ -117,7 +107,7 @@ namespace Neutron.Forms
 
         private InventoryManager _inventoryManager;
         private string _newLocationButtonText = "Locations";
-        private Dictionary<int, DeviceIndicator> _deviceIndicators;
+       // private Dictionary<int, DeviceIndicator> _deviceIndicators;
         private DeviceIndicatorManager _deviceIndicatorManager;
 
         private NeutronTrayManager _neutronTrayManager;
@@ -132,6 +122,7 @@ namespace Neutron.Forms
         private TcpIptiCommandCenter _tcpIptiCommandCenter;
 
         private int _currentPage;
+        private readonly Func<NeutronDb> _contextFactory;
 
         public string Item
         {
@@ -155,15 +146,23 @@ namespace Neutron.Forms
             , NeutronVariables neutronVariables, NeutronLicense neutronLicense
             , WorkstationView workstationView, IHistoryManager historyManager, ILocationsRepository locationsRepository
             , IInventoryUnitOfWork inventoryUnitOfWork
-            , IIptiDisplayFunctions iptiDisplayFunctions, IInventoryRepository inventoryRepository
+            , IIptiDisplayFunctions iptiDisplayFunctions, IInventoryRepository inventoryRepository, Func<NeutronDb> contextFactory
             , string item = "", int quantity = 1, PickList pickList = null)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
 
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
             //_workstationRepository = workstationRepository;
 
+            _repoSizeCode = new GenericRepository<SizeCode>(contextFactory);
+            _repoVelocityCode = new GenericRepository<VelocityCode>(contextFactory);
+            _repoHeightCode = new GenericRepository<HeightCode>(contextFactory);
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoAka = new AkaRepository(new NeutronDb());
             _workstationView = workstationView;
             _historyManager = historyManager;
             _locationsRepository = locationsRepository;
@@ -207,7 +206,7 @@ namespace Neutron.Forms
                 _labelPrinter = _jsonData.LoadFile<LabelPrinterPreferences>();
 
                 SetupGridItemDefinition();
-                _repoInv = new InventoryRepository(_logger);
+                _repoInv = new InventoryRepository(_contextFactory, _logger);
                 _useCostCenter = _neutronVariables.UseCostCenter;
                 LabelFormTitle.Text = _resourceManager.GetString($"HotActions");
                 LabelFormTitle.BackColor = Color.Red;
@@ -1557,8 +1556,6 @@ namespace Neutron.Forms
                         //TextBoxHotPickQuantity.Text = _quantity.ToString();
                         //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
 
-                        // await _iptiDisplayFunctions?.ShowBli(loc2, loc4, 2, _quantity.ToString());
-
                         if (_neutronVariables.IptiDisplays)
                         {
                             if (_iptiDisplayFunctions != null)
@@ -1750,8 +1747,6 @@ namespace Neutron.Forms
                                 MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
                                 //TextBoxHotPickQuantity.Text = _quantity.ToString();
                                 //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-
-                                // await _iptiDisplayFunctions?.ShowBli(loc2, loc4, 2, _quantity.ToString());
 
                                 if (_neutronVariables.IptiDisplays)
                                 {
@@ -2462,9 +2457,9 @@ namespace Neutron.Forms
                 _workstationView.ProLiteManager?.ClearAllProlites();
                 if (_iptiDisplayFunctions != null)
                 {
-                    await _iptiDisplayFunctions.ClearBatchTable();
-                    await _iptiDisplayFunctions.ClearBlastzone();
-                    await _iptiDisplayFunctions.TurnOffBatchOrderControl();
+                    _iptiDisplayFunctions.ClearBatchTable();
+                    _iptiDisplayFunctions.ClearBlastzone();
+                    _iptiDisplayFunctions.TurnOffBatchOrderControl();
                 }
 
                 if (_useCostCenter && _hotPickButtonPressed)
@@ -2906,7 +2901,7 @@ namespace Neutron.Forms
         private void EditItemDefinition(int id)
         {
             Hide();
-            using (var frm = new FrmEditItemDefinition(id, _historyManager))
+            using (var frm = new FrmEditItemDefinition(id, _historyManager, _contextFactory))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -2920,7 +2915,7 @@ namespace Neutron.Forms
         private void EditLocationDefinition(int id)
         {
             Hide();
-            using (var frm = new FrmEditLocationDefinition(id))
+            using (var frm = new FrmEditLocationDefinition(id, _contextFactory))
             {
                 var result = frm.ShowDialog();
                 Show();
@@ -3150,48 +3145,48 @@ namespace Neutron.Forms
         //}
 
 
-        private void UpdateCurrentDeviceIndicator()
-        {
-            Task.Run(() => _logger.LogDetail("Update Current Device Indicator START"));
-            // Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator START"));
-            ClearActiveDeviceIndicators();
-            var loc1 = _currentInventoryView.Loc1;
-            _deviceIndicators[loc1].BlinkOn();
-            _deviceIndicators[loc1].Active = true;
-            //Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator END"));
-            _logger.LogDetail("Update Current Device Indicator END");
-        }
+        //private void UpdateCurrentDeviceIndicator()
+        //{
+        //    Task.Run(() => _logger.LogDetail("Update Current Device Indicator START"));
+        //    // Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator START"));
+        //    ClearActiveDeviceIndicators();
+        //    var loc1 = _currentInventoryView.Loc1;
+        //    _deviceIndicators[loc1].BlinkOn();
+        //    _deviceIndicators[loc1].Active = true;
+        //    //Task.Run(() => _logger.LogDetailAsync("Update Current Device Indicator END"));
+        //    _logger.LogDetail("Update Current Device Indicator END");
+        //}
 
-        private void ClearActiveDeviceIndicators()
-        {
-            _logger.LogDetail("Clear Active Device Indicators START");
-            //Task.Run(() => _logger.LogDetailAsync("Clear Active Device Indicators START"));
-            var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
-            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
-            {
-                _logger.LogDetail($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
-                // Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
-                deviceIndicator.Value.BlinkOff();
-                deviceIndicator.Value.Active = false;
-            }
-            _logger.LogDetail("Clear Active Device Indicators END");
-            //Task.Run(() => _logger.LogDetailAsync("Clear Active Device Indicators END"));
-        }
+        //private void ClearActiveDeviceIndicators()
+        //{
+        //    _logger.LogDetail("Clear Active Device Indicators START");
+        //    //Task.Run(() => _logger.LogDetailAsync("Clear Active Device Indicators START"));
+        //    var devices = _deviceIndicators.Where(x => x.Value.Active == true).ToList();
+        //    foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in devices)
+        //    {
+        //        _logger.LogDetail($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
+        //        // Task.Run(() => _logger.LogDetailAsync($"Clear Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
+        //        deviceIndicator.Value.BlinkOff();
+        //        deviceIndicator.Value.Active = false;
+        //    }
+        //    _logger.LogDetail("Clear Active Device Indicators END");
+        //    //Task.Run(() => _logger.LogDetailAsync("Clear Active Device Indicators END"));
+        //}
 
-        private void ClearAllDeviceIndicators()
-        {
-            _logger.LogDetail("Clear ALL Active Device Indicators START");
-            //Task.Run(() => _logger.LogDetailAsync("Clear ALL Active Device Indicators START"));
-            foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
-            {
-                _logger.LogDetail($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
-                // Task.Run(() => _logger.LogDetailAsync($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
-                deviceIndicator.Value.Active = false;
-                deviceIndicator.Value.BlinkOff();
-            }
-            _logger.LogDetail("Clear ALL Active Device Indicators END");
-            //Task.Run(() => _logger.LogDetailAsync("Clear ALL Active Device Indicators END"));
-        }
+        //private void ClearAllDeviceIndicators()
+        //{
+        //    _logger.LogDetail("Clear ALL Active Device Indicators START");
+        //    //Task.Run(() => _logger.LogDetailAsync("Clear ALL Active Device Indicators START"));
+        //    foreach (KeyValuePair<int, DeviceIndicator> deviceIndicator in _deviceIndicators)
+        //    {
+        //        _logger.LogDetail($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}");
+        //        // Task.Run(() => _logger.LogDetailAsync($"Clear ALL Active Device Indicator: {deviceIndicator.Value.DeviceNumber}"));
+        //        deviceIndicator.Value.Active = false;
+        //        deviceIndicator.Value.BlinkOff();
+        //    }
+        //    _logger.LogDetail("Clear ALL Active Device Indicators END");
+        //    //Task.Run(() => _logger.LogDetailAsync("Clear ALL Active Device Indicators END"));
+        //}
 
         private void SetCulture(string lang)
         {
