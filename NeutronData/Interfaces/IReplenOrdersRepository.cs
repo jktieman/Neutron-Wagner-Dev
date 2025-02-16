@@ -30,5 +30,7 @@ namespace NeutronData.Interfaces
         IEnumerable<ReplenOrderView> GetReplenStoreOrderViews(string orderStatus, string searchfield);
         IEnumerable<ReplenOrderView> GetPutawayOrderViews(string orderStatus, string searchField);
         IEnumerable<ReplenOrderView> GetCompletedReplenOrderViews(string orderStatus = "6", string searchField = "");
+        int[] GetOrderDetailIds(int[] currentOrderIds, int areaId);
+        void SetOrderStatusToAvailableIfNotComplete(int[] orderIds);
     }
 }
