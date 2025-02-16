@@ -20,10 +20,10 @@ namespace NeutronData.Repositories
 {
     public class ReplenOrdersRepository : IReplenOrdersRepository
     {
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
-        private readonly GenericRepository<ItemDefinition> _repoItemDefinition = new GenericRepository<ItemDefinition>(new NeutronDb());
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<ItemDefinition> _repoItemDefinition;
 
         private readonly WorkstationView _workstationView;
         private readonly IWorkstationRepository _workstationRepository;
@@ -38,12 +38,20 @@ namespace NeutronData.Repositories
 
         public ReplenOrdersRepository(WorkstationView workstationView
             , IWorkstationRepository workstationRepository
-            , IAreaRepository areaRepository)
+            , IAreaRepository areaRepository
+            , Func<NeutronDb> contextFactory)
         {
+            if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
             _workstationView = workstationView;
             _workstationRepository = workstationRepository;
             _areaRepository = areaRepository;
-            Init();
+            _repoReplenOrders = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+            _repoItemDefinition = new GenericRepository<ItemDefinition>(contextFactory);
+
+
+        Init();
         }
 
         private void Init()
@@ -77,6 +85,38 @@ namespace NeutronData.Repositories
             return velocityCodes;
         }
 
+        public void SetOrderStatusToAvailableIfNotComplete(int[] orderIds)
+        {
+            foreach (var orderId in orderIds)
+            {
+                var inCompleteOrderDetails = _repoReplenOrderDetails.FindBy(r => r.ReplenOrderId == orderId).Where(r => r.LineStatusId != (int)LineStatus.Complete)
+                    .ToList();
+                if (!inCompleteOrderDetails.Any())
+                {
+                    // set order Complete
+                    var order = _repoReplenOrders.FindByKey(orderId);
+                    order.OrderStatusId = (int)OrderStatus.Complete;
+                    _repoReplenOrders.Update(order);
+                }
+                else
+                {
+                    // set order available
+                    var order = _repoReplenOrders.FindByKey(orderId);
+                    order.OrderStatusId = (int)OrderStatus.Available;
+                    _repoReplenOrders.Update(order);
+
+
+                    foreach (var inCompleteOrderDetail in inCompleteOrderDetails)
+                    {
+                        if (inCompleteOrderDetail.LineStatusId == (int)LineStatus.Picking)
+                        {
+                            inCompleteOrderDetail.LineStatusId = (int)LineStatus.Available;
+                            _repoReplenOrderDetails.Update(inCompleteOrderDetail);
+                        }
+                    }
+                }
+            }
+        }
         public IEnumerable<SizeCode> GetSizeCodesByArea(int areaId)
         {
             IEnumerable<SizeCode> sizeCodes = new List<SizeCode>();
@@ -152,6 +192,13 @@ namespace NeutronData.Repositories
                 _ = _logger.LogDetailAsync("Get Order Views Error. " + ex.Message + " " + ex.InnerException);
             }
             return recs;
+        }
+
+        public int[] GetOrderDetailIds(int[] currentOrderIds, int areaId)
+        {
+            if (currentOrderIds == null || currentOrderIds.Length == 0) return Array.Empty<int>();
+
+            return _repoReplenOrderDetails.FindBy(od => currentOrderIds.Contains(od.ReplenOrderId) && od.AreaId == areaId).Select(od => od.Id).ToArray();
         }
 
         public IEnumerable<ReplenOrderView> GetCompletedReplenOrderViews(string orderStatus = "6", string searchField = "")

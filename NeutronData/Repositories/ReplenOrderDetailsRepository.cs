@@ -1,4 +1,5 @@
-﻿using NeutronData.DataContexts;
+﻿using System;
+using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.ModelViews;
 using System.Collections.Generic;
@@ -12,12 +13,16 @@ namespace NeutronData.Repositories
     public class ReplenOrderDetailsRepository
     {
 
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly NeutronDb db = new NeutronDb();
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
 
-        public ReplenOrderDetailsRepository()
+        public ReplenOrderDetailsRepository(Func<NeutronDb> contextFactory)
         {
- 
+            if (contextFactory == null)
+            {
+                throw new ArgumentNullException("contextFactory");
+            }
+
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
         }
         public List<ReplenOrderDetailsView> GetOrderDetailsView()
         {
