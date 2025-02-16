@@ -23,15 +23,24 @@ namespace Neutron.Global
         private readonly WorkstationView _workstationView;
         private readonly IInventoryRepository _inventoryRepository;
 
-        private readonly GenericRepository<History> _repoHistory = new GenericRepository<History>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(new NeutronDb());
-        private readonly GenericRepository<ReplenOrder> _repoReplenOrders = new GenericRepository<ReplenOrder>(new NeutronDb());
-        private readonly GenericRepository<Inventory> _repoInventory = new GenericRepository<Inventory>(new NeutronDb());
+        private readonly GenericRepository<History> _repoHistory;
+        private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetails;
+        private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
+        private readonly GenericRepository<Inventory> _repoInventory;
+        private readonly Func<NeutronDb> _contextFactory;
 
 
-        public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView)
+        public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView, Func<NeutronDb> contextFactory)
         {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            
             _inventoryRepository = inventoryRepository;
+
+            _repoHistory = new GenericRepository<History>(contextFactory);
+            _repoReplenOrderDetails = new GenericRepository<ReplenOrderDetail>(contextFactory);
+            _repoReplenOrders = new GenericRepository<ReplenOrder>(contextFactory);
+            _repoInventory = new GenericRepository<Inventory>(contextFactory);
+
             _workstationView = workstationView;
         }
 
