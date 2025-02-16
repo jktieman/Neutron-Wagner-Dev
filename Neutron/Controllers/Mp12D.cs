@@ -374,8 +374,29 @@ namespace Neutron.Controllers
                                     }
                                     else  // current and requested trays are the same
                                     {
-                                        continueLoop = false;
-                                        deviceResponse = DeviceResponse.Success;
+                                        cError = "";
+                                        if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
+                                        {
+                                            _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
+
+                                            continueLoop = false;
+                                            deviceResponse = DeviceResponse.Success;
+                                            _previousTray[deviceNumber] = trayNumber;
+
+
+                                            // status.TargetTray = trayNumber;
+                                            //status.CurrentTray = trayNumber;
+                                            status.CommandExecuted = false;
+                                            status.CommandAccepted = false;
+                                            status.InMotion = false;
+
+                                            _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
+                                        }
+                                        else
+                                        {
+                                            _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
+                                            continueLoop = false;
+                                        }
                                         _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.CurrentTray.ToString()}  Tray Number:  {trayNumber.ToString()}").SafeFireAndForget();
                                     }
                                 }
@@ -473,7 +494,7 @@ namespace Neutron.Controllers
             var result = false;
             try
             {
-               result =  _hanel.Close_Controller(ref cError);
+                result = _hanel.Close_Controller(ref cError);
 
                 _logger.LogDetailAsync($"Close Hanel MP12D Controller - Success {cError}").SafeFireAndForget();
             }
@@ -556,47 +577,47 @@ namespace Neutron.Controllers
 
         public byte[] ValidCommand(byte[] dataIn)
         {
-            
-                byte[] byteArray = null;
-                if (dataIn.Length == 0)
-                {
-                    return null;
-                }
 
-                _logger.LogDetailAsync($"dataIn: {dataIn.ByteArrayToHexString()}");
-                // extract the byte array starting with 42 and ending with 10
-                //var startIndex =   Array.IndexOf(dataIn, AST);
-                var startIndex = FindAsterisk(dataIn);
-                _logger.LogDetailAsync($"Start Index: {startIndex}");
-                if (startIndex == -1)
-                {
-                    _logger.LogDetailAsync($"Start Index = -1 {startIndex}");
-                    return null;
-                }
+            byte[] byteArray = null;
+            if (dataIn.Length == 0)
+            {
+                return null;
+            }
 
-                if (startIndex >= 0)
-                {
-                    while (dataIn.First() != AST)
-                    {
+            _logger.LogDetailAsync($"dataIn: {dataIn.ByteArrayToHexString()}");
+            // extract the byte array starting with 42 and ending with 10
+            //var startIndex =   Array.IndexOf(dataIn, AST);
+            var startIndex = FindAsterisk(dataIn);
+            _logger.LogDetailAsync($"Start Index: {startIndex}");
+            if (startIndex == -1)
+            {
+                _logger.LogDetailAsync($"Start Index = -1 {startIndex}");
+                return null;
+            }
 
-                        dataIn = dataIn.Skip(1).ToArray();
-                        _logger.LogDetailAsync($"Building dataIn: {dataIn.ByteArrayToHexString()} ");
-                    }
-                }
-                _logger.LogDetailAsync($"Final dataIn: {dataIn.ByteArrayToHexString()} ");
-                startIndex = Array.IndexOf(dataIn, AST);
-                _logger.LogDetailAsync($"Final dataIn Start Index: {startIndex} ");
-                var endIndex = Array.IndexOf(dataIn, LF);
-                _logger.LogDetailAsync($"Final dataIn End Index: {endIndex} ");
-                if (endIndex == -1)
+            if (startIndex >= 0)
+            {
+                while (dataIn.First() != AST)
                 {
-                    return null;
-                }
 
-                byteArray = dataIn.Skip(startIndex + 1).Take(endIndex - startIndex - 1).ToArray();
-                _logger.LogDetailAsync($"Return ByteArray: {byteArray.ByteArrayToHexString()}");
-                return byteArray;
-            
+                    dataIn = dataIn.Skip(1).ToArray();
+                    _logger.LogDetailAsync($"Building dataIn: {dataIn.ByteArrayToHexString()} ");
+                }
+            }
+            _logger.LogDetailAsync($"Final dataIn: {dataIn.ByteArrayToHexString()} ");
+            startIndex = Array.IndexOf(dataIn, AST);
+            _logger.LogDetailAsync($"Final dataIn Start Index: {startIndex} ");
+            var endIndex = Array.IndexOf(dataIn, LF);
+            _logger.LogDetailAsync($"Final dataIn End Index: {endIndex} ");
+            if (endIndex == -1)
+            {
+                return null;
+            }
+
+            byteArray = dataIn.Skip(startIndex + 1).Take(endIndex - startIndex - 1).ToArray();
+            _logger.LogDetailAsync($"Return ByteArray: {byteArray.ByteArrayToHexString()}");
+            return byteArray;
+
         }
 
         public void ProcessCommand(string command)
