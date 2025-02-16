@@ -134,7 +134,7 @@ namespace Neutron.Extensions
                     //textBox.Text = "88888888888";
                     textBox.Name = $@"TextBoxPos{pickPosition}";
                     textBox.BackColor = Color.White;
-                    textBox.Multiline = true;
+                    textBox.Multiline = false;
                     // set the font size of the textbox
                     textBox.Font = new Font(textBox.Font.FontFamily.Name, 16F);
                     //textBox.SizeTextBoxFont(2);
