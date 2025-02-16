@@ -11,11 +11,13 @@ namespace NeutronData.Repositories
 {
     public class AkaRepository : IAkaRepository, IDisposable
     {
-        private readonly NeutronDb _context = new NeutronDb();
+        private readonly NeutronDb _context;
         private IDynamicLogger _logger;
         private const string LoggerName = "AKARepository";
-        public AkaRepository()
+        public AkaRepository(NeutronDb context)
         {
+            _context = context;
+
             //Init();
             _logger = NeutronCore.Global.Logger.SetupLogger(@"AKARepository");
         }
