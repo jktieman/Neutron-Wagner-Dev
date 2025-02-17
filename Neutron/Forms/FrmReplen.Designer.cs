@@ -412,9 +412,9 @@
             this.AvailableRack.Controls.Add(this.MBOrderComplete);
             this.AvailableRack.Controls.Add(this.MbPrintAvailableOrdersRack);
             this.AvailableRack.Controls.Add(this.MBRackBack);
-            this.AvailableRack.Location = new System.Drawing.Point(4, 25);
+            this.AvailableRack.Location = new System.Drawing.Point(4, 22);
             this.AvailableRack.Name = "AvailableRack";
-            this.AvailableRack.Size = new System.Drawing.Size(1234, 673);
+            this.AvailableRack.Size = new System.Drawing.Size(1234, 676);
             this.AvailableRack.TabIndex = 11;
             this.AvailableRack.Text = "Available Rack";
             // 
@@ -495,7 +495,7 @@
             this.TextBoxFindAvailableOrdersRack.Location = new System.Drawing.Point(298, 11);
             this.TextBoxFindAvailableOrdersRack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFindAvailableOrdersRack.Name = "TextBoxFindAvailableOrdersRack";
-            this.TextBoxFindAvailableOrdersRack.Size = new System.Drawing.Size(344, 46);
+            this.TextBoxFindAvailableOrdersRack.Size = new System.Drawing.Size(344, 38);
             this.TextBoxFindAvailableOrdersRack.TabIndex = 2;
             this.TextBoxFindAvailableOrdersRack.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFindAvailableOrdersRack.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindAvailableOrdersRack_KeyDown);
@@ -608,9 +608,9 @@
             this.NewOrder.Controls.Add(this.GroupBoxOrderInformation);
             this.NewOrder.Controls.Add(this.MBNewOrderSave);
             this.NewOrder.Controls.Add(this.MBNewOrderClose);
-            this.NewOrder.Location = new System.Drawing.Point(4, 25);
+            this.NewOrder.Location = new System.Drawing.Point(4, 22);
             this.NewOrder.Name = "NewOrder";
-            this.NewOrder.Size = new System.Drawing.Size(1234, 673);
+            this.NewOrder.Size = new System.Drawing.Size(1234, 676);
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
             // 
@@ -667,7 +667,7 @@
             this.TextBoxNewOrderFind.Location = new System.Drawing.Point(7, 52);
             this.TextBoxNewOrderFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewOrderFind.Name = "TextBoxNewOrderFind";
-            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(375, 45);
+            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(375, 37);
             this.TextBoxNewOrderFind.TabIndex = 0;
             this.TextBoxNewOrderFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewOrderFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewOrderFind_KeyDown);
@@ -764,7 +764,7 @@
             this.LabelNewOrderStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelNewOrderStationNumber.Location = new System.Drawing.Point(531, 65);
             this.LabelNewOrderStationNumber.Name = "LabelNewOrderStationNumber";
-            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(120, 20);
+            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(102, 17);
             this.LabelNewOrderStationNumber.TabIndex = 70;
             this.LabelNewOrderStationNumber.Text = "StationNumber";
             this.LabelNewOrderStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -776,7 +776,7 @@
             this.LabelNewOrderItemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelNewOrderItemId.Location = new System.Drawing.Point(531, 42);
             this.LabelNewOrderItemId.Name = "LabelNewOrderItemId";
-            this.LabelNewOrderItemId.Size = new System.Drawing.Size(54, 20);
+            this.LabelNewOrderItemId.Size = new System.Drawing.Size(45, 17);
             this.LabelNewOrderItemId.TabIndex = 68;
             this.LabelNewOrderItemId.Text = "ItemId";
             this.LabelNewOrderItemId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -805,7 +805,7 @@
             this.TextBoxNewOrderDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderDescription.Location = new System.Drawing.Point(150, 65);
             this.TextBoxNewOrderDescription.Name = "TextBoxNewOrderDescription";
-            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(302, 30);
+            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(302, 26);
             this.TextBoxNewOrderDescription.TabIndex = 67;
             // 
             // TextBoxNewOrderItem
@@ -814,7 +814,7 @@
             this.TextBoxNewOrderItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderItem.Location = new System.Drawing.Point(150, 28);
             this.TextBoxNewOrderItem.Name = "TextBoxNewOrderItem";
-            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 30);
+            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 26);
             this.TextBoxNewOrderItem.TabIndex = 68;
             // 
             // ButtonAddDetail
@@ -834,7 +834,7 @@
             this.TextBoxNewOrderQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderQuantity.Location = new System.Drawing.Point(150, 103);
             this.TextBoxNewOrderQuantity.Name = "TextBoxNewOrderQuantity";
-            this.TextBoxNewOrderQuantity.Size = new System.Drawing.Size(88, 30);
+            this.TextBoxNewOrderQuantity.Size = new System.Drawing.Size(88, 26);
             this.TextBoxNewOrderQuantity.TabIndex = 0;
             this.TextBoxNewOrderQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewOrderQuantity.TextChanged += new System.EventHandler(this.TextBoxNewOrderQuantity_TextChanged);
@@ -891,7 +891,7 @@
             this.TextBoxNewOrderPriority.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderPriority.Location = new System.Drawing.Point(150, 103);
             this.TextBoxNewOrderPriority.Name = "TextBoxNewOrderPriority";
-            this.TextBoxNewOrderPriority.Size = new System.Drawing.Size(88, 30);
+            this.TextBoxNewOrderPriority.Size = new System.Drawing.Size(88, 26);
             this.TextBoxNewOrderPriority.TabIndex = 2;
             this.TextBoxNewOrderPriority.Text = "99";
             this.TextBoxNewOrderPriority.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -912,7 +912,7 @@
             this.TextBoxNewOrderOrd2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderOrd2.Location = new System.Drawing.Point(150, 65);
             this.TextBoxNewOrderOrd2.Name = "TextBoxNewOrderOrd2";
-            this.TextBoxNewOrderOrd2.Size = new System.Drawing.Size(200, 30);
+            this.TextBoxNewOrderOrd2.Size = new System.Drawing.Size(200, 26);
             this.TextBoxNewOrderOrd2.TabIndex = 1;
             this.TextBoxNewOrderOrd2.TextChanged += new System.EventHandler(this.TextBoxNewOrderOrd2_TextChanged);
             // 
@@ -931,7 +931,7 @@
             this.TextBoxNewOrderOrd1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderOrd1.Location = new System.Drawing.Point(150, 28);
             this.TextBoxNewOrderOrd1.Name = "TextBoxNewOrderOrd1";
-            this.TextBoxNewOrderOrd1.Size = new System.Drawing.Size(200, 30);
+            this.TextBoxNewOrderOrd1.Size = new System.Drawing.Size(200, 26);
             this.TextBoxNewOrderOrd1.TabIndex = 0;
             this.TextBoxNewOrderOrd1.TextChanged += new System.EventHandler(this.TextBoxNewOrderOrd1_TextChanged);
             // 
@@ -981,9 +981,9 @@
             this.OrderDetails.Controls.Add(this.MBReleaseDetail);
             this.OrderDetails.Controls.Add(this.DataGridViewOrderDetails);
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
-            this.OrderDetails.Location = new System.Drawing.Point(4, 25);
+            this.OrderDetails.Location = new System.Drawing.Point(4, 22);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1234, 673);
+            this.OrderDetails.Size = new System.Drawing.Size(1234, 676);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -1136,11 +1136,11 @@
             this.PickScreen.Controls.Add(this.MBPrint);
             this.PickScreen.Controls.Add(this.PictureBoxItemImage);
             this.PickScreen.Controls.Add(this.MBPickBack);
-            this.PickScreen.Location = new System.Drawing.Point(4, 25);
+            this.PickScreen.Location = new System.Drawing.Point(4, 22);
             this.PickScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickScreen.Name = "PickScreen";
             this.PickScreen.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickScreen.Size = new System.Drawing.Size(1234, 673);
+            this.PickScreen.Size = new System.Drawing.Size(1234, 676);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
@@ -1150,7 +1150,7 @@
             this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxClientConnected.Location = new System.Drawing.Point(9, 374);
             this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
-            this.CheckBoxClientConnected.Size = new System.Drawing.Size(193, 29);
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
             this.CheckBoxClientConnected.TabIndex = 201;
             this.CheckBoxClientConnected.Text = "Transmitter Ready";
             this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
@@ -1160,7 +1160,7 @@
             // 
             this.MBShortPick.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MBShortPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortPick.Location = new System.Drawing.Point(848, 631);
+            this.MBShortPick.Location = new System.Drawing.Point(848, 633);
             this.MBShortPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShortPick.Name = "MBShortPick";
             this.MBShortPick.Size = new System.Drawing.Size(150, 32);
@@ -1174,7 +1174,7 @@
             this.MBSkipPick.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MBSkipPick.Enabled = false;
             this.MBSkipPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSkipPick.Location = new System.Drawing.Point(848, 585);
+            this.MBSkipPick.Location = new System.Drawing.Point(848, 587);
             this.MBSkipPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSkipPick.Name = "MBSkipPick";
             this.MBSkipPick.Size = new System.Drawing.Size(150, 32);
@@ -1188,7 +1188,7 @@
             this.TextBoxSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxSlot.Location = new System.Drawing.Point(297, 2);
             this.TextBoxSlot.Name = "TextBoxSlot";
-            this.TextBoxSlot.Size = new System.Drawing.Size(640, 143);
+            this.TextBoxSlot.Size = new System.Drawing.Size(640, 116);
             this.TextBoxSlot.TabIndex = 0;
             this.TextBoxSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxSlot.Visible = false;
@@ -1285,7 +1285,7 @@
             this.TextBoxPickedSoFar.Location = new System.Drawing.Point(815, 530);
             this.TextBoxPickedSoFar.Name = "TextBoxPickedSoFar";
             this.TextBoxPickedSoFar.ReadOnly = true;
-            this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 26);
+            this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 22);
             this.TextBoxPickedSoFar.TabIndex = 107;
             this.TextBoxPickedSoFar.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1295,7 +1295,7 @@
             this.TextBoxRequestedQty.Location = new System.Drawing.Point(815, 488);
             this.TextBoxRequestedQty.Name = "TextBoxRequestedQty";
             this.TextBoxRequestedQty.ReadOnly = true;
-            this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 26);
+            this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 22);
             this.TextBoxRequestedQty.TabIndex = 105;
             this.TextBoxRequestedQty.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1317,7 +1317,7 @@
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.Location = new System.Drawing.Point(739, 491);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(77, 20);
+            this.label24.Size = new System.Drawing.Size(63, 16);
             this.label24.TabIndex = 104;
             this.label24.Text = "Req Qty";
             this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1352,7 +1352,7 @@
             this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label52.Location = new System.Drawing.Point(951, 517);
             this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(85, 46);
+            this.label52.Size = new System.Drawing.Size(69, 37);
             this.label52.TabIndex = 95;
             this.label52.Text = "Qty";
             this.label52.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1484,7 +1484,7 @@
             this.TextBoxReceivedDate.Location = new System.Drawing.Point(164, 133);
             this.TextBoxReceivedDate.Name = "TextBoxReceivedDate";
             this.TextBoxReceivedDate.ReadOnly = true;
-            this.TextBoxReceivedDate.Size = new System.Drawing.Size(132, 26);
+            this.TextBoxReceivedDate.Size = new System.Drawing.Size(132, 23);
             this.TextBoxReceivedDate.TabIndex = 70;
             this.TextBoxReceivedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1504,7 +1504,7 @@
             this.TextBoxTotalQuantity.Location = new System.Drawing.Point(270, 166);
             this.TextBoxTotalQuantity.Name = "TextBoxTotalQuantity";
             this.TextBoxTotalQuantity.ReadOnly = true;
-            this.TextBoxTotalQuantity.Size = new System.Drawing.Size(78, 26);
+            this.TextBoxTotalQuantity.Size = new System.Drawing.Size(78, 23);
             this.TextBoxTotalQuantity.TabIndex = 67;
             this.TextBoxTotalQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1535,7 +1535,7 @@
             this.TextBoxLocationQuantity.Location = new System.Drawing.Point(88, 166);
             this.TextBoxLocationQuantity.Name = "TextBoxLocationQuantity";
             this.TextBoxLocationQuantity.ReadOnly = true;
-            this.TextBoxLocationQuantity.Size = new System.Drawing.Size(78, 26);
+            this.TextBoxLocationQuantity.Size = new System.Drawing.Size(78, 23);
             this.TextBoxLocationQuantity.TabIndex = 44;
             this.TextBoxLocationQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1558,7 +1558,7 @@
             this.TextBoxPickLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc5.Name = "TextBoxPickLoc5";
             this.TextBoxPickLoc5.ReadOnly = true;
-            this.TextBoxPickLoc5.Size = new System.Drawing.Size(70, 16);
+            this.TextBoxPickLoc5.Size = new System.Drawing.Size(70, 13);
             this.TextBoxPickLoc5.TabIndex = 24;
             this.TextBoxPickLoc5.TabStop = false;
             this.TextBoxPickLoc5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1570,7 +1570,7 @@
             this.TextBoxPickLoc4.Location = new System.Drawing.Point(292, 57);
             this.TextBoxPickLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc4.Name = "TextBoxPickLoc4";
-            this.TextBoxPickLoc4.Size = new System.Drawing.Size(67, 75);
+            this.TextBoxPickLoc4.Size = new System.Drawing.Size(67, 62);
             this.TextBoxPickLoc4.TabIndex = 22;
             this.TextBoxPickLoc4.TabStop = false;
             this.TextBoxPickLoc4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1581,7 +1581,7 @@
             this.TextBoxPickLoc3.Location = new System.Drawing.Point(201, 57);
             this.TextBoxPickLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc3.Name = "TextBoxPickLoc3";
-            this.TextBoxPickLoc3.Size = new System.Drawing.Size(67, 75);
+            this.TextBoxPickLoc3.Size = new System.Drawing.Size(67, 62);
             this.TextBoxPickLoc3.TabIndex = 21;
             this.TextBoxPickLoc3.TabStop = false;
             this.TextBoxPickLoc3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1592,7 +1592,7 @@
             this.TextBoxPickLoc2.Location = new System.Drawing.Point(95, 57);
             this.TextBoxPickLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc2.Name = "TextBoxPickLoc2";
-            this.TextBoxPickLoc2.Size = new System.Drawing.Size(88, 75);
+            this.TextBoxPickLoc2.Size = new System.Drawing.Size(88, 62);
             this.TextBoxPickLoc2.TabIndex = 18;
             this.TextBoxPickLoc2.TabStop = false;
             this.TextBoxPickLoc2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1604,7 +1604,7 @@
             this.TextBoxPickLoc1.Location = new System.Drawing.Point(10, 57);
             this.TextBoxPickLoc1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc1.Name = "TextBoxPickLoc1";
-            this.TextBoxPickLoc1.Size = new System.Drawing.Size(67, 75);
+            this.TextBoxPickLoc1.Size = new System.Drawing.Size(67, 62);
             this.TextBoxPickLoc1.TabIndex = 16;
             this.TextBoxPickLoc1.TabStop = false;
             this.TextBoxPickLoc1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1644,7 +1644,7 @@
             this.MBPickChangeQuantity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MBPickChangeQuantity.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickChangeQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickChangeQuantity.Location = new System.Drawing.Point(692, 585);
+            this.MBPickChangeQuantity.Location = new System.Drawing.Point(692, 587);
             this.MBPickChangeQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickChangeQuantity.Name = "MBPickChangeQuantity";
             this.MBPickChangeQuantity.Size = new System.Drawing.Size(150, 76);
@@ -1711,11 +1711,11 @@
             this.PickList.Controls.Add(this.MBPrintPickList);
             this.PickList.Controls.Add(this.MBStart);
             this.PickList.Controls.Add(this.MBPickListBack);
-            this.PickList.Location = new System.Drawing.Point(4, 25);
+            this.PickList.Location = new System.Drawing.Point(4, 22);
             this.PickList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickList.Name = "PickList";
             this.PickList.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickList.Size = new System.Drawing.Size(1234, 673);
+            this.PickList.Size = new System.Drawing.Size(1234, 676);
             this.PickList.TabIndex = 3;
             this.PickList.Text = "Pick List";
             // 
@@ -1816,11 +1816,11 @@
             this.AvailableOrders.Controls.Add(this.MBGo);
             this.AvailableOrders.Controls.Add(this.MBGo2);
             this.AvailableOrders.Controls.Add(this.MBAvailableOrdersBack);
-            this.AvailableOrders.Location = new System.Drawing.Point(4, 25);
+            this.AvailableOrders.Location = new System.Drawing.Point(4, 22);
             this.AvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.AvailableOrders.Name = "AvailableOrders";
             this.AvailableOrders.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.AvailableOrders.Size = new System.Drawing.Size(1234, 673);
+            this.AvailableOrders.Size = new System.Drawing.Size(1234, 676);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
             // 
@@ -1870,10 +1870,9 @@
             this.TextBoxFindAvailableOrders.Location = new System.Drawing.Point(433, 10);
             this.TextBoxFindAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFindAvailableOrders.Name = "TextBoxFindAvailableOrders";
-            this.TextBoxFindAvailableOrders.Size = new System.Drawing.Size(278, 34);
+            this.TextBoxFindAvailableOrders.Size = new System.Drawing.Size(278, 29);
             this.TextBoxFindAvailableOrders.TabIndex = 2;
             this.TextBoxFindAvailableOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.TextBoxFindAvailableOrders.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindAvailableOrders_KeyDown);
             // 
             // DataGridViewAvailableOrders
             // 
@@ -2015,11 +2014,11 @@
             this.OrderListing.Controls.Add(this.ButtonClear);
             this.OrderListing.Controls.Add(this.MButtonClose);
             this.OrderListing.Controls.Add(this.MButtonSearch);
-            this.OrderListing.Location = new System.Drawing.Point(4, 25);
+            this.OrderListing.Location = new System.Drawing.Point(4, 22);
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
             this.OrderListing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.OrderListing.Size = new System.Drawing.Size(1234, 673);
+            this.OrderListing.Size = new System.Drawing.Size(1234, 676);
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
@@ -2148,7 +2147,7 @@
             this.TextBoxFind.Location = new System.Drawing.Point(536, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(278, 46);
+            this.TextBoxFind.Size = new System.Drawing.Size(278, 38);
             this.TextBoxFind.TabIndex = 3;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -2256,9 +2255,9 @@
             this.Main.Controls.Add(this.MBMainNewOrder);
             this.Main.Controls.Add(this.MBMainOrderManager);
             this.Main.Controls.Add(this.MBMainAvailableOrders);
-            this.Main.Location = new System.Drawing.Point(4, 25);
+            this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1234, 673);
+            this.Main.Size = new System.Drawing.Size(1234, 676);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -2336,9 +2335,9 @@
             this.AdjustOrder.Controls.Add(this.DataGridViewAdjust);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderSave);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderBack);
-            this.AdjustOrder.Location = new System.Drawing.Point(4, 25);
+            this.AdjustOrder.Location = new System.Drawing.Point(4, 22);
             this.AdjustOrder.Name = "AdjustOrder";
-            this.AdjustOrder.Size = new System.Drawing.Size(1234, 673);
+            this.AdjustOrder.Size = new System.Drawing.Size(1234, 676);
             this.AdjustOrder.TabIndex = 12;
             this.AdjustOrder.Text = "Adjust Order";
             // 
@@ -2414,7 +2413,6 @@
             this.Name = "FrmReplen";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmReplen_FormClosing);
             this.Load += new System.EventHandler(this.FrmReplen_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmReplen_KeyDown);
             this.AvailableRack.ResumeLayout(false);
             this.AvailableRack.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewAvailableOrdersRack)).EndInit();
