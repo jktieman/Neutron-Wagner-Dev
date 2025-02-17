@@ -1632,15 +1632,15 @@ namespace NeutronData.Repositories
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreenWithRoute @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
 
 
-                    var orderIds = GetInvalidOrderDetails(areaId, recs);
-                    if (orderIds.Any())
-                    {
-                        foreach (var orderId in orderIds)
-                        {
-                            var availableOrdersView = recs.Find(r => r.Id == orderId);
-                            recs.Remove(availableOrdersView);
-                        }
-                    }
+                    //var orderIds = GetInvalidOrderDetails(areaId, recs);
+                    //if (orderIds.Any())
+                    //{
+                    //    foreach (var orderId in orderIds)
+                    //    {
+                    //        var availableOrdersView = recs.Find(r => r.Id == orderId);
+                    //        recs.Remove(availableOrdersView);
+                    //    }
+                    //}
                 }
             }
             catch (Exception ex)
