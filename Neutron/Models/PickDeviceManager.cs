@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
+using Neutron.Controllers;
 using Neutron.Global;
+using Neutron.Interfaces;
 using NeutronData.ModelViews;
 
 namespace Neutron.Models
@@ -112,9 +115,18 @@ namespace Neutron.Models
             //}
         }
 
-        public void Reset()
+        public void Reset(Form frm, WorkstationView workstationView)
         {
             _logger.LogDetailAsync($"Reset:").SafeFireAndForget();
+
+            // Close Hanel controller
+            GlobalVar.Hanel.CloseController();
+
+            // Create New Hanel controller
+            GlobalVar.Hanel = new Mp12D(frm, workstationView, _logger);
+
+
+
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
