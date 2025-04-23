@@ -9,6 +9,7 @@ using AsyncAwaitBestPractices;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
+using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using Logger = NeutronCore.Global.Logger;
 
@@ -377,7 +378,89 @@ namespace NeutronData.Repositories
             return recs;  //.Where(r => r.Slot.Contains(find));
         }
 
+        public Location CreateLocation(string slot, int areaId)
+        {
+            var sizeVelocityHeight = GetMinSizeVelocityHeightCode(areaId);
+
+            var location = new Location()
+            {
+                Slot = slot,
+                AreaId = areaId,
+                InUse = false,
+                SizeCodeId = sizeVelocityHeight.SizeCode.Id,
+                VelocityCodeId = sizeVelocityHeight.VelocityCode.Id,
+                HeightCodeId = sizeVelocityHeight.HeightCode.Id,
+                Loc1 = 1,
+                Loc2 = 1,
+                Loc3 = 1,
+                Loc4 = 1,
+                Loc5 = 1,
+                PickSequence = 999999,
+                LocationCode = string.Empty
+            };
+
+            using (var context = _contextFactory())
+            {
+                context.Locations.Add(location);
+                context.SaveChanges();
+            }
+
+            return location;
+        }
+
+        private SizeVelocityHeight GetMinSizeVelocityHeightCode(int areaId)
+        {
+            SizeVelocityHeight sizeVelocityHeight = new SizeVelocityHeight(); 
+            try
+            {
+                using (var context = _contextFactory())
+                {
+                    sizeVelocityHeight.SizeCode = context.Set<SizeCode>().OrderBy(h => h.Sequence).FirstOrDefault();
+                    //sizeVelocityHeight.SizeCodeId = sizeCode?.Id ?? 1;
+
+                    sizeVelocityHeight.VelocityCode = context.Set<VelocityCode>().OrderBy(h => h.Sequence).FirstOrDefault();
+                    // sizeVelocityHeight.VelocityCodeId = velocityCode?.Id ?? 1;
+
+                    sizeVelocityHeight.HeightCode = context.Set<HeightCode>().OrderBy(h => h.Sequence).FirstOrDefault();
+                  // sizeVelocityHeight.HeightCodeId = heightCode?.Id ?? 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error in {nameof(GetMinSizeVelocityHeightCode)}: {ex.Message}").SafeFireAndForget();
+                throw;
+            }
+
+            return sizeVelocityHeight;
+        }
+
         #endregion
+
+        public Location FindLocationBySlot(string slot = "")
+        {
+            var rec = new Location();
+
+            _logger.LogDetailAsync(@"Get Location By Slot Start").SafeFireAndForget();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param = new SqlParameter("@Slot", slot);
+                    rec = context.Database.SqlQuery<Location>(sql: "usp_GetLocationBySlot @Slot"
+                        , parameters: new object[] { param }).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get Location By Slot Error.   {ex.Message} {Environment.NewLine} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            _logger.LogDetailAsync($"Get Location By Slot End:  {rec?.Slot}").SafeFireAndForget();
+
+            return rec;
+        }
+
+
         public IEnumerable<LocationView> FindLocationViews(string find = "")
         {
             var recs = new List<LocationView>();
@@ -551,5 +634,33 @@ namespace NeutronData.Repositories
 
             return recs;
         }
+
+        public Location GetBestLocationForPutaway(int areaId, int itemDefinitionSizeCodeId
+            , int itemDefinitionVelocityCodeId, int itemDefinitionHeightCodeId, int inUse)
+        {
+            var rec = new Location();
+            try
+            {
+                using (var context = new NeutronDb())
+                {
+                    var param1 = new SqlParameter("@AreaId", areaId);
+                    var param2 = new SqlParameter("@SizeCodeId", itemDefinitionSizeCodeId);
+                    var param3 = new SqlParameter("@VelocityCodeId", itemDefinitionVelocityCodeId);
+                    var param4 = new SqlParameter("@HeightCodeId", itemDefinitionHeightCodeId);
+                    var param5 = new SqlParameter("@InUse", inUse);
+
+                    rec = context.Database.SqlQuery<Location>(
+                        "usp_GetBestLocationForPutaway @AreaId, @SizeCodeId, @VelocityCodeId, @HeightCodeId, @InUse"
+                        , param1, param2, param3, param4, param5).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Get Location Exact By Areas Error.  {ex.Message}{Environment.NewLine}{ex.InnerException}").SafeFireAndForget();
+            }
+
+            return rec;
+        }
+
     }
 }
