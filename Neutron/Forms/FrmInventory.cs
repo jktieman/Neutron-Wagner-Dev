@@ -929,6 +929,9 @@ namespace Neutron.Forms
         private void EditLocation()
         {
             var inventoryView = ((ObjectView<SqlInventoryView>)_locationBindingSource.Current).Object;
+            var inventory = _inventoryRepository.GetInventoryById(inventoryView.Id);
+            SetCurrentInventoryItem(inventory);
+            
             TextBoxAddDetailItem.Text = inventoryView.Item;
             TextBoxAddDetailDescription.Text = inventoryView.Description;
             DateTimePickerAddDetailReceivedDate.Value = inventoryView.ReceivedDate;
@@ -1916,7 +1919,7 @@ namespace Neutron.Forms
                     var result = MessageBox.Show(_resourceManager.GetString($"Message17"), string.Empty,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result != DialogResult.Yes) return;
-                    await DeleteInventoryItemAsync(locView.Id, false);
+                    DeleteInventoryItem(locView.Id, false);
                     await LoadViewEdit();
                     tabControl1.SelectedTab = tabPage2;
                 }
@@ -1929,10 +1932,10 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        public async Task DeleteInventoryItemAsync(int invId, bool releaseOnly)
+        public void DeleteInventoryItem(int invId, bool releaseOnly)
         {
             var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-            await inventoryManager.DeleteInventoryRecordAsync(invId, releaseOnly: releaseOnly);
+            inventoryManager.DeleteInventoryRecord(invId, releaseOnly: releaseOnly);
         }
 
         /// <summary>
@@ -1952,7 +1955,7 @@ namespace Neutron.Forms
             SetCurrentInventoryItem(inventory);
             UpdateAddLocationForm(CurrentItem);
             // Get the available locations for the current item
-            var recs = await GetAvailableLocations(CurrentItem, 0);
+            var recs = await GetAvailableLocations(CurrentItem);
 
             UpdateDataGridViewInventoryNewLocations(recs);
             _processing = false;
@@ -2339,7 +2342,7 @@ namespace Neutron.Forms
 
             // Get the available locations for the current item
             // var recs = await GetAvailableLocations(_workingItemDefinition, 0);
-            var recs = await GetAvailableLocations(CurrentItem, 0);
+            var recs = await GetAvailableLocations(CurrentItem);
 
             UpdateDataGridViewInventoryNewLocations(recs);
             _processing = false;
@@ -2536,7 +2539,7 @@ namespace Neutron.Forms
         {
             var deleted = false;
             var beginningQuantity = 0;
-            Inventory inventory = null;
+            Inventory inventory;
             if (CurrentInventoryItem != null)
             {
                 var inventoryId = CurrentInventoryItem.Id;
@@ -2577,7 +2580,7 @@ namespace Neutron.Forms
             }
 
             var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-            var canDelete = inventoryManager.QuickReleaseCheckAsync(inventory);
+            var canDelete = inventoryManager.QuickReleaseCheck(inventory);
             if (canDelete)
             {
                 var sb = new StringBuilder();
@@ -2592,7 +2595,7 @@ namespace Neutron.Forms
                 if (result == DialogResult.Yes)
                 {
                     _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
-                    deleted = await inventoryManager.ReleaseCheckAsync(inventory);
+                    deleted = inventoryManager.ReleaseCheck(inventory);
                 }
             }
 
@@ -3226,12 +3229,12 @@ namespace Neutron.Forms
             {
                 var selectedList = GetSelectedItems(DataGridView1);
                 // Create a DataTable from the List(Of T) (SqlInventoryView)
-                dataTable = ToDataTable<SqlInventoryView>(selectedList);
+                dataTable = ToDataTable(selectedList);
             }
             else
             {
                 // Create a DataTable from the List(Of T) (SqlInventoryView)
-                dataTable = ToDataTable<SqlInventoryView>(_currentList);
+                dataTable = ToDataTable(_currentList);
 
             }
 
