@@ -287,9 +287,9 @@ namespace NeutronLoader
                                 await SendToSapAsync(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
                                 _logger.LogDetailAsync(
                                     $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
-
+                                var transactionId = transId.ToString();
                                 var recs = await _repoHistory
-                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transId.ToString()));
+                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transactionId));
                                 foreach (var rec in recs)
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
@@ -347,8 +347,9 @@ namespace NeutronLoader
                                 await SendToSapAsync(transId, orderDetail.Quantity, orderDetail.PickedQuantity);
                                 _logger.LogDetailAsync(
                                     $"Send to SAP: TransId: {orderDetail.TransId}  Quantity: {orderDetail.Quantity}  Picked: {orderDetail.PickedQuantity}").SafeFireAndForget();
+                                var transactionId = transId.ToString();
                                 var recs = await _repoHistory
-                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transId.ToString()));
+                                    .FindByAsync(r => r.OrderDetailInfo.StartsWith(transactionId));
                                 foreach (var rec in recs)
                                 {
                                     rec.TransmitDateTime = DateTime.Now;
