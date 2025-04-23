@@ -36,7 +36,19 @@ namespace ReplenService
                 using (var context = new NeutronDb())
                 {
                     _replenishments = await context.Database.SqlQuery<Replenishment>("usp_CreateReplenishments").ToListAsync();
+                    //var testRec = _replenishments.FirstOrDefault(r => r.Item == "89957");
+                    //if (testRec != null)
+                    //{
+                    //    var r = testRec;
+                    //}
+
                     newReplenishments = await context.Database.SqlQuery<Replenishment>("usp_NewItemsWithoutInventory").ToListAsync();
+                    //testRec = newReplenishments.FirstOrDefault(r => r.Item == "89957");
+                    //if (testRec != null)
+                    //{
+                    //    var r = testRec;
+                    //}
+
                 }
                 // append newReplenishments to _replenishments
                 _replenishments.AddRange(newReplenishments);
