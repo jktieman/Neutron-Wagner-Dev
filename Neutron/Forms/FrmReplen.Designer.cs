@@ -1192,6 +1192,7 @@
             this.TextBoxSlot.TabIndex = 0;
             this.TextBoxSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxSlot.Visible = false;
+            this.TextBoxSlot.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSlot_KeyDown);
             // 
             // MBShortCut
             // 
@@ -1203,6 +1204,7 @@
             this.MBShortCut.TabIndex = 174;
             this.MBShortCut.Text = "?";
             this.MBShortCut.UseSelectable = true;
+            this.MBShortCut.Visible = false;
             // 
             // LabelPickMessages
             // 
