@@ -91,7 +91,7 @@ namespace AlliedLogger
             get => _baseFolder;
             set
             {
-                _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRONTEST\LOGS\") : value;
+                _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : value;
                 _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             }
         }
