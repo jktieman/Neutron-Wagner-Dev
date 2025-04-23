@@ -69,9 +69,9 @@ namespace SAPServer
                                 foreach (var rec in recs)
                                 {
                                     rec.PROCESSED = "Y";
+                                    db.SaveChanges();
                                 }
                                 //rec.EXPLANATION = string.Empty;
-                                db.SaveChanges();
 
                                 _ = _logger.LogDetailAsync(
                                     $"NOVA_OUTPUT Set to Processed: TASK: {good.TANUM} -- SKU: {good.MATNR}");
