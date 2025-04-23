@@ -2,6 +2,7 @@
 using NeutronData.Models;
 using NeutronData.Repositories;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,13 @@ using System.Windows.Forms;
 using NeutronData.ModelViews;
 using NeutronCore.Enums;
 using System.Data.SqlClient;
+using System.Threading;
 using AlliedPostOffice;
 using NeutronCore.Extensions;
 using NeutronData.Interfaces;
 using NeutronData.PrintModels;
+using System.Globalization;
+using System.IO;
 
 namespace Neutron.Global
 {
@@ -28,12 +32,16 @@ namespace Neutron.Global
         private readonly GenericRepository<ReplenOrder> _repoReplenOrders;
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly Func<NeutronDb> _contextFactory;
+        private readonly IHistoryRepository _historyRepository;
+        private BlockingCollection<History> _historyQueue;
+        private static readonly object StreamLock = new object();
 
 
-        public HistoryManager(IInventoryRepository inventoryRepository,  WorkstationView workstationView, Func<NeutronDb> contextFactory)
+        public HistoryManager(IInventoryRepository inventoryRepository, WorkstationView workstationView, Func<NeutronDb> contextFactory, IHistoryRepository historyRepository)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
-            
+            _historyRepository = historyRepository;
+            _historyQueue = new BlockingCollection<History>(new ConcurrentQueue<History>(), 1000);
             _inventoryRepository = inventoryRepository;
 
             _repoHistory = new GenericRepository<History>(contextFactory);
@@ -42,6 +50,51 @@ namespace Neutron.Global
             _repoInventory = new GenericRepository<Inventory>(contextFactory);
 
             _workstationView = workstationView;
+            Init();
+        }
+
+        private void Init()
+        {
+            var loggerThread = Task.Factory.StartNew(() =>
+            {
+                var ci = CultureInfo.InvariantCulture;
+                //Loop will continue as long as IsCompleted returns false
+                while (!_historyQueue.IsCompleted)
+                {
+
+                    try
+                    {
+                        foreach (var history in _historyQueue.GetConsumingEnumerable())
+                        {
+                            lock (StreamLock)
+
+                            {
+                                var maxRetries = 10;
+                                int retryCount = 0;
+                                bool success = false;
+                                while (retryCount < maxRetries && !success)
+                                {
+                                    try
+                                    {
+                                        _historyRepository.InsertHistoryRecord(history);
+                                        success = true;
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        retryCount++;
+                                        Thread.Sleep(100); // Short delay before retrying
+                                    }
+                                }
+                                Thread.Sleep(50);
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //throw new Exception($"Detail Async Error: {ex.Message}");
+                    }
+                }
+            });
         }
 
 
@@ -172,7 +225,7 @@ namespace Neutron.Global
                 WorkstationId = _workstationView.WorkstationId,
                 AreaId = _workstationView.AreaId
             };
-             Save(history);
+            Save(history);
         }
         public async Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderView order)
         {
@@ -335,15 +388,15 @@ namespace Neutron.Global
 
         public void SaveHistory(ActionCode actionCode, ReplenPickStop pickStop)
         {
-            
-                
+
+
             foreach (var pickView in pickStop.PickViews)
             {
                 var order = _repoReplenOrders.FindByKey(pickView.OrderId);
-                
+
                 foreach (var pickLocation in pickView.PickLocations)
                 {
-                    
+
                     var history = new History
                     {
                         ActionCode = (int)actionCode,
@@ -414,7 +467,7 @@ namespace Neutron.Global
                 IssuedQuantity = 0,
                 Slot = string.Empty,
                 EmpId = GlobalVar.User.EmpId,
-               //OrderDetailId = value.Id,
+                //OrderDetailId = value.Id,
                 CostCenter = cCenter,
                 OrderInfo = value.OrderInfo ?? string.Empty,
                 OrderDetailInfo = orderDetailInfo ?? string.Empty,
@@ -463,7 +516,7 @@ namespace Neutron.Global
                 IssuedQuantity = value.PickedQuantity,
                 Slot = value.PrimeBin,
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = areaId, 
+                AreaId = areaId,
                 OrderDetailId = value.Id,
                 CostCenter = cCenter,
                 OrderInfo = string.Empty,
@@ -911,7 +964,7 @@ namespace Neutron.Global
 
         public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
         {
-            var inventory =  _repoInventory.FindByKey(inv.Id);
+            var inventory = _repoInventory.FindByKey(inv.Id);
             var orderText = "  INV MOD";
             var history = new History
             {
@@ -1104,37 +1157,31 @@ namespace Neutron.Global
             Save(history);
         }
 
-        private async Task SaveAsync(History history)
+        private Task SaveAsync(History history)
         {
             try
             {
-               await _repoHistory.InsertAsync(history);
+                _historyQueue.Add(history);
+                Thread.Sleep(50);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error, unable to save history record. " + ex.Message);
             }
+
+            return Task.CompletedTask;
         }
 
         private void Save(History history)
         {
             try
             {
-                //if (history.ActionCode == 1 || history.ActionCode == 5)
-                //{
-                //    if (!CheckForExistingHistory(history))
-                //    {
-                //        _repoHistory.Insert(history);
-                //    }
-                //}
-                //else
-                //{
-                    _repoHistory.Insert(history);
-                //}
+                _historyQueue.Add(history);
+                Thread.Sleep(50);
             }
             catch (Exception ex)
             {
-                
+
                 MessageBox.Show("Error, unable to save history record. " + ex.Message);
             }
         }
@@ -1206,7 +1253,7 @@ namespace Neutron.Global
                 OrderInfo = string.Empty,
                 OrderDetailInfo = string.Empty,
                 WorkstationId = _workstationView.WorkstationId,
-                AreaId = _workstationView.AreaId    
+                AreaId = _workstationView.AreaId
             };
             Save(history);
         }
@@ -1348,7 +1395,7 @@ namespace Neutron.Global
                 IssuedQuantity = skipView.Picked,
                 Slot = "Skip",
                 EmpId = GlobalVar.User.EmpId,
-                AreaId = skipView.AreaId, 
+                AreaId = skipView.AreaId,
                 OrderDetailId = skipView.Id,
                 CostCenter = skipView.OrderDetail.OrderDetailInfo.Length < 5 ? string.Empty : skipView.OrderDetail.OrderDetailInfo.Substring(0, 5),
                 OrderInfo = skipView.OrderDetail.Order.OrderInfo,
@@ -1358,7 +1405,7 @@ namespace Neutron.Global
             Save(history);
         }
 
-       //public void SaveActionCodesToDatabase()
+        //public void SaveActionCodesToDatabase()
         //{
         //    //Run this one time at startup
         //    //break down the ActionCode Enum into a List and save to the database.
