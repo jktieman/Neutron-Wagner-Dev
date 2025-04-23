@@ -313,18 +313,18 @@ namespace Neutron
             this.RadioButtonEnglish.UseVisualStyleBackColor = true;
             this.RadioButtonEnglish.CheckedChanged += new System.EventHandler(this.RadioButtonLanguage_CheckedChanged);
             // 
+            // CheckBoxClientConnected
+            // 
+            resources.ApplyResources(this.CheckBoxClientConnected, "CheckBoxClientConnected");
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
+            // 
             // PictureBoxLogo
             // 
             this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.TEST;
             resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;
-            // 
-            // CheckBoxClientConnected
-            // 
-            resources.ApplyResources(this.CheckBoxClientConnected, "CheckBoxClientConnected");
-            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
-            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
             // 
             // FrmMain
             // 

@@ -278,7 +278,7 @@ namespace Neutron
 
         private void DisplayMessage(string message)
         {
-            //_logger.LogDetailAsync($"Display Message: {message}").SafeFireAndForget();
+            _logger.LogDetailAsync($"Display Message: {message}").SafeFireAndForget();
             MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
