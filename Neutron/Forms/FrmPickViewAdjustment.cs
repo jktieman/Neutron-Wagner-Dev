@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronData.ModelViews;
 
 namespace Neutron.Forms
@@ -84,8 +85,8 @@ namespace Neutron.Forms
             ButtonPressed = "Backorder";
             _pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
 
-            _pickView.OrderDetail.PickedQuantity = _pickView.PickedQty;
-            //_pickView.PickedQty = 0;
+            _pickView.OrderDetail.PickedQuantity = TextBoxNewQuantity.Text.ParseInt();  // _pickView.PickedQty;
+            _pickView.PickedQty =  TextBoxNewQuantity.Text.ParseInt();
            // _pickView.QuantityToBePicked = _pickView.Quantity;
             Success = true;
             Close();
@@ -111,8 +112,8 @@ namespace Neutron.Forms
         {
             ButtonPressed = "Accept";
             _pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
-            _pickView.OrderDetail.PickedQuantity = _pickView.QuantityToBePicked;
-            _pickView.PickedQty = _pickView.QuantityToBePicked;
+            _pickView.OrderDetail.PickedQuantity = TextBoxNewQuantity.Text.ParseInt();   // _pickView.QuantityToBePicked;
+            _pickView.PickedQty = TextBoxNewQuantity.Text.ParseInt();   // _pickView.QuantityToBePicked;
             Success = true;
             Close();
         }
