@@ -128,7 +128,8 @@ namespace Neutron.Ninject
             Bind<IPrintJobRepository>().To<PrintJobRepository>().InSingletonScope();
             Bind<IOptions<MemoryCacheOptions>>().ToConstant(Microsoft.Extensions.Options.Options.Create(new MemoryCacheOptions()));
             Bind<IMemoryCache>().To<MemoryCache>().InSingletonScope();
-
+            Bind<IHistoryRepository>().To<HistoryRepository>().InSingletonScope();
+            
             // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             //Bind<ISapService>().To<SAPService>().InSingletonScope();
