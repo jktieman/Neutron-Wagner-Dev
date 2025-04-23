@@ -1189,7 +1189,7 @@ namespace NeutronData.Repositories
 
                 order.ReplenOrderDetails = new List<ReplenOrderDetail>();
 
-                foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 9))
+                foreach (var orderDetail in details.Where(orderDetail => orderDetail.AreaId == areaId).Where(orderDetail => orderDetail.LineStatusId is 1 or 3 or 9))
                 {
                     order.ReplenOrderDetails.Add(orderDetail);
                 }
