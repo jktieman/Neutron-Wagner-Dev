@@ -2553,7 +2553,7 @@ namespace Neutron.Forms
                                 _historyManager.SaveHistory(actionCode, inv, pickQty);
                             }
                             var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-                            var canDelete = inventoryManager.QuickReleaseCheckAsync(inv);
+                            var canDelete = inventoryManager.QuickReleaseCheck(inv);
                             if (canDelete)
                             {
                                 var sb = new StringBuilder();
@@ -2570,7 +2570,7 @@ namespace Neutron.Forms
                                 if (result == DialogResult.Yes)
                                 {
                                     _logger.LogDetailAsync($"{sb.ToString()}").SafeFireAndForget();
-                                    var deleted = await inventoryManager.ReleaseCheckAsync(inv);
+                                    var deleted = inventoryManager.ReleaseCheck(inv);
                                 }
                             }
                         }
