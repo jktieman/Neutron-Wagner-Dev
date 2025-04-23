@@ -1,6 +1,7 @@
 ﻿using System;
 using NeutronData.Models;
 using System.Collections.Generic;
+using System.Linq;
 using NeutronCore.Enums;
 using NeutronData.Interfaces;
 
@@ -43,8 +44,21 @@ namespace NeutronData.ModelViews
         public int PreviousLineStatusId { get; set; }
         public int GetQuantityToBePicked()
         {
-            var result = Quantity - PickedQty;
-            return result > 0 ? result : 0;
+           // var result = Quantity - PickedQty;
+          //  return result > 0 ? result : 0;
+            return Quantity - GetTotalPickLocations();
+        }
+
+        public int GetTotalPickLocations()
+        {
+            var total = 0;
+            if (!PickLocations.Any()) return total;
+            foreach (var pickLocation in PickLocations)
+            {
+                total += pickLocation.Quantity;
+            }
+
+            return total;
         }
     }
 }
