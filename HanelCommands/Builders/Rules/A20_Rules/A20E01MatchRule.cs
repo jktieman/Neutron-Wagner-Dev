@@ -31,6 +31,9 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         {
                             device.CommandAccepted = false;
                             device.StatusMessage = "XA A20 E01 No Shelf in Access Point";
+                            device.CommandSent = false;
+                            device.CommandAccepted = false;
+                            device.CommandExecuted = true;
                         }
                     }
                 }
