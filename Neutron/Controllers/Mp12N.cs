@@ -10,11 +10,12 @@ using Neutron.Enums;
 using NeutronData.ModelViews;
 
 using Neutron.Interfaces;
-
-using NeutronCore;
+using Hanel_DC.HanelStatics;
 using NeutronCore.Enums;
 using Hanel_DC.Hanel_DeviceControllers;
 using HanelCommands;
+using NeutronCore.Models;
+
 
 namespace Neutron.Controllers
 {
@@ -33,14 +34,16 @@ namespace Neutron.Controllers
 
         private IDynamicLogger _logger;
         private readonly WorkstationView _workstation;
+        private readonly IDialogService _dialogService;
         Form _currentForm;
         private readonly Object _locker = new Object();
         private int[] _previousTray;
 
-        public Mp12N(Form frm, WorkstationView workstation)
+        public Mp12N(Form frm, WorkstationView workstation, IDialogService dialogService)
         {
             _previousTray = new int[10];
             _workstation = workstation;
+            _dialogService = dialogService;
             _currentForm = frm;
 
             Init();
@@ -51,7 +54,8 @@ namespace Neutron.Controllers
             _logger = NeutronCore.Global.Logger.SetupLogger("Mp12N");
             Task.Run(() => _logger.LogDetailAsync($"Mp12N Constructor - {_currentForm.Name}"));
             CallBackHandler_Init = new SendOrPostCallback(MyInitProgressDelegate);
-            _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12N());
+           // _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12N(), _dialogService );
+            _hanel = new Hanel_DeviceController(HanelDcStatics.Controller_Type_Hanel_Mp12N(), _dialogService );
 
             Task.Run(() => _logger.LogDetailAsync(@"Hanel Device Controller has been created: "));
             RCC2Init();
@@ -166,10 +170,25 @@ namespace Neutron.Controllers
         {
             _hanel?.ResetHanelDeviceStatus();
         }
+        public bool GetTrayInWindow(int lift, int accessPoint)
+        {
+            var response = _hanel.GetTrayInWindow(lift, accessPoint);
+            return response;
+        }
+
+        public void GetTraysInWindow()
+        {
+            _hanel.GetTraysInWindow();
+        }
+
+        public void Stop()
+        {
+            
+        }
 
         public byte[] ValidCommand(byte[] byteArray)
         {
-            throw new NotImplementedException();
+            return new byte[1];
         }
 
         public void ShowMessage(string msg)
