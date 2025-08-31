@@ -31,6 +31,7 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
                         if (device != null)
                         {
+                            device.CommandSent = false;
                             device.CommandAccepted = false;
                             device.CommandExecuted = false;
                             device.InMotion = false;
