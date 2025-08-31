@@ -120,6 +120,9 @@
             this.DataGridViewOrderDetails = new System.Windows.Forms.DataGridView();
             this.MBOrderDetailsBack = new MetroFramework.Controls.MetroButton();
             this.PickScreen = new System.Windows.Forms.TabPage();
+            this.TextCurrentTray3 = new System.Windows.Forms.Label();
+            this.TextCurrentTray2 = new System.Windows.Forms.Label();
+            this.TextCurrentTray1 = new System.Windows.Forms.Label();
             this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.MBShortPick = new MetroFramework.Controls.MetroButton();
             this.MBSkipPick = new MetroFramework.Controls.MetroButton();
@@ -1108,6 +1111,9 @@
             // PickScreen
             // 
             this.PickScreen.BackColor = System.Drawing.Color.Green;
+            this.PickScreen.Controls.Add(this.TextCurrentTray3);
+            this.PickScreen.Controls.Add(this.TextCurrentTray2);
+            this.PickScreen.Controls.Add(this.TextCurrentTray1);
             this.PickScreen.Controls.Add(this.CheckBoxClientConnected);
             this.PickScreen.Controls.Add(this.MBShortPick);
             this.PickScreen.Controls.Add(this.MBSkipPick);
@@ -1144,6 +1150,36 @@
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
+            // TextCurrentTray3
+            // 
+            this.TextCurrentTray3.AutoSize = true;
+            this.TextCurrentTray3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextCurrentTray3.Location = new System.Drawing.Point(189, 73);
+            this.TextCurrentTray3.Name = "TextCurrentTray3";
+            this.TextCurrentTray3.Size = new System.Drawing.Size(0, 20);
+            this.TextCurrentTray3.TabIndex = 206;
+            this.TextCurrentTray3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextCurrentTray2
+            // 
+            this.TextCurrentTray2.AutoSize = true;
+            this.TextCurrentTray2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextCurrentTray2.Location = new System.Drawing.Point(189, 42);
+            this.TextCurrentTray2.Name = "TextCurrentTray2";
+            this.TextCurrentTray2.Size = new System.Drawing.Size(0, 20);
+            this.TextCurrentTray2.TabIndex = 203;
+            this.TextCurrentTray2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TextCurrentTray1
+            // 
+            this.TextCurrentTray1.AutoSize = true;
+            this.TextCurrentTray1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextCurrentTray1.Location = new System.Drawing.Point(189, 12);
+            this.TextCurrentTray1.Name = "TextCurrentTray1";
+            this.TextCurrentTray1.Size = new System.Drawing.Size(0, 20);
+            this.TextCurrentTray1.TabIndex = 204;
+            this.TextCurrentTray1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // CheckBoxClientConnected
             // 
             this.CheckBoxClientConnected.AutoSize = true;
@@ -1165,7 +1201,7 @@
             this.MBShortPick.Name = "MBShortPick";
             this.MBShortPick.Size = new System.Drawing.Size(150, 32);
             this.MBShortPick.TabIndex = 175;
-            this.MBShortPick.Text = "Short Pick";
+            this.MBShortPick.Text = "Pick Zero";
             this.MBShortPick.UseSelectable = true;
             this.MBShortPick.Click += new System.EventHandler(this.MBShortPick_Click);
             // 
@@ -1192,6 +1228,7 @@
             this.TextBoxSlot.TabIndex = 0;
             this.TextBoxSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxSlot.Visible = false;
+            this.TextBoxSlot.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSlot_KeyDown);
             // 
             // MBShortCut
             // 
@@ -1203,6 +1240,7 @@
             this.MBShortCut.TabIndex = 174;
             this.MBShortCut.Text = "?";
             this.MBShortCut.UseSelectable = true;
+            this.MBShortCut.Visible = false;
             // 
             // LabelPickMessages
             // 
@@ -2611,5 +2649,8 @@
         private System.Windows.Forms.Button ButtonStopMoveFirst;
         private System.Windows.Forms.Label LabelLineOfLines;
         private MetroFramework.Controls.MetroButton MBClear;
+        private System.Windows.Forms.Label TextCurrentTray3;
+        private System.Windows.Forms.Label TextCurrentTray2;
+        private System.Windows.Forms.Label TextCurrentTray1;
     }
 }

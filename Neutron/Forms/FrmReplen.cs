@@ -246,6 +246,7 @@ namespace Neutron.Forms
             _currentPickViewItemIds = new int[0];
             _currentOrderIds = new int[0];
             _currentOrderDetailIds = new int[0];
+            _currentAreaId = workstationView.AreaId;
             _selectedRowIndices = new List<int>();
 
             InitForm();
@@ -330,7 +331,7 @@ namespace Neutron.Forms
 
             Mediator.GetInstance().IptiButtonPressed += (s, e) => IptiButtonPickAccept(e.ResponseInfo);
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
-            Mediator.GetInstance().TrayInPosition += (s, e) => UpdateTraysInPosition(e.InPositionInfo);
+            Mediator.GetInstance().TrayInPosition += (s, e) => UpdateTrayInPosition(e.InPositionInfo);
             Mediator.GetInstance().TransmitStateChanged += (s, e) => UpdateClientConnected(e.State);
             Mediator.GetInstance().IsClientConnected += FrmReplen_IsClientConnected;
         }
@@ -586,20 +587,28 @@ namespace Neutron.Forms
 
             CheckBoxClientConnected.Checked = state;
         }
-        private void UpdateTraysInPosition(InPositionInfo inPositionInfo)
+        private void UpdateTrayInPosition(InPositionInfo inPositionInfo)
         {
-            if (inPositionInfo.OneInPosition)
+            var info = inPositionInfo ?? throw new ArgumentNullException(nameof(inPositionInfo), "InPositionInfo cannot be null.");
+
+            _logger.LogDetailAsync($"Lift:{info.Lift}  Tray: {info.Tray}");
+            switch (info.Lift)
             {
-                MBStoreAccept.ForeColor = Color.DarkGreen;
-                MBStoreAccept.Refresh();
-            }
-            if (inPositionInfo.TwoInPosition)
-            {
-                MBStoreAccept.ForeColor = Color.Blue;
-            }
-            if (inPositionInfo.ThreeInPosition)
-            {
-                MBStoreAccept.ForeColor = Color.Red;
+                case 1:
+                {
+                    TextCurrentTray1.Text = info.Tray.ToString();
+                    break;
+                }
+                case 2:
+                {
+                    TextCurrentTray2.Text = info.Tray.ToString();
+                    break;
+                }
+                case 3:
+                {
+                    TextCurrentTray3.Text = info.Tray.ToString();
+                    break;
+                }
             }
         }
         protected override CreateParams CreateParams
@@ -2640,19 +2649,24 @@ namespace Neutron.Forms
         }
 
         /// <summary>
-        /// Check to see if TextBoxPosx.Text doesn't match OrdersToPick.Order
-        /// Clear invalid OrdersToPick
+        /// Performs a final validation of the orders to pick by ensuring that the text in the corresponding 
+        /// text boxes matches the expected order values. Invalid orders are cleared from the list.
         /// </summary>
+        /// <returns>
+        /// Returns <c>true</c> if at least one valid order is found; otherwise, <c>false</c>.
+        /// </returns>
+        /// <remarks>
+        /// This method logs the start and end of the validation process asynchronously. 
+        /// If an exception occurs during the validation, it logs the error and displays a message box 
+        /// with the error details.
+        /// </remarks>
         private bool FinalCheckOfOrdersToPick()
         {
-            // loop over all TextBoxPosx
-            // and check for TextBoxPosx.Text that doesn't match OrdersToPick.Order
-            // Clear invalid OrdersToPick
+            var containsAtLeastOneOrder = false;
+
             _logger.LogDetailAsync($"[{DateTime.Now}]  Start FinalCheckOfOrdersToPick").SafeFireAndForget();
             try
             {
-                //ClearBatchPositions();
-
                 foreach (var bp in _ordersToPick)
                 {
                     var pos = bp.PositionNumber.ToString();
@@ -2679,6 +2693,8 @@ namespace Neutron.Forms
                                 bp.Ord2 = isRealOrder.Ord2;
                                 bp.OrderComplete = false;
                                 bp.RowIndex = 0;
+
+                                containsAtLeastOneOrder = true;
                             }
                             //var realOrders = _repoReplenOrder.FindBy(r => r.Ord1 == order && r.OrderStatusId == 1).ToList();
 
@@ -2737,9 +2753,9 @@ namespace Neutron.Forms
                                 $"{ex.Message}");
                 return false;
             }
-            DumpOrdersToPick(2848);
+            DumpOrdersToPick(2744);
             _logger.LogDetailAsync($"[{DateTime.Now}]  End FinalCheckOfOrdersToPick").SafeFireAndForget();
-            return true;
+            return containsAtLeastOneOrder;
 
 
 
@@ -3045,13 +3061,22 @@ namespace Neutron.Forms
                 _bindingSourcePickStops.MoveFirst();
                 _currentPickStop = (ReplenPickStop)_bindingSourcePickStops.Current;
 
+                ClearProLites();
+                ClearIptiDisplayFunctions();
+
                 UpdatePickScreenLabelsAndPickedSoFar();
 
                 if (_workstationView.AreaId == AreaEight)
                 {
+                    if (_currentPickStop.CurrentInventoryLocation.Location.Slot == "999999")
+                    {
+                        TextBoxSlot.Text = string.Empty;
+                    }
+                    else
+                    {
+                        TextBoxSlot.Text = _currentPickStop.CurrentInventoryLocation.Location.Slot;
+                    }
                     TextBoxSlot.Visible = true;
-                    TextBoxSlot.Text = string.Empty;
-                    TextBoxSlot.Focus();
                 }
                 else
                 {
@@ -3062,12 +3087,23 @@ namespace Neutron.Forms
 
                 UpdatePickPosition();
 
+
+
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
 
                 // UpdateTowerDisplay();
 
                 tabControl1.SelectedTab = PickScreen;
-                MBStoreAccept.Focus();
+                if (_currentPickStop.CurrentInventoryLocation.Location.Slot == "999999")
+                {
+                    TextBoxSlot.Focus();
+                    
+                }
+                else
+                {
+                    MBStoreAccept.Focus();
+                }
+                TextBoxSlot.SelectAll();
                 _spaceBarDisabled = false;
 
                 //feels good to here
@@ -3266,14 +3302,19 @@ namespace Neutron.Forms
         private List<Inventory> GetDefaultInventory(int itemDefinitionId, int areaId)
         {
             var inventoryList = new List<Inventory>();
+            var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
+            if (itemDefinition == null) return inventoryList;
 
             if (areaId == AreaEight)
             {
-                var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
-                if (itemDefinition == null) return inventoryList;
-                var location = _repoLocationRepository.FindByKey(10954);
-                if (location == null) return inventoryList;
 
+                var location = _locationsRepository.FindLocationBySlot("999999");
+                if (location == null)
+                {
+                    // Create a new location with a Slot of "999999"
+                    location = _locationsRepository.CreateLocation("999999", areaId);
+                    if (location is null) return inventoryList;
+                }
 
                 // no inventory locations for this item
                 // create a new empty Inventory object
@@ -3286,16 +3327,23 @@ namespace Neutron.Forms
                     ReceivedDate = DateTime.Now,
                     Quantity = 0,
                     Location = location,
-                    LocationId = 10954
+                    LocationId = location.Id,
+                    StorageTypeId = itemDefinition.StorageTypeId
                 };
                 inventoryList.Add(inventory);
                 return inventoryList;
             }
             else
             {
-                var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
-                if (itemDefinition == null) return inventoryList;
-                var location = _repoLocationRepository.FindBy(r => r.SizeCodeId == itemDefinition.SizeCodeId && r.VelocityCodeId == itemDefinition.VelocityCodeId && r.HeightCodeId == itemDefinition.HeightCodeId && r.InUse == false).FirstOrDefault();
+                //var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
+                //if (itemDefinition == null) return inventoryList;
+
+                var location = _locationsRepository.GetBestLocationForPutaway(areaId, itemDefinition.SizeCodeId,
+                    itemDefinition.VelocityCodeId, itemDefinition.HeightCodeId, 0);
+
+                //var location = _repoLocationRepository.FindBy(r => r.SizeCodeId == itemDefinition.SizeCodeId && r.VelocityCodeId == itemDefinition.VelocityCodeId && r.HeightCodeId == itemDefinition.HeightCodeId && r.InUse == false).FirstOrDefault();
+
+
                 if (location != null)
                 {
                     // no inventory locations for this item
@@ -3309,7 +3357,8 @@ namespace Neutron.Forms
                         ReceivedDate = DateTime.Now,
                         Quantity = 0,
                         Location = location,
-                        LocationId = location.Id
+                        LocationId = location.Id,
+                        StorageTypeId = itemDefinition.StorageTypeId
                     };
                     inventoryList.Add(inventory);
                     return inventoryList;
@@ -3347,6 +3396,11 @@ namespace Neutron.Forms
                 sortedRecs = recs.OrderBy(o => o.ReceivedDate).ToList();
 
                 inventorySequence.AddRange(sortedRecs);
+            }
+            else
+            {
+                recs = GetDefaultInventory(item.ItemId, item.AreaId);
+                inventorySequence.AddRange(recs);
             }
             return inventorySequence;
         }
@@ -5143,7 +5197,7 @@ namespace Neutron.Forms
             //_logger.LogDetailAsync($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]"));
 
             _logger.LogDetailAsync($"Update GroupBox Location Start : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
-            if (_workstationView.StationTypeId == 3)
+            if (_workstationView.AreaId == AreaEight)
             {
 
                 //}
@@ -5169,6 +5223,10 @@ namespace Neutron.Forms
                 TextBoxPickLoc1.Size = new Size(300, 62);
                 TextBoxPickLoc1.Text = inventory.Location == null ? string.Empty : inventory.Location.Slot;
                 TextBoxSlot.Text = inventory.Location == null ? string.Empty : inventory.Location.Slot;
+                // select all the text in TextBoxSlot
+                TextBoxSlot.SelectAll();
+                TextBoxSlot.Focus();
+
             }
 
             if (_workstationView.StationType.Id == 7)
@@ -5235,10 +5293,15 @@ namespace Neutron.Forms
             LabelPrimeBin.Visible = inventory.PrimeBin;
             LabelStaticRelease.Text = inventory.StorageType == null ? string.Empty : inventory.StorageType.Name;
 
-            TextBoxSlot.FocusAndHighlightText();
+            // TextBoxSlot.FocusAndHighlightText();
 
             _logger.LogDetailAsync($"Update GroupBox Location End : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
-
+            // TextBoxSlot.SelectAll();
+            // set the focus to TextBoxSlot
+            // 
+            TextBoxSlot.Focus();
+            TextBoxSlot.SelectAll();
+            MBStoreAccept.Enabled = true;
         }
 
 
@@ -5702,7 +5765,7 @@ namespace Neutron.Forms
             // Verify something else
             // Returns true is process is to continue
             // Return false if the process is canceled
-            if (!SelectAction.StoreAccept(_currentPickStop)) return;
+            //if (!SelectAction.StoreAccept(_currentPickStop)) return;
 
 
             Cursor.Current = Cursors.WaitCursor;
@@ -5778,7 +5841,7 @@ namespace Neutron.Forms
                 var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
                 var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
                 var text = _currentPickStop.QuantityToBePicked.ToString();
-
+                _logger.LogDetailAsync($"hello PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}").SafeFireAndForget();
                 PositionDevice(loc1, loc2, loc3, loc4, true);
 
                 UpdatePickScreenLabelsAndPickedSoFar();
@@ -6541,7 +6604,8 @@ namespace Neutron.Forms
                     AreaId = location.AreaId,
                     RFID = string.Empty
                 };
-                _repoInventory.Insert(inventory);
+                _currentPickStop.Inventory.Add(inventory);
+                //_repoInventory.Insert(inventory);
                 _currentPickStop.CurrentInventoryLocation = inventory;
                 _currentPickStop.CurrentInventoryLocation.ItemDefinition = itemDefinition;
                 _currentPickStop.CurrentInventoryLocation.Location = location;
@@ -6572,7 +6636,7 @@ namespace Neutron.Forms
 
             // UpdateTowerDisplay();
             if (_workstationView.AreaId == AreaEight) return;
-
+            _logger.LogDetailAsync($"world PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}").SafeFireAndForget();
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             // UpdateCurrentDeviceIndicator();
             // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
@@ -8300,7 +8364,7 @@ namespace Neutron.Forms
         private LabelDetail GetLabelDetail(ReplenOrderDetail orderDetail)
         {
 
-            
+
             return new LabelDetail
             {
                 Item = orderDetail.ItemDefinition.Item,
@@ -9605,7 +9669,7 @@ namespace Neutron.Forms
             var inventory = pickView.Inventory.FirstOrDefault();
             if (inventory != null)
             {
-                _historyManager.SaveHistoryAsync(ActionCode.PickOrder, inventory, 0, pickView).SafeFireAndForget();
+                _historyManager.SaveHistoryAsync(ActionCode.StoreOrder, inventory, 0, pickView).SafeFireAndForget();
             }
         }
 
@@ -9681,6 +9745,7 @@ namespace Neutron.Forms
                     pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
                     pickView.OrderDetail.PickedQuantity = pickViewTotal;
                     _repoReplenOrderDetails.Update(pickView.OrderDetail);
+                    CheckForOrderComplete(pickView.OrderDetail.ReplenOrder);
                 }
             }
 
@@ -9949,8 +10014,8 @@ namespace Neutron.Forms
         private void FrmPick_KeyDownHandler(object sender, KeyEventArgs e)
         {
             Console.WriteLine($"FrmPick_KeyDownHandler");
-            OnFrmPickKeyDown(sender, e);
 
+            OnFrmPickKeyDown(sender, e);
         }
 
 
@@ -9968,14 +10033,14 @@ namespace Neutron.Forms
             switch (tabControl1.SelectedTab.Name)
             {
                 case "PickScreen":
-                    HandlePickScreenKeyDown(e);
+                    HandlePickScreenKeyDown(sender, e);
                     break;
                 case "AvailableOrders":
-                    HandleAvailableOrdersKeyDown(e);
+                    HandleAvailableOrdersKeyDown(sender, e);
                     break;
             }
         }
-        private void HandlePickScreenKeyDown(KeyEventArgs e)
+        private void HandlePickScreenKeyDown(object sender, KeyEventArgs e)
         {
             if (_logger != null)
             {
@@ -9984,46 +10049,41 @@ namespace Neutron.Forms
             switch (e.KeyCode)
             {
                 case Keys.Enter:
-                    HandleEnterKey(e);
+                    HandleEnterKey(sender, e);
                     break;
                 case Keys.Space:
-                    HandleSpaceKey(e);
+                    HandleSpaceKey(sender, e);
                     break;
-                case Keys.L:
-                    HandleLKey(e);
-                    break;
-                case Keys.A:
-                    HandleAKey(e);
-                    break;
-                case Keys.S:
-                    HandleSKey(e);
-                    break;
-                case Keys.Q:
-                    HandleQKey(e);
-                    break;
-                case Keys.B:
-                    HandleBKey(e);
-                    break;
-                case Keys.H:
-                    HandleHKey(e);
-                    break;
+                //case Keys.L:
+                //    HandleLKey(sender, e);
+                //    break;
+                //case Keys.A:
+                //    HandleAKey(sender, e);
+                //    break;
+                //case Keys.S:
+                //    HandleSKey(sender, e);
+                //    break;
+                //case Keys.Q:
+                //    HandleQKey(sender, e);
+                //    break;
+                //case Keys.B:
+                //    HandleBKey(sender, e);
+                //    break;
+                //case Keys.H:
+                //    HandleHKey(sender, e);
+                //    break;
                 case Keys.F2:
-                    HandleF2Key(e);
+                    HandleF2Key(sender, e);
                     break;
                 case Keys.OemQuestion:
-                    HandleOemQuestionKey(e);
+                    HandleOemQuestionKey(sender, e);
                     break;
                 case Keys.F12:
-                    HandleF12Key(e);
+                    HandleF12Key(sender, e);
                     break;
             }
         }
-        private void HandleEnterKey(KeyEventArgs e)
-        {
-            e.Handled = true;
-            //StoreAccept();
-        }
-        private void HandleSpaceKey(KeyEventArgs e)
+        private void HandleEnterKey(object sender, KeyEventArgs e)
         {
             e.Handled = true;
             if (!_spaceBarDisabled)
@@ -10031,47 +10091,55 @@ namespace Neutron.Forms
                 StoreAccept();
             }
         }
-        private void HandleLKey(KeyEventArgs e)
+        private void HandleSpaceKey(object sender, KeyEventArgs e)
+        {
+            e.Handled = true;
+            if (!_spaceBarDisabled)
+            {
+                StoreAccept();
+            }
+        }
+        private void HandleLKey(object sender, KeyEventArgs e)
         {
             LocationCount();
             e.Handled = true;
         }
-        private void HandleAKey(KeyEventArgs e)
+        private void HandleAKey(object sender, KeyEventArgs e)
         {
             HotAction();
             e.Handled = true;
         }
-        private void HandleSKey(KeyEventArgs e)
+        private void HandleSKey(object sender, KeyEventArgs e)
         {
             ShowOrderOrQuantityToggle();
             e.Handled = true;
         }
-        private void HandleQKey(KeyEventArgs e)
+        private void HandleQKey(object sender, KeyEventArgs e)
         {
             ChangeQuantity();
             e.Handled = true;
         }
-        private void HandleBKey(KeyEventArgs e)
+        private void HandleBKey(object sender, KeyEventArgs e)
         {
             e.Handled = true;
             ShortPick();
         }
-        private void HandleHKey(KeyEventArgs e)
+        private void HandleHKey(object sender, KeyEventArgs e)
         {
             e.Handled = true;
             SkipPick();
         }
-        private void HandleF2Key(KeyEventArgs e)
+        private void HandleF2Key(object sender, KeyEventArgs e)
         {
             PrintLabels(_currentPickStop, 2);
             e.Handled = true;
         }
-        private void HandleOemQuestionKey(KeyEventArgs e)
+        private void HandleOemQuestionKey(object sender, KeyEventArgs e)
         {
             ShowShortCutForm();
             e.Handled = true;
         }
-        private void HandleF12Key(KeyEventArgs e)
+        private void HandleF12Key(object sender, KeyEventArgs e)
         {
             using (var frm = DI.Create<FrmInventory>(_workstationView, _neutronVariables, _iptiDisplayFunctions))
             {
@@ -10079,7 +10147,7 @@ namespace Neutron.Forms
                 Show();
             }
         }
-        private void HandleAvailableOrdersKeyDown(KeyEventArgs e)
+        private void HandleAvailableOrdersKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -10099,7 +10167,7 @@ namespace Neutron.Forms
                     e.Handled = true;
                     break;
                 case Keys.F12:
-                    HandleF12Key(e);
+                    HandleF12Key(sender, e);
                     break;
             }
         }
@@ -10304,6 +10372,21 @@ namespace Neutron.Forms
             TextBoxReceivedDate.Text = inventory.ReceivedDate.ToString("G");
             LabelPrimeBin.Visible = inventory.PrimeBin;
             LabelStaticRelease.Text = inventory.StorageType.Name;
+        }
+
+        private void TextBoxSlot_KeyDown(object sender, KeyEventArgs e)
+        {
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    if (sender is TextBox textBox) HandleScannerInput(textBox);
+
+            //    e.Handled = true;
+            //}
+            //else if (e.KeyCode == Keys.Space && !_spaceBarDisabled)
+            //{
+            //    e.SuppressKeyPress = true;
+            //    if (sender is TextBox textBox) HandleKeyboardInput(textBox);
+            //}
         }
     }
 }
