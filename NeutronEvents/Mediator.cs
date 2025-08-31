@@ -218,5 +218,12 @@ namespace NeutronEvents
         {
             IsClientConnected?.Invoke(this, new IsClientConnectedEventArgs() { IsClientConnected = isClientConnected });
         }
+
+        public event EventHandler<SendPollCommandEventArgs> SendPollCommand;
+
+        public void OnSendPollCommand(object sender, bool sendPoll)
+        {
+            SendPollCommand?.Invoke(this, new SendPollCommandEventArgs() {SendPoll = sendPoll});
+        }
     }
 }
