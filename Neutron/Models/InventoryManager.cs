@@ -22,23 +22,23 @@ namespace Neutron.Models
             _locationsRepository = locationsRepository;
         }
 
-        public async Task<bool> DeleteInventoryRecordAsync(int invId, bool releaseOnly = false)
+        public bool DeleteInventoryRecord(int invId, bool releaseOnly = false)
         {
             var inventory = _inventoryUnitOfWork.Inventory.FindByKey(invId);
             if (inventory == null || (releaseOnly && inventory.StorageTypeId != (int)StorageType.Release))
             {
                 return false;
             }
-            await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventory);
-            var otherInventoryInLocation = await _inventoryUnitOfWork.Inventory.FindByAsync(r => r.LocationId == inventory.LocationId);
+            GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
+            var otherInventoryInLocation = _inventoryUnitOfWork.Inventory.FindBy(r => r.LocationId == inventory.LocationId);
             if (otherInventoryInLocation.Count() == 1)
             {
-                await _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
+                 _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
             }
-            return await _inventoryUnitOfWork.Inventory.DeleteWithReturnAsync(invId);
+            return _inventoryUnitOfWork.Inventory.DeleteWithReturn(invId);
         }
 
-        public async Task<bool> ReleaseCheckAsync(Inventory inventory)
+        public bool ReleaseCheck(Inventory inventory)
         {
             var isInventoryEmpty = inventory.Quantity <= 0;
             var isStorageTypeRelease = inventory.StorageTypeId == (int)StorageType.Release;
@@ -46,9 +46,9 @@ namespace Neutron.Models
             {
                 return false;
             }
-            return await DeleteInventoryRecordAsync(inventory.Id, releaseOnly: true);
+            return DeleteInventoryRecord(inventory.Id, releaseOnly: true);
         }
-        public bool QuickReleaseCheckAsync(Inventory inventory)
+        public bool QuickReleaseCheck(Inventory inventory)
         {
             var isInventoryEmpty = inventory.Quantity <= 0;
             var isStorageTypeRelease = inventory.StorageTypeId == (int)StorageType.Release;
