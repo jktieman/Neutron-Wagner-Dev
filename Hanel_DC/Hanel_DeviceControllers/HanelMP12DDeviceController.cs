@@ -32,13 +32,20 @@ namespace Hanel_DC.Hanel_DeviceControllers
         {
             this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
             _testing = false;
-            _logger = NeutronCore.Global.Logger.SetupLogger("HanelMp12DDeviceController");
+            //_logger = NeutronCore.Global.Logger.SetupLogger("HanelMp12DDeviceController");
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
+
         }
         public HanelMp12DDeviceController(IDynamicLogger logger)
         {
             this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
             _testing = true;
             _logger = logger;
+        }
+
+        public void Stop()
+        {
+            _serialPortMonitor?.Stop();
         }
 
         public HanelMp12DSerialPortMonitor SerialPortMonitor => _serialPortMonitor;
@@ -91,7 +98,8 @@ namespace Hanel_DC.Hanel_DeviceControllers
                 try
                 {
                     _serialPortMonitor = new HanelMp12DSerialPortMonitor(comPort
-                        , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList);
+                        , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList
+                        , logLevel);
                 }
                 catch (Exception ex)
                 {
@@ -145,7 +153,6 @@ namespace Hanel_DC.Hanel_DeviceControllers
                     return Parity.None;
             }
         }
-
         public bool DriveDevice(IHanelCommand hanelCommand, ref string cError)
         {
            return _serialPortMonitor.SendData(hanelCommand.Command);
@@ -171,7 +178,11 @@ namespace Hanel_DC.Hanel_DeviceControllers
  
             int num = this._PB_False;
             cError = "";
+            var hanelDeviceStatus = _currentHanelDeviceStatusList.FirstOrDefault(r => r.Device == nAccess);
+            if (hanelDeviceStatus != null) hanelDeviceStatus.CommandSent = true;
+
             var hanelCommand = $"{AST}G{device}{ap}$M XR$E20$T{tray}$F{over}$O{back}$P1${CR}{LF}";
+            _logger.LogDetailAsync($"_serialPortMonitor.SendData: {hanelCommand}").SafeFireAndForget();
             _serialPortMonitor.SendData(Encoding.UTF8.GetBytes(hanelCommand));
             
             
@@ -256,9 +267,9 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         public void CloseChannel()
         {
-         _ = _logger.LogDetailAsync("Begin");
+         _logger.LogDetailAsync("Begin").SafeFireAndForget();
             _serialPortMonitor?.Stop();
-         _ = _logger.LogDetailAsync("End");
+         _logger.LogDetailAsync("End").SafeFireAndForget();
 
         }
 
