@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HanelCommands;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace Hanel_DC.Hanel_DeviceControllers
 
         string Get_LastErrorMessage();
 
+        bool DriveDevice(IHanelCommand hanelCommand, ref string cError);
+
         bool DriveDevice(int nAccess, int nTray, ref string cError);
 
         bool ReturnTray(int nAccess, ref string cError);
@@ -32,5 +35,6 @@ namespace Hanel_DC.Hanel_DeviceControllers
             ref string cError);
 
         void CloseChannel();
+        void Stop();
     }
 }
