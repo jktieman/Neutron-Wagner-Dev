@@ -26,8 +26,9 @@ namespace JsonManager
         /// </remarks>
         public JsonData()
         {
+
             _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
-           
+         
             if (!Directory.Exists(_rootDirectory))
             {
                 _rootDirectory = string.Empty;
