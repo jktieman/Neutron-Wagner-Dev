@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using HanelCommands.Builders.Interfaces;
+using NeutronCore.Extensions;
+using NeutronEvents;
 
 namespace HanelCommands.Builders.Rules.A20_Rules
 {
@@ -29,10 +31,20 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
                         if (device != null)
                         {
-                            device.CommandExecuted = true;
+                            device.CommandAccepted = false;
+                            device.CommandExecuted = false;
                             device.InMotion = false;
                             device.CurrentTray = device.TargetTray;
+                            Mediator.GetInstance().OnTrayInPosition(this
+                                , new InPositionInfo
+                                {
+                                    Lift = lift.ParseInt(),
+                                    Tray = device.TargetTray
+                                });
                             device.StatusMessage = "XA A20 E00 Command was Executed";
+                            device.CommandSent = false;
+                            device.CommandAccepted = false;
+                            device.CommandExecuted = false;
                         }
                     }
                 }
