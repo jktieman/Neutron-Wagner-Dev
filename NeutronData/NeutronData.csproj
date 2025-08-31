@@ -130,6 +130,7 @@
     <Compile Include="Interfaces\IBlastzone.cs" />
     <Compile Include="Interfaces\IEnumManager.cs" />
     <Compile Include="Interfaces\IAkaRepository.cs" />
+    <Compile Include="Interfaces\IHistoryRepository.cs" />
     <Compile Include="Interfaces\IOrderDetailsRepository.cs" />
     <Compile Include="Interfaces\IPrintJobRepository.cs" />
     <Compile Include="Interfaces\IReplenOrdersRepository.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\NOVA_OUTPUT.cs" />
     <Compile Include="Models\PriorityRecord.cs" />
     <Compile Include="Models\Replenishment.cs" />
+    <Compile Include="Models\SizeVelocityHeight.cs" />
     <Compile Include="Models\StorageDevice.cs" />
     <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\HostOrderLine.cs" />
@@ -299,6 +301,7 @@
     <Compile Include="Repositories\AkaRepository.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Interfaces\ILocationsRepository.cs" />
+    <Compile Include="Repositories\HistoryRepository.cs" />
     <Compile Include="Repositories\IGenericRepository.cs" />
     <Compile Include="Interfaces\IItemDefinitionsRepository.cs" />
     <Compile Include="Interfaces\IInventoryRepository.cs" />
