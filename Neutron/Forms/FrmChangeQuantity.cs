@@ -115,7 +115,7 @@ namespace Neutron.Forms
                 NewQty = value;
                 return true;
             }
-            MessageBox.Show(_resourceManager.GetString("Message1"));
+            MessageBox.Show(_resourceManager.GetString("Message1"), "Valid Number Check", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             return false;
         }
 
@@ -153,7 +153,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ");
+                MessageBox.Show($"Error loading language file.  { ex.Message} { Environment.NewLine} { ex.InnerException} ", "Language File Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
