@@ -30,6 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.ButtonCancel = new System.Windows.Forms.Button();
             this.ButtonAccept = new System.Windows.Forms.Button();
             this.ButtonBackorder = new System.Windows.Forms.Button();
             this.ButtonHighlight = new System.Windows.Forms.Button();
@@ -65,6 +66,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel2.Controls.Add(this.ButtonCancel);
             this.panel2.Controls.Add(this.ButtonAccept);
             this.panel2.Controls.Add(this.ButtonBackorder);
             this.panel2.Controls.Add(this.ButtonHighlight);
@@ -73,12 +75,23 @@
             this.panel2.Size = new System.Drawing.Size(503, 100);
             this.panel2.TabIndex = 36;
             // 
+            // ButtonCancel
+            // 
+            this.ButtonCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ButtonCancel.Location = new System.Drawing.Point(382, 14);
+            this.ButtonCancel.Name = "ButtonCancel";
+            this.ButtonCancel.Size = new System.Drawing.Size(113, 72);
+            this.ButtonCancel.TabIndex = 2;
+            this.ButtonCancel.Text = "Cancel";
+            this.ButtonCancel.UseVisualStyleBackColor = true;
+            this.ButtonCancel.Click += new System.EventHandler(this.ButtonCancel_Click);
+            // 
             // ButtonAccept
             // 
             this.ButtonAccept.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonAccept.Location = new System.Drawing.Point(336, 14);
+            this.ButtonAccept.Location = new System.Drawing.Point(258, 14);
             this.ButtonAccept.Name = "ButtonAccept";
-            this.ButtonAccept.Size = new System.Drawing.Size(150, 72);
+            this.ButtonAccept.Size = new System.Drawing.Size(113, 72);
             this.ButtonAccept.TabIndex = 2;
             this.ButtonAccept.Text = "Accept";
             this.ButtonAccept.UseVisualStyleBackColor = true;
@@ -87,9 +100,9 @@
             // ButtonBackorder
             // 
             this.ButtonBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonBackorder.Location = new System.Drawing.Point(176, 14);
+            this.ButtonBackorder.Location = new System.Drawing.Point(134, 14);
             this.ButtonBackorder.Name = "ButtonBackorder";
-            this.ButtonBackorder.Size = new System.Drawing.Size(150, 72);
+            this.ButtonBackorder.Size = new System.Drawing.Size(113, 72);
             this.ButtonBackorder.TabIndex = 1;
             this.ButtonBackorder.Text = "Backorder";
             this.ButtonBackorder.UseVisualStyleBackColor = true;
@@ -98,9 +111,9 @@
             // ButtonHighlight
             // 
             this.ButtonHighlight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonHighlight.Location = new System.Drawing.Point(17, 14);
+            this.ButtonHighlight.Location = new System.Drawing.Point(10, 14);
             this.ButtonHighlight.Name = "ButtonHighlight";
-            this.ButtonHighlight.Size = new System.Drawing.Size(150, 72);
+            this.ButtonHighlight.Size = new System.Drawing.Size(113, 72);
             this.ButtonHighlight.TabIndex = 0;
             this.ButtonHighlight.Text = "Skip";
             this.ButtonHighlight.UseVisualStyleBackColor = true;
@@ -171,7 +184,7 @@
             this.LabelNewQuantity.Name = "LabelNewQuantity";
             this.LabelNewQuantity.Size = new System.Drawing.Size(463, 36);
             this.LabelNewQuantity.TabIndex = 29;
-            this.LabelNewQuantity.Text = "Quantity";
+            this.LabelNewQuantity.Text = "Quantity Picked";
             this.LabelNewQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TextBoxNewQuantity
@@ -187,10 +200,13 @@
             // 
             // FrmPickViewAdjustment
             // 
+            this.AcceptButton = this.ButtonCancel;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.CancelButton = this.ButtonCancel;
             this.ClientSize = new System.Drawing.Size(567, 608);
+            this.ControlBox = false;
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
@@ -198,6 +214,7 @@
             this.Name = "FrmPickViewAdjustment";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Pick Adjustment";
+            this.TopMost = true;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmPickViewAdjustment_KeyDown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -220,5 +237,6 @@
         private System.Windows.Forms.Button ButtonAccept;
         private System.Windows.Forms.Button ButtonBackorder;
         private System.Windows.Forms.Button ButtonHighlight;
+        private System.Windows.Forms.Button ButtonCancel;
     }
 }

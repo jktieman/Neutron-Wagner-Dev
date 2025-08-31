@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using AlliedLogger;
 using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronData.ModelViews;
 
 namespace Neutron.Forms
@@ -15,6 +17,7 @@ namespace Neutron.Forms
     public partial class FrmPickViewAdjustment : Form
     {
         private readonly PickView _pickView;
+        private readonly IDynamicLogger _logger;
         public bool Success;
         public string ButtonPressed = string.Empty;
 
@@ -22,17 +25,19 @@ namespace Neutron.Forms
         /// Initializes a new instance of the <see cref="FrmPickViewAdjustment"/> class.
         /// </summary>
         /// <param name="pickView">The pick view model that contains the details of the pick operation.</param>
+        /// <param name="logger"></param>
         /// <remarks>
         /// This constructor initializes the form with the details of the pick operation from the provided pick view model.
         /// It sets up the form fields such as order, item, description, pick position
         /// , and quantity to be picked with the corresponding values from the pick view model.
         /// </remarks>
-        public FrmPickViewAdjustment(PickView pickView)
+        public FrmPickViewAdjustment(PickView pickView, IDynamicLogger logger)
         {
             InitializeComponent();
 
             KeyPreview = true;
             _pickView = pickView;
+            _logger = logger;
             LabelOrder.Text = pickView.Ord1;
             LabelItem.Text = pickView.Item;
             LabelDescription.Text = pickView.Description;
@@ -63,6 +68,7 @@ namespace Neutron.Forms
             _pickView.OrderDetail.PickedQuantity = 0;
             _pickView.PickedQty = 0;
             _pickView.QuantityToBePicked = _pickView.Quantity;
+            _logger.LogDetailAsync($"Skip Item: {_pickView.Item}");
             Success = true;
             Close();
         }
@@ -84,9 +90,10 @@ namespace Neutron.Forms
             ButtonPressed = "Backorder";
             _pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
 
-            _pickView.OrderDetail.PickedQuantity = _pickView.PickedQty;
-            //_pickView.PickedQty = 0;
-           // _pickView.QuantityToBePicked = _pickView.Quantity;
+            _pickView.OrderDetail.PickedQuantity = TextBoxNewQuantity.Text.ParseInt();  // _pickView.PickedQty;
+            _pickView.PickedQty =  TextBoxNewQuantity.Text.ParseInt();
+            _logger.LogDetailAsync($"Backorder: {_pickView.Item} Quantity: {_pickView.PickedQty}");
+            //_pickView.QuantityToBePicked = _pickView.Quantity;
             Success = true;
             Close();
         }
@@ -111,8 +118,9 @@ namespace Neutron.Forms
         {
             ButtonPressed = "Accept";
             _pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
-            _pickView.OrderDetail.PickedQuantity = _pickView.QuantityToBePicked;
-            _pickView.PickedQty = _pickView.QuantityToBePicked;
+            _pickView.OrderDetail.PickedQuantity = TextBoxNewQuantity.Text.ParseInt();   // _pickView.QuantityToBePicked;
+            _pickView.PickedQty = TextBoxNewQuantity.Text.ParseInt();   // _pickView.QuantityToBePicked;
+            _logger.LogDetailAsync($"Accept: {_pickView.Item} Quantity: {_pickView.PickedQty}");
             Success = true;
             Close();
         }
@@ -147,6 +155,11 @@ namespace Neutron.Forms
                         break;
                     }
             }
+        }
+
+        private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
