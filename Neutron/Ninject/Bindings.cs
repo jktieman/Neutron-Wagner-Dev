@@ -19,7 +19,6 @@ using NeutronMaintenance;
 using SqlSchemaManager;
 using ProliteController;
 using IDisplayController = IPTI.Models.IDisplayController;
-
 using System.Data.Common;
 using System.Data.SqlClient;
 using Ninject;
@@ -27,6 +26,7 @@ using System;
 using Microsoft.Extensions.Caching.Memory;
 using static System.Windows.Forms.Design.AxImporter;
 using Microsoft.Extensions.Options;
+using NeutronCore.Models;
 
 
 namespace Neutron.Ninject
@@ -56,7 +56,8 @@ namespace Neutron.Ninject
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>().InSingletonScope();
             Bind<IInventoryManager>().To<InventoryManager>().InSingletonScope();
             Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
-           // Bind<FrmMain>().To<FrmMain>().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            // Bind<FrmMain>().To<FrmMain>().InSingletonScope();
             Bind<FrmMain>().ToSelf();
            Bind<FrmSystem>().To<FrmSystem>()
                 
@@ -124,10 +125,11 @@ namespace Neutron.Ninject
             Bind<IBlastzone>().To<Blastzone>().InSingletonScope();
             Bind<IProLiteManager>().To<ProLiteManager>().InSingletonScope();
             Bind<IDisplayController>().To<TcpIptiController>().InSingletonScope();
-            Bind<IDialogService>().To<DialogService>().InSingletonScope();
             Bind<IPrintJobRepository>().To<PrintJobRepository>().InSingletonScope();
             Bind<IOptions<MemoryCacheOptions>>().ToConstant(Microsoft.Extensions.Options.Options.Create(new MemoryCacheOptions()));
             Bind<IMemoryCache>().To<MemoryCache>().InSingletonScope();
+            Bind<IHistoryRepository>().To<HistoryRepository>().InSingletonScope();
+
 
             // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
