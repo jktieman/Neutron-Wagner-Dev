@@ -1,5 +1,4 @@
-﻿using Hanel_DC.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,6 +13,8 @@ using HanelCommands;
 using HanelCommands.Builders;
 using NeutronEvents;
 using AsyncAwaitBestPractices;
+using NeutronCore.Extensions;
+using ByteExtensions = Hanel_DC.Extensions.ByteExtensions;
 
 namespace Hanel_DC
 {
@@ -26,6 +27,7 @@ namespace Hanel_DC
         private readonly StopBits _stopBits;
         private string _cError;
         private List<HanelDeviceStatus> _currentHanelDeviceStatusList;
+        private readonly int _logLevel;
         private IDynamicLogger _logger;
 
         public static char ZERO = Convert.ToChar(30);
@@ -42,7 +44,6 @@ namespace Hanel_DC
         private SerialPortStream _serialPort;
 
         private byte[] _dataIn = new byte[] { };
-        private bool _continue = true;
         private Thread _readMp12DThread;
         private StringComparer _stringComparer = StringComparer.OrdinalIgnoreCase;
         public event EventHandler<byte[]> RaiseSerialDataEvent;
@@ -50,6 +51,7 @@ namespace Hanel_DC
         private volatile bool _cancelPolling = false;
         private HanelCommandService _hanelCommandService;
         private volatile bool _pollingActive;
+        private int _loglevel;
 
         public event EventHandler<SerialPortInfoEventArgs> SerialPortInfoHandler;
         public event EventHandler<HanelDeviceStatusEventArgs> HanelDeviceStatusHandler;
@@ -60,7 +62,8 @@ namespace Hanel_DC
             , Parity parity
             , StopBits stopBits
             , ref string cError
-            , ref List<HanelDeviceStatus> currentHanelDeviceStatusList)
+            , ref List<HanelDeviceStatus> currentHanelDeviceStatusList
+            , int logLevel)
         {
             _comPort = comPort;
             _baudRate = baudRate;
@@ -69,6 +72,7 @@ namespace Hanel_DC
             _stopBits = stopBits;
             _cError = cError;
             _currentHanelDeviceStatusList = currentHanelDeviceStatusList;
+            _logLevel = logLevel;
             _lastMessageSent = new byte[] { };
 
             Init();
@@ -76,12 +80,16 @@ namespace Hanel_DC
 
         private void Init()
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger("SerialPortData");
+            //_logger = NeutronCore.Global.Logger.SetupLogger("SerialPortData");
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
             _logger.LogDetailAsync("Hanel MP12D Serial Port Monitor Startup").SafeFireAndForget();
             InitSerialPort();
+
             _hanelCommandService = new HanelCommandService(_currentHanelDeviceStatusList.Count, _currentHanelDeviceStatusList);
             Task.Run(StartPollingAsync);
         }
+
+
 
 
         protected virtual void OnSerialPortInfo(SerialPortInfoEventArgs e)
@@ -99,28 +107,33 @@ namespace Hanel_DC
 
         private void InitSerialPort()
         {
+            const int maxAttempts = 60;
+            const int delayMs = 500;
+            var portOpened = false;
+
             _serialPort = new SerialPortStream(_comPort, _baudRate, _dataBits, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One)
             {
                 WriteTimeout = 200
             };
 
-            for (var i = 0; i <= 60; i++)
+            for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
                 try
                 {
-                    _serialPort?.Open();
-                    if (_serialPort != null && _serialPort.IsOpen)
-                    {
-                        _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
-                        //ShowData("Startup Success");
-                        _readMp12DThread = new Thread(ReadMp12D);
-                        RaiseSerialDataEvent += async (sender, data) => await ProcessMp12DData(sender, data);
-                        break;
-                    }
+                    if (_serialPort == null) continue;
+                    _serialPort.Open();
+                    if (!_serialPort.IsOpen) continue;
+                    
+                    _logger.LogDetailAsync($"Serial port opened successfully on attempt {attempt}.").SafeFireAndForget();
+                    
+                    _readMp12DThread = new Thread(ReadMp12D);
+                    RaiseSerialDataEvent += async (sender, data) => await ProcessMp12DData(sender, data);
+                    portOpened = true;
+                    break;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogDetailAsync($"Open Serial Port Exception: {ex.Message}").SafeFireAndForget();
+                    _logger.LogDetailAsync($"Attempt {attempt}: Failed to open serial port: {ex.Message}").SafeFireAndForget();
                     try
                     {
                         _serialPort?.Close();
@@ -129,17 +142,18 @@ namespace Hanel_DC
                     {
                         _logger.LogDetailAsync($"Close Exception: {e.Message}").SafeFireAndForget();
                     }
+                    Thread.Sleep(delayMs);
 
-                    Thread.Sleep(500);
-
-                    _cError = $"TRY: {i}  :SerialPort Open Exception: {ex.Message}";
+                    _cError = $"TRY: {attempt}  :SerialPort Open Exception: {ex.Message}";
                     _logger.LogDetailAsync($"Startup Fail: {Environment.NewLine} {_cError}").SafeFireAndForget();
                 }
             }
 
-            if (!IsPortOpen)
+            if (!portOpened)
             {
-                MessageBox.Show($"Port is NOT Open.");
+                _logger.LogDetailAsync("All attempts to open the serial port failed.").SafeFireAndForget();
+                _cancelPolling = true;
+                MessageBox.Show("Port is NOT Open after multiple attempts.", "Port Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
@@ -149,16 +163,19 @@ namespace Hanel_DC
         {
             if (dataIn == null || dataIn.Length == 0) return;
 
-            _logger.LogDetailAsync($"Current Data In: {Encoding.UTF8.GetString(dataIn)}").SafeFireAndForget();
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Current Data In: {Encoding.UTF8.GetString(dataIn)}").SafeFireAndForget();
 
             var concat = new byte[_dataIn.Length + dataIn.Length];
             Buffer.BlockCopy(_dataIn, 0, concat, 0, _dataIn.Length);
             Buffer.BlockCopy(dataIn, 0, concat, _dataIn.Length, dataIn.Length);
             _dataIn = concat;
-            _logger.LogDetailAsync($"Merged Mp12D Data: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Merged Mp12D Data: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
 
             _dataIn = RemoveBytesBeforeAsterisk(_dataIn);
-            _logger.LogDetailAsync($"Remove Bytes Before Asterisk: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Remove Bytes Before Asterisk: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
 
             if (_dataIn.Length >= 3)
             {
@@ -170,15 +187,16 @@ namespace Hanel_DC
                     {
                         _dataIn = _dataIn.Skip(validCommand.Length).ToArray();
                         // ShowData($"---------------------Complete MP12D Response------------------------");
-                        _logger.LogDetailAsync($"MP12D Response: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
-                        _logger.LogDetailAsync($"validCommand: {Encoding.UTF8.GetString(validCommand)}").SafeFireAndForget();
+                        // _logger.LogDetailAsync($"MP12D Response: {Encoding.UTF8.GetString(_dataIn)}").SafeFireAndForget();
+                        // _logger.LogDetailAsync($"Valid Command: {Encoding.UTF8.GetString(validCommand)}").SafeFireAndForget();
 
                         await ProcessDataIn(validCommand);
 
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogDetailAsync("04 Error Message: {ex.Message}").SafeFireAndForget();
+                        _logger.LogDetailAsync($"04 Error Message: {ex.Message}").SafeFireAndForget();
+                        Mediator.GetInstance().OnDisplayMessage(this, $"Process Data Error: {ex.Message}");
                     }
                 }
 
@@ -207,28 +225,35 @@ namespace Hanel_DC
             {
                 return null;
             }
-
-            _logger.LogDetailAsync($"dataIn: {Encoding.UTF8.GetString(dataIn)}");
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"dataIn: {Encoding.UTF8.GetString(dataIn)}").SafeFireAndForget();
             // extract the byte array starting with 42 and ending with 10
             var startIndex = FindAsterisk(dataIn);
-            _logger.LogDetailAsync($"Start Index: {startIndex}");
+
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Start Index: {startIndex}").SafeFireAndForget();
             if (startIndex == -1)
             {
-                _logger.LogDetailAsync($"Start Index = -1 {startIndex}");
+                if (_logLevel == 8)
+                    _logger.LogDetailAsync($"Start Index = -1 {startIndex}").SafeFireAndForget();
                 return null;
             }
-            _logger.LogDetailAsync($"Final dataIn: {Encoding.UTF8.GetString(dataIn)} ");
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Final dataIn: {Encoding.UTF8.GetString(dataIn)} ").SafeFireAndForget();
             startIndex = FindAsterisk(dataIn);
-            _logger.LogDetailAsync($"Final dataIn Start Index: {startIndex} ");
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Final dataIn Start Index: {startIndex} ").SafeFireAndForget();
             var endIndex = FindLineFeed(dataIn);
-            _logger.LogDetailAsync($"Final dataIn End Index: {endIndex} ");
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Final dataIn End Index: {endIndex} ").SafeFireAndForget();
             if (endIndex == -1)
             {
                 return null;
             }
 
             byteArray = dataIn.Skip(startIndex).Take(endIndex - startIndex + 1).ToArray();
-            _logger.LogDetailAsync($"Return ByteArray: {Encoding.UTF8.GetString(byteArray)}");
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Return ByteArray: {Encoding.UTF8.GetString(byteArray)}").SafeFireAndForget();
             return byteArray;
         }
 
@@ -334,9 +359,16 @@ namespace Hanel_DC
             try
             {
                 byte[] buffer = new byte[4096];
-                Action kickoffReadMp12D = null;
-                kickoffReadMp12D = delegate
+                //Action kickoffReadMp12D = null;
+                //kickoffReadMp12D = delegate
+                void StartReading()
                 {
+                    if (_serialPort == null || !_serialPort.IsOpen)
+                    {
+                        _logger.LogDetailAsync("Serial port is not open. Skipping read.").SafeFireAndForget();
+                        return;
+                    }
+
                     _serialPort.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                     {
                         try
@@ -359,12 +391,15 @@ namespace Hanel_DC
                             // Ensure the read operation is restarted
                             if (!_cancelPolling)
                             {
-                                kickoffReadMp12D();
+                                //kickoffReadMp12D();
+                                StartReading();
                             }
                         }
                     }, null);
-                };
-                kickoffReadMp12D();
+                }
+                ;
+                //kickoffReadMp12D();
+                StartReading();
             }
             catch (ThreadAbortException ex)
             {
@@ -393,35 +428,63 @@ namespace Hanel_DC
 
         public bool SendData(string message)
         {
-            return SendData(message.StringToByteArray());
+            return SendData(ByteExtensions.StringToByteArray(message));
         }
 
         public bool SendData(byte[] message)
         {
+            var commandString = $"{Encoding.UTF8.GetString(message)}";
+            var deviceNumber = commandString.Substring(3, 1).ParseInt();
+            var targetTray = commandString.Substring(3, 1).ParseInt();
+            var status = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+            if (status != null)
+            {
+                status.CommandSent = true;
+                status.CommandAccepted = false;
+                status.CommandExecuted = false;
+                var command = new HanelCommand()
+                {
+                    Command = message
+                };
+                status.LastHanelCommand = command;
+                status.TargetTray = targetTray;
+            }
+            _logger.LogDetailAsync($"Device Status-Sent:{status.CommandSent}").SafeFireAndForget();
             var result = false;
             try
             {
-                if (_lastMessageSent.Length == 0)
-                {
-                    _lastMessageSent = message;
-                }
-                _logger.LogDetailAsync($"Send to Hanel: {Encoding.UTF8.GetString(message)}").SafeFireAndForget();
+                //if (_lastMessageSent.Length == 0)
+                //{
+                //    _lastMessageSent = message;
+                //}
                 //ShowData(message.ByteArrayToString());
                 if (IsPortOpen)
                 {
+                    _logger.LogDetailAsync($"SEND TO HANEL: {commandString}").SafeFireAndForget();
                     _serialPort.Write(message, 0, message.Length);
                     result = true;
                 }
                 else
                 {
-                    _logger.LogDetailAsync("Serial Port is Closed.").SafeFireAndForget();
+                    _logger.LogDetailAsync($"Had to InitSerialPort First");
+                    InitSerialPort();
+                    if (IsPortOpen)
+                    {
+                        _serialPort.Write(message, 0, message.Length);
+                        _logger.LogDetailAsync($"SENT TO HANEL: {commandString}").SafeFireAndForget();
+                        result = true;
+                    }
+                    else
+                    {
+                        Mediator.GetInstance().OnDisplayMessage(this, "Serial Port is Closed.");
+                        _logger.LogDetailAsync("Serial Port is Closed.").SafeFireAndForget();
+                    }
                 }
-
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"SendData Error: {ex.Message}").SafeFireAndForget();
-                throw;
+                Mediator.GetInstance().OnDisplayMessage(this, $"SendData Error: {ex.Message}");
             }
             return result;
         }
@@ -436,7 +499,6 @@ namespace Hanel_DC
             try
             {
                 _logger.LogDetailAsync("Begin Stop").SafeFireAndForget();
-                _continue = false;
                 _cancelPolling = true;
                 _readMp12DThread?.Abort();
                 _serialPort?.Close();
@@ -456,7 +518,7 @@ namespace Hanel_DC
             var lift = nAccess.ToString().PadLeft(2, '0');
             var accessPoint = "1";
             var response = $"{AST}G{lift}{accessPoint}$M XO$X01001PRESS RETURN$X03010DO IT NOW${CR}{LF}";
-            SendData(response.StringToByteArray());
+            SendData(ByteExtensions.StringToByteArray(response));
         }
 
         /// <summary>
@@ -467,8 +529,20 @@ namespace Hanel_DC
         /// <returns>Returns a string response to the MP12D</returns>
         private async Task ProcessDataIn(byte[] dataIn)
         {
+            
             var commandString = Encoding.UTF8.GetString(dataIn);
             _logger.LogDetailAsync($"PROCESS DATA IN: {commandString}").SafeFireAndForget();
+
+
+            //if (dataIn.Length > 6)
+            //{
+            //    _logger.LogDetailAsync($"PROCESS DATA IN: {commandString}").SafeFireAndForget();
+            //}
+            //else
+            //{
+                
+            //}
+
 
             var commandSegments = commandString.Split('$');
             LogSegments(commandSegments);
@@ -479,7 +553,8 @@ namespace Hanel_DC
 
                 //if (commandString.Contains("BE"))
                 //{
-                _logger.LogDetailAsync($"Exactly 2 Command Segments: {commandString}").SafeFireAndForget();
+                if (_logLevel == 8)
+                    _logger.LogDetailAsync($"Exactly 2 Command Segments: {commandString}").SafeFireAndForget();
                 //   // await DumpStatusAsync("Odd BE Command String");
                 //}
                 //else
@@ -490,13 +565,22 @@ namespace Hanel_DC
             }
 
             // There are more than 2 commandSegments
+            
+            var lift = commandSegments[0].Substring(2, 2); 
+            if (!int.TryParse(lift, out var liftNumber))
+            {
+                throw new InvalidOperationException($"Invalid lift number: {lift}");
+            }
 
-            var lift = commandSegments[0].Substring(2, 2);
-            var accessPoint = commandSegments[0].Substring(4, 1);
+            var ap = commandSegments[0].Substring(4, 1);
+            if (!int.TryParse(ap, out var accessPoint))
+            {
+                throw new InvalidOperationException($"Invalid Access Point number: {ap}");
+            }
+            var deviceStatus = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
 
-            var deviceStatus = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == int.Parse(lift));
 
-            await DumpStatusAsync("Before Command Processing", deviceStatus);
+           await DumpStatusAsync("Before Command Processing", deviceStatus);
 
             var hanelCommandProcessor = new HanelCommandProcessor();
 
@@ -504,11 +588,12 @@ namespace Hanel_DC
 
             await DumpStatusAsync("After Command Processing", deviceStatus);
 
-            _logger.LogDetailAsync($"DataIn to Process: {commandString}").SafeFireAndForget();
+            // _logger.LogDetailAsync($"DataIn to Process: {commandString}").SafeFireAndForget();
 
             if (commandString.Contains("BE"))
             {
-                _logger.LogDetailAsync($"Contains Ending BE").SafeFireAndForget();
+                if (_logLevel == 8)
+                    _logger.LogDetailAsync($"Contains Ending BE").SafeFireAndForget();
             }
         }
 
@@ -519,8 +604,8 @@ namespace Hanel_DC
             {
                 sb.AppendLine(segment);
             }
-
-            _logger.LogDetailAsync($"Command segments: {sb}").SafeFireAndForget();
+            if (_logLevel == 8)
+                _logger.LogDetailAsync($"Command segments: {sb}").SafeFireAndForget();
         }
         private async Task DumpStatusAsync(string title, HanelDeviceStatus deviceStatus)
         {
@@ -548,44 +633,11 @@ namespace Hanel_DC
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  InAlignment = {deviceStatus.InAlignment}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  StatusMessage = {deviceStatus.StatusMessage}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  ActiveErrorCount = {deviceStatus.ActiveErrorCount}");
+            sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandSent = {deviceStatus.CommandSent}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandAccepted = {deviceStatus.CommandAccepted}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandExecuted = {deviceStatus.CommandExecuted}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  Switched On = {deviceStatus.SwitchedOn}");
         }
-
-
-
-        //private void DumpStatus()
-        //{
-        //    foreach (var deviceStatus in _currentHanelDeviceStatusList)
-        //    {
-        //        if (deviceStatus == null) continue;
-
-        //        var sb = new StringBuilder();
-
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  DeviceNumber = {deviceStatus.DeviceNumber}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  GoodStatus = {deviceStatus.GoodStatus}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  LastStatus = {deviceStatus.LastStatus}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  LastCommand = {deviceStatus.LastCommand}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  Device = {deviceStatus.Device}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  TargetTray = {deviceStatus.TargetTray}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CurrentTray = {deviceStatus.CurrentTray}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  InMotion = {deviceStatus.InMotion}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  InAlignment = {deviceStatus.InAlignment}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  StatusMessage = {deviceStatus.StatusMessage}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  ActiveErrorCount ={deviceStatus.ActiveErrorCount}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandAccepted = {deviceStatus.CommandAccepted}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandExecuted = {deviceStatus.CommandExecuted}");
-        //        sb.AppendLine($"Device #{deviceStatus.DeviceNumber} Switched On = {deviceStatus.SwitchedOn}");
-        //        sb.AppendLine($"--------------------------------------------------");
-        //        sb.AppendLine();
-
-        //        _logger.LogDetailAsync(sb.ToString()).SafeFireAndForget(); 
-
-        //        //ShowData($"{sb.ToString()}");
-        //    }
-        //    //ShowData($"Device #{deviceStatus.DeviceNumber} Status Message: {deviceStatus.StatusMessage}");
-        //}
 
         private void UpdateCurrentTray(string lift, string accessPoint, string tray)
         {
@@ -612,6 +664,8 @@ namespace Hanel_DC
 
         public async Task StartPollingAsync()
         {
+            _logger.LogDetailAsync("Start Polling").SafeFireAndForget();
+
             var activePoll = false;
             _pollingActive = true;
             try
@@ -622,31 +676,31 @@ namespace Hanel_DC
                     if (statusList.Any())
                     {
                         var acceptedStatus = statusList.Where(r => r.CommandAccepted && !r.CommandExecuted).ToList();
-                        var executedStatus = statusList.Where(r => r.CommandAccepted && r.CommandExecuted).ToList();
-                        var readyStatus = statusList.Where(r => !r.CommandAccepted && !r.CommandExecuted).ToList();
-                        if (executedStatus.Any())
-                        {
-                            Mediator.GetInstance().OnTrayInPosition(this, new InPositionInfo { OneInPosition = true, TwoInPosition = false, ThreeInPosition = false });
-                        }
-                        if (acceptedStatus.Any())
-                        {
-                            activePoll = true;
-                        }
-                        if (readyStatus.Any())
-                        {
-                            // Handle ready status if needed
-                        }
+                        //       var executedStatus = statusList.Where(r => r.CommandAccepted && r.CommandExecuted).ToList();
+                        //      var readyStatus = statusList.Where(r => !r.CommandAccepted && !r.CommandExecuted).ToList();
+
+                        //     UpdateCurrentTrayInWindow(statusList);
+
+                        activePoll = acceptedStatus.Any();
+
+                        //if (readyStatus.Any())
+                        //{
+                        //    // Handle ready status if needed
+                        //}
                     }
                     if (activePoll)
                     {
-                        await _logger.LogDetailAsync("Active Polling Started").ConfigureAwait(false);
-                        var response = $"{AST}{CR}{LF}";
-                        SendData(response.StringToByteArray());
-                        //ShowData($"Neutron Polling : {response}");
-                        await _logger.LogDetailAsync($"Neutron Polling : {response}").ConfigureAwait(false);
+                        _logger.LogDetailAsync("ACTIVE Polling Started").SafeFireAndForget();
+                       // var response = $"{AST}{CR}{LF}";
+                       
+                       Mediator.GetInstance().OnSendPollCommand(this, true);
+                      
+                        //  SendData(response.StringToByteArray());
+
+                      //  _logger.LogDetailAsync($"Mediator Sent Poll Command").SafeFireAndForget();
                     }
                     await Task.Delay(500).ConfigureAwait(false);
-                    //await _logger.LogDetailAsync($"Active Polling Wait 500 milliseconds ActivePoll : {activePoll}").ConfigureAwait(false);
+                   // _logger.LogDetailAsync($"Active Polling Wait 500 milliseconds ActivePoll : {activePoll}").SafeFireAndForget();
                 }
             }
             catch (Exception ex)
@@ -657,6 +711,45 @@ namespace Hanel_DC
             {
                 _pollingActive = false;
             }
+            _logger.LogDetailAsync("Stop Polling").SafeFireAndForget();
+        }
+
+        private void UpdateCurrentTrayInWindow(List<HanelDeviceStatus> statusList)
+        {
+            _logger.LogDetailAsync("9");
+            foreach (var status in statusList)
+            {
+                if (status.DeviceNumber == 1)
+                {
+                    Mediator.GetInstance().OnTrayInPosition(this
+                        , new InPositionInfo
+                        {
+                            Lift = status.DeviceNumber,
+                            Tray = status.CurrentTray
+                        });
+                }
+                if (status.DeviceNumber == 2)
+                {
+                    Mediator.GetInstance().OnTrayInPosition(this
+                        , new InPositionInfo
+                        {
+                            Lift = status.DeviceNumber,
+                            Tray = status.CurrentTray
+                        });
+                }
+                if (status.DeviceNumber == 3)
+                {
+
+                    Mediator.GetInstance().OnTrayInPosition(this
+                        , new InPositionInfo
+                        {
+                            Lift = status.DeviceNumber,
+                            Tray = status.CurrentTray
+                        });
+                }
+
+            }
+            _logger.LogDetailAsync("Current Tray Processing Complete...").ConfigureAwait(false);
         }
 
 
