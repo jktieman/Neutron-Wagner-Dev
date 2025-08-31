@@ -11,7 +11,7 @@ namespace NeutronData.Interfaces
         List<InventoryView> GetInventoryViewAll();
         InventoryView GetInventoryViewById(int id);
         Inventory GetInventoryById(int id);
-        Task<List<Inventory>> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId);
+        List<Inventory> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId);
         List<InventoryView> GetInventoryViewByItem(string item);
         List<HotStoreListView> GetHotStoreList(string s);
         Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find, int areaId);
