@@ -8,8 +8,7 @@ namespace NeutronEvents
 {
     public class InPositionInfo
     {
-        public bool OneInPosition { get; set; }
-        public bool TwoInPosition { get; set; }
-        public bool ThreeInPosition { get; set; }
+        public int Lift { get; set; }
+        public int Tray { get; set; }
     }
 }
