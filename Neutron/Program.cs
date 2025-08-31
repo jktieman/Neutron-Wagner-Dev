@@ -40,8 +40,9 @@ namespace Neutron
             //NeutronLicense neutronLicense = null;
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-CA");
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr-CA");
-            
+
             const string appName = "NeutronTest";
+
 
             //var assembly = Assembly.GetExecutingAssembly();
             //var currentPath = AppDomain.CurrentDomain.BaseDirectory;
