@@ -75,6 +75,8 @@
     <Compile Include="Global\NeutronVariables.cs" />
     <Compile Include="LoaderSettings.cs" />
     <Compile Include="Models\DeviceDriverName.cs" />
+    <Compile Include="Models\DialogService.cs" />
+    <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\NeutronLicense.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
