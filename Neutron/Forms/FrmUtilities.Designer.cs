@@ -52,6 +52,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Main = new System.Windows.Forms.TabPage();
             this.MBSapServer = new MetroFramework.Controls.MetroButton();
+            this.MBHanelTester = new MetroFramework.Controls.MetroButton();
             this.MBBatchLightTester = new MetroFramework.Controls.MetroButton();
             this.MBProLiteTester = new MetroFramework.Controls.MetroButton();
             this.LabelVersionLabel = new System.Windows.Forms.Label();
@@ -582,7 +583,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.MBHanelTester = new MetroFramework.Controls.MetroButton();
             this.tabControl1.SuspendLayout();
             this.Main.SuspendLayout();
             this.PrintSettings.SuspendLayout();
@@ -702,9 +702,9 @@
             this.Main.Controls.Add(this.MBDevices);
             this.Main.Controls.Add(this.MBStations);
             this.Main.Controls.Add(this.MBOptions);
-            this.Main.Location = new System.Drawing.Point(4, 25);
+            this.Main.Location = new System.Drawing.Point(4, 22);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1227, 633);
+            this.Main.Size = new System.Drawing.Size(1227, 636);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             // 
@@ -719,6 +719,18 @@
             this.MBSapServer.Text = "SAP Server";
             this.MBSapServer.UseSelectable = true;
             this.MBSapServer.Click += new System.EventHandler(this.MBSapServer_Click);
+            // 
+            // MBHanelTester
+            // 
+            this.MBHanelTester.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.MBHanelTester.Location = new System.Drawing.Point(957, 165);
+            this.MBHanelTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHanelTester.Name = "MBHanelTester";
+            this.MBHanelTester.Size = new System.Drawing.Size(241, 84);
+            this.MBHanelTester.TabIndex = 33;
+            this.MBHanelTester.Text = "Hanel Tester";
+            this.MBHanelTester.UseSelectable = true;
+            this.MBHanelTester.Click += new System.EventHandler(this.MBHanelTester_Click);
             // 
             // MBBatchLightTester
             // 
@@ -749,7 +761,7 @@
             this.LabelVersionLabel.AutoSize = true;
             this.LabelVersionLabel.Location = new System.Drawing.Point(13, 15);
             this.LabelVersionLabel.Name = "LabelVersionLabel";
-            this.LabelVersionLabel.Size = new System.Drawing.Size(53, 16);
+            this.LabelVersionLabel.Size = new System.Drawing.Size(42, 13);
             this.LabelVersionLabel.TabIndex = 32;
             this.LabelVersionLabel.Text = "Version";
             // 
@@ -759,7 +771,7 @@
             this.LabelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelVersion.Location = new System.Drawing.Point(73, 15);
             this.LabelVersion.Name = "LabelVersion";
-            this.LabelVersion.Size = new System.Drawing.Size(84, 20);
+            this.LabelVersion.Size = new System.Drawing.Size(65, 16);
             this.LabelVersion.TabIndex = 31;
             this.LabelVersion.Text = "1.1.21.449";
             // 
@@ -922,9 +934,9 @@
             this.PrintSettings.Controls.Add(this.label8);
             this.PrintSettings.Controls.Add(this.LabelCheckPrinter);
             this.PrintSettings.Controls.Add(this.MBPrintSetUpBack);
-            this.PrintSettings.Location = new System.Drawing.Point(4, 25);
+            this.PrintSettings.Location = new System.Drawing.Point(4, 22);
             this.PrintSettings.Name = "PrintSettings";
-            this.PrintSettings.Size = new System.Drawing.Size(1227, 633);
+            this.PrintSettings.Size = new System.Drawing.Size(1227, 636);
             this.PrintSettings.TabIndex = 5;
             this.PrintSettings.Text = "Print Settings";
             // 
@@ -948,14 +960,14 @@
             // 
             this.TextBoxLoftwarePrinter.Location = new System.Drawing.Point(192, 59);
             this.TextBoxLoftwarePrinter.Name = "TextBoxLoftwarePrinter";
-            this.TextBoxLoftwarePrinter.Size = new System.Drawing.Size(281, 26);
+            this.TextBoxLoftwarePrinter.Size = new System.Drawing.Size(281, 22);
             this.TextBoxLoftwarePrinter.TabIndex = 1;
             // 
             // TextBoxLoftwareStation
             // 
             this.TextBoxLoftwareStation.Location = new System.Drawing.Point(192, 88);
             this.TextBoxLoftwareStation.Name = "TextBoxLoftwareStation";
-            this.TextBoxLoftwareStation.Size = new System.Drawing.Size(281, 26);
+            this.TextBoxLoftwareStation.Size = new System.Drawing.Size(281, 22);
             this.TextBoxLoftwareStation.TabIndex = 1;
             // 
             // LabelLoftwarePrinter
@@ -963,7 +975,7 @@
             this.LabelLoftwarePrinter.AutoSize = true;
             this.LabelLoftwarePrinter.Location = new System.Drawing.Point(40, 59);
             this.LabelLoftwarePrinter.Name = "LabelLoftwarePrinter";
-            this.LabelLoftwarePrinter.Size = new System.Drawing.Size(129, 20);
+            this.LabelLoftwarePrinter.Size = new System.Drawing.Size(98, 16);
             this.LabelLoftwarePrinter.TabIndex = 0;
             this.LabelLoftwarePrinter.Text = "Loftware Printer";
             // 
@@ -972,7 +984,7 @@
             this.LabelLoftwareStation.AutoSize = true;
             this.LabelLoftwareStation.Location = new System.Drawing.Point(40, 88);
             this.LabelLoftwareStation.Name = "LabelLoftwareStation";
-            this.LabelLoftwareStation.Size = new System.Drawing.Size(131, 20);
+            this.LabelLoftwareStation.Size = new System.Drawing.Size(101, 16);
             this.LabelLoftwareStation.TabIndex = 0;
             this.LabelLoftwareStation.Text = "Loftware Station";
             // 
@@ -980,7 +992,7 @@
             // 
             this.TextBoxLoftwareFilePath.Location = new System.Drawing.Point(192, 31);
             this.TextBoxLoftwareFilePath.Name = "TextBoxLoftwareFilePath";
-            this.TextBoxLoftwareFilePath.Size = new System.Drawing.Size(281, 26);
+            this.TextBoxLoftwareFilePath.Size = new System.Drawing.Size(281, 22);
             this.TextBoxLoftwareFilePath.TabIndex = 1;
             // 
             // LabelLoftwareFilePath
@@ -988,7 +1000,7 @@
             this.LabelLoftwareFilePath.AutoSize = true;
             this.LabelLoftwareFilePath.Location = new System.Drawing.Point(40, 31);
             this.LabelLoftwareFilePath.Name = "LabelLoftwareFilePath";
-            this.LabelLoftwareFilePath.Size = new System.Drawing.Size(145, 20);
+            this.LabelLoftwareFilePath.Size = new System.Drawing.Size(112, 16);
             this.LabelLoftwareFilePath.TabIndex = 0;
             this.LabelLoftwareFilePath.Text = "Loftware File Path";
             // 
@@ -1000,7 +1012,7 @@
             this.CheckBoxPrintPreviewTesting.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPrintPreviewTesting.Location = new System.Drawing.Point(581, 72);
             this.CheckBoxPrintPreviewTesting.Name = "CheckBoxPrintPreviewTesting";
-            this.CheckBoxPrintPreviewTesting.Size = new System.Drawing.Size(255, 24);
+            this.CheckBoxPrintPreviewTesting.Size = new System.Drawing.Size(202, 20);
             this.CheckBoxPrintPreviewTesting.TabIndex = 55;
             this.CheckBoxPrintPreviewTesting.Text = "Use Print Preview For Testing";
             this.CheckBoxPrintPreviewTesting.UseVisualStyleBackColor = true;
@@ -1012,7 +1024,7 @@
             this.CheckBoxUseLoftwareFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseLoftwareFile.Location = new System.Drawing.Point(208, 431);
             this.CheckBoxUseLoftwareFile.Name = "CheckBoxUseLoftwareFile";
-            this.CheckBoxUseLoftwareFile.Size = new System.Drawing.Size(234, 24);
+            this.CheckBoxUseLoftwareFile.Size = new System.Drawing.Size(184, 20);
             this.CheckBoxUseLoftwareFile.TabIndex = 55;
             this.CheckBoxUseLoftwareFile.Text = "Use Loftware File for Label";
             this.CheckBoxUseLoftwareFile.UseVisualStyleBackColor = true;
@@ -1023,7 +1035,7 @@
             this.CheckBoxLandscape.AutoSize = true;
             this.CheckBoxLandscape.Location = new System.Drawing.Point(210, 72);
             this.CheckBoxLandscape.Name = "CheckBoxLandscape";
-            this.CheckBoxLandscape.Size = new System.Drawing.Size(18, 17);
+            this.CheckBoxLandscape.Size = new System.Drawing.Size(15, 14);
             this.CheckBoxLandscape.TabIndex = 54;
             this.CheckBoxLandscape.UseVisualStyleBackColor = true;
             // 
@@ -1056,7 +1068,7 @@
             this.TextBoxTestOrderNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxTestOrderNumber.Location = new System.Drawing.Point(610, 131);
             this.TextBoxTestOrderNumber.Name = "TextBoxTestOrderNumber";
-            this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(173, 26);
+            this.TextBoxTestOrderNumber.Size = new System.Drawing.Size(173, 23);
             this.TextBoxTestOrderNumber.TabIndex = 2;
             this.TextBoxTestOrderNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1133,7 +1145,7 @@
             // 
             this.TextBoxLabelHomeY.Location = new System.Drawing.Point(263, 21);
             this.TextBoxLabelHomeY.Name = "TextBoxLabelHomeY";
-            this.TextBoxLabelHomeY.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxLabelHomeY.Size = new System.Drawing.Size(68, 22);
             this.TextBoxLabelHomeY.TabIndex = 1;
             this.TextBoxLabelHomeY.Text = "0";
             this.TextBoxLabelHomeY.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1142,7 +1154,7 @@
             // 
             this.TextBoxLabelHomeX.Location = new System.Drawing.Point(105, 21);
             this.TextBoxLabelHomeX.Name = "TextBoxLabelHomeX";
-            this.TextBoxLabelHomeX.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxLabelHomeX.Size = new System.Drawing.Size(68, 22);
             this.TextBoxLabelHomeX.TabIndex = 0;
             this.TextBoxLabelHomeX.Text = "0";
             this.TextBoxLabelHomeX.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1152,7 +1164,7 @@
             this.LabelPrintSettingsYPosition.AutoSize = true;
             this.LabelPrintSettingsYPosition.Location = new System.Drawing.Point(189, 24);
             this.LabelPrintSettingsYPosition.Name = "LabelPrintSettingsYPosition";
-            this.LabelPrintSettingsYPosition.Size = new System.Drawing.Size(84, 20);
+            this.LabelPrintSettingsYPosition.Size = new System.Drawing.Size(67, 16);
             this.LabelPrintSettingsYPosition.TabIndex = 3;
             this.LabelPrintSettingsYPosition.Text = "Y Position";
             // 
@@ -1161,7 +1173,7 @@
             this.LabelPrintSettingsXPosition.AutoSize = true;
             this.LabelPrintSettingsXPosition.Location = new System.Drawing.Point(29, 24);
             this.LabelPrintSettingsXPosition.Name = "LabelPrintSettingsXPosition";
-            this.LabelPrintSettingsXPosition.Size = new System.Drawing.Size(90, 20);
+            this.LabelPrintSettingsXPosition.Size = new System.Drawing.Size(69, 16);
             this.LabelPrintSettingsXPosition.TabIndex = 1;
             this.LabelPrintSettingsXPosition.Text = "X  Position";
             // 
@@ -1182,7 +1194,7 @@
             this.TextBoxLabelPrinter.Location = new System.Drawing.Point(208, 306);
             this.TextBoxLabelPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxLabelPrinter.Name = "TextBoxLabelPrinter";
-            this.TextBoxLabelPrinter.Size = new System.Drawing.Size(438, 26);
+            this.TextBoxLabelPrinter.Size = new System.Drawing.Size(438, 22);
             this.TextBoxLabelPrinter.TabIndex = 5;
             // 
             // LabelPrintSettingsEnterTestOrderNumber
@@ -1229,7 +1241,7 @@
             // 
             this.TextBoxDocumentBottomMargin.Location = new System.Drawing.Point(153, 121);
             this.TextBoxDocumentBottomMargin.Name = "TextBoxDocumentBottomMargin";
-            this.TextBoxDocumentBottomMargin.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxDocumentBottomMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentBottomMargin.TabIndex = 2;
             this.TextBoxDocumentBottomMargin.Text = "100";
             this.TextBoxDocumentBottomMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1238,7 +1250,7 @@
             // 
             this.TextBoxDocumentRightMargin.Location = new System.Drawing.Point(220, 86);
             this.TextBoxDocumentRightMargin.Name = "TextBoxDocumentRightMargin";
-            this.TextBoxDocumentRightMargin.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxDocumentRightMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentRightMargin.TabIndex = 1;
             this.TextBoxDocumentRightMargin.Text = "100";
             this.TextBoxDocumentRightMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1247,7 +1259,7 @@
             // 
             this.TextBoxDocumentLeftMargin.Location = new System.Drawing.Point(85, 86);
             this.TextBoxDocumentLeftMargin.Name = "TextBoxDocumentLeftMargin";
-            this.TextBoxDocumentLeftMargin.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxDocumentLeftMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentLeftMargin.TabIndex = 3;
             this.TextBoxDocumentLeftMargin.Text = "100";
             this.TextBoxDocumentLeftMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1256,7 +1268,7 @@
             // 
             this.TextBoxDocumentTopMargin.Location = new System.Drawing.Point(153, 52);
             this.TextBoxDocumentTopMargin.Name = "TextBoxDocumentTopMargin";
-            this.TextBoxDocumentTopMargin.Size = new System.Drawing.Size(68, 26);
+            this.TextBoxDocumentTopMargin.Size = new System.Drawing.Size(68, 22);
             this.TextBoxDocumentTopMargin.TabIndex = 0;
             this.TextBoxDocumentTopMargin.Text = "100";
             this.TextBoxDocumentTopMargin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1266,7 +1278,7 @@
             this.LabelPrintSettingsRight.AutoSize = true;
             this.LabelPrintSettingsRight.Location = new System.Drawing.Point(294, 92);
             this.LabelPrintSettingsRight.Name = "LabelPrintSettingsRight";
-            this.LabelPrintSettingsRight.Size = new System.Drawing.Size(48, 20);
+            this.LabelPrintSettingsRight.Size = new System.Drawing.Size(38, 16);
             this.LabelPrintSettingsRight.TabIndex = 3;
             this.LabelPrintSettingsRight.Text = "Right";
             // 
@@ -1275,7 +1287,7 @@
             this.LabelPrintSettingsBottom.AutoSize = true;
             this.LabelPrintSettingsBottom.Location = new System.Drawing.Point(143, 159);
             this.LabelPrintSettingsBottom.Name = "LabelPrintSettingsBottom";
-            this.LabelPrintSettingsBottom.Size = new System.Drawing.Size(63, 20);
+            this.LabelPrintSettingsBottom.Size = new System.Drawing.Size(49, 16);
             this.LabelPrintSettingsBottom.TabIndex = 2;
             this.LabelPrintSettingsBottom.Text = "Bottom";
             // 
@@ -1284,7 +1296,7 @@
             this.LabelPrintSettingsLeft.AutoSize = true;
             this.LabelPrintSettingsLeft.Location = new System.Drawing.Point(27, 89);
             this.LabelPrintSettingsLeft.Name = "LabelPrintSettingsLeft";
-            this.LabelPrintSettingsLeft.Size = new System.Drawing.Size(38, 20);
+            this.LabelPrintSettingsLeft.Size = new System.Drawing.Size(28, 16);
             this.LabelPrintSettingsLeft.TabIndex = 1;
             this.LabelPrintSettingsLeft.Text = "Left";
             // 
@@ -1293,7 +1305,7 @@
             this.LabelPrintSettingsTop.AutoSize = true;
             this.LabelPrintSettingsTop.Location = new System.Drawing.Point(164, 20);
             this.LabelPrintSettingsTop.Name = "LabelPrintSettingsTop";
-            this.LabelPrintSettingsTop.Size = new System.Drawing.Size(37, 20);
+            this.LabelPrintSettingsTop.Size = new System.Drawing.Size(32, 16);
             this.LabelPrintSettingsTop.TabIndex = 0;
             this.LabelPrintSettingsTop.Text = "Top";
             // 
@@ -1314,7 +1326,7 @@
             this.TextBoxDocumentPrinter.Location = new System.Drawing.Point(210, 37);
             this.TextBoxDocumentPrinter.Margin = new System.Windows.Forms.Padding(5);
             this.TextBoxDocumentPrinter.Name = "TextBoxDocumentPrinter";
-            this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 26);
+            this.TextBoxDocumentPrinter.Size = new System.Drawing.Size(438, 22);
             this.TextBoxDocumentPrinter.TabIndex = 0;
             // 
             // label8
@@ -1442,11 +1454,11 @@
             this.Settings.Controls.Add(this.CheckBoxUseReturnToStock);
             this.Settings.Controls.Add(this.MBSaveVariables);
             this.Settings.Controls.Add(this.MBInterfaceFilesBack);
-            this.Settings.Location = new System.Drawing.Point(4, 25);
+            this.Settings.Location = new System.Drawing.Point(4, 22);
             this.Settings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Settings.Name = "Settings";
             this.Settings.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Settings.Size = new System.Drawing.Size(1227, 633);
+            this.Settings.Size = new System.Drawing.Size(1227, 636);
             this.Settings.TabIndex = 2;
             this.Settings.Text = "Settings";
             // 
@@ -1465,7 +1477,7 @@
             this.TextBoxLogFilesDaysToKeep.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxLogFilesDaysToKeep.Location = new System.Drawing.Point(1013, 589);
             this.TextBoxLogFilesDaysToKeep.Name = "TextBoxLogFilesDaysToKeep";
-            this.TextBoxLogFilesDaysToKeep.Size = new System.Drawing.Size(40, 26);
+            this.TextBoxLogFilesDaysToKeep.Size = new System.Drawing.Size(40, 22);
             this.TextBoxLogFilesDaysToKeep.TabIndex = 58;
             this.TextBoxLogFilesDaysToKeep.Text = "14";
             this.TextBoxLogFilesDaysToKeep.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1476,7 +1488,7 @@
             this.CheckBoxAutoLoadReplenishments.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxAutoLoadReplenishments.Location = new System.Drawing.Point(601, 591);
             this.CheckBoxAutoLoadReplenishments.Name = "CheckBoxAutoLoadReplenishments";
-            this.CheckBoxAutoLoadReplenishments.Size = new System.Drawing.Size(232, 24);
+            this.CheckBoxAutoLoadReplenishments.Size = new System.Drawing.Size(187, 20);
             this.CheckBoxAutoLoadReplenishments.TabIndex = 55;
             this.CheckBoxAutoLoadReplenishments.Text = "Auto Load Replenishments";
             this.CheckBoxAutoLoadReplenishments.UseVisualStyleBackColor = true;
@@ -1496,7 +1508,7 @@
             0,
             0});
             this.numericUpDownBliControllerId.Name = "numericUpDownBliControllerId";
-            this.numericUpDownBliControllerId.Size = new System.Drawing.Size(54, 26);
+            this.numericUpDownBliControllerId.Size = new System.Drawing.Size(54, 22);
             this.numericUpDownBliControllerId.TabIndex = 53;
             this.numericUpDownBliControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericUpDownBliControllerId.Value = new decimal(new int[] {
@@ -1537,7 +1549,7 @@
             "01--01--01--01"});
             this.ComboBoxLoaderStation.Location = new System.Drawing.Point(168, 596);
             this.ComboBoxLoaderStation.Name = "ComboBoxLoaderStation";
-            this.ComboBoxLoaderStation.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxLoaderStation.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxLoaderStation.TabIndex = 50;
             // 
             // LabelLoaderStation
@@ -1598,7 +1610,7 @@
             "30"});
             this.ComboBoxStoreBatchSize.Location = new System.Drawing.Point(167, 311);
             this.ComboBoxStoreBatchSize.Name = "ComboBoxStoreBatchSize";
-            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(54, 28);
+            this.ComboBoxStoreBatchSize.Size = new System.Drawing.Size(54, 24);
             this.ComboBoxStoreBatchSize.TabIndex = 7;
             // 
             // ComboBoxPickBatchSize
@@ -1639,7 +1651,7 @@
             "30"});
             this.ComboBoxPickBatchSize.Location = new System.Drawing.Point(167, 274);
             this.ComboBoxPickBatchSize.Name = "ComboBoxPickBatchSize";
-            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(54, 28);
+            this.ComboBoxPickBatchSize.Size = new System.Drawing.Size(54, 24);
             this.ComboBoxPickBatchSize.TabIndex = 6;
             // 
             // GroupBoxPickMethod
@@ -1661,7 +1673,7 @@
             this.RadioButtonLifo.AutoSize = true;
             this.RadioButtonLifo.Location = new System.Drawing.Point(30, 125);
             this.RadioButtonLifo.Name = "RadioButtonLifo";
-            this.RadioButtonLifo.Size = new System.Drawing.Size(67, 24);
+            this.RadioButtonLifo.Size = new System.Drawing.Size(53, 20);
             this.RadioButtonLifo.TabIndex = 3;
             this.RadioButtonLifo.Text = "LIFO";
             this.RadioButtonLifo.UseVisualStyleBackColor = true;
@@ -1672,7 +1684,7 @@
             this.RadioButtonFifo.Checked = true;
             this.RadioButtonFifo.Location = new System.Drawing.Point(30, 91);
             this.RadioButtonFifo.Name = "RadioButtonFifo";
-            this.RadioButtonFifo.Size = new System.Drawing.Size(67, 24);
+            this.RadioButtonFifo.Size = new System.Drawing.Size(54, 20);
             this.RadioButtonFifo.TabIndex = 2;
             this.RadioButtonFifo.TabStop = true;
             this.RadioButtonFifo.Text = "FIFO";
@@ -1683,7 +1695,7 @@
             this.RadioButtonPrimeBinLast.AutoSize = true;
             this.RadioButtonPrimeBinLast.Location = new System.Drawing.Point(30, 57);
             this.RadioButtonPrimeBinLast.Name = "RadioButtonPrimeBinLast";
-            this.RadioButtonPrimeBinLast.Size = new System.Drawing.Size(195, 24);
+            this.RadioButtonPrimeBinLast.Size = new System.Drawing.Size(149, 20);
             this.RadioButtonPrimeBinLast.TabIndex = 1;
             this.RadioButtonPrimeBinLast.Text = "Prime Bin Last - FIFO";
             this.RadioButtonPrimeBinLast.UseVisualStyleBackColor = true;
@@ -1693,7 +1705,7 @@
             this.RadioButtonPrimeBinFirst.AutoSize = true;
             this.RadioButtonPrimeBinFirst.Location = new System.Drawing.Point(29, 25);
             this.RadioButtonPrimeBinFirst.Name = "RadioButtonPrimeBinFirst";
-            this.RadioButtonPrimeBinFirst.Size = new System.Drawing.Size(196, 24);
+            this.RadioButtonPrimeBinFirst.Size = new System.Drawing.Size(149, 20);
             this.RadioButtonPrimeBinFirst.TabIndex = 0;
             this.RadioButtonPrimeBinFirst.Text = "Prime Bin First - FIFO";
             this.RadioButtonPrimeBinFirst.UseVisualStyleBackColor = true;
@@ -1704,7 +1716,7 @@
             this.CheckBoxShiEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxShiEnabled.Location = new System.Drawing.Point(598, 346);
             this.CheckBoxShiEnabled.Name = "CheckBoxShiEnabled";
-            this.CheckBoxShiEnabled.Size = new System.Drawing.Size(266, 24);
+            this.CheckBoxShiEnabled.Size = new System.Drawing.Size(213, 20);
             this.CheckBoxShiEnabled.TabIndex = 31;
             this.CheckBoxShiEnabled.Text = "Shelf Height Indicators Enabled";
             this.CheckBoxShiEnabled.UseVisualStyleBackColor = true;
@@ -1715,7 +1727,7 @@
             this.CheckBoxBliEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxBliEnabled.Location = new System.Drawing.Point(598, 310);
             this.CheckBoxBliEnabled.Name = "CheckBoxBliEnabled";
-            this.CheckBoxBliEnabled.Size = new System.Drawing.Size(260, 24);
+            this.CheckBoxBliEnabled.Size = new System.Drawing.Size(206, 20);
             this.CheckBoxBliEnabled.TabIndex = 30;
             this.CheckBoxBliEnabled.Text = "Batch Light Indicators Enabled";
             this.CheckBoxBliEnabled.UseVisualStyleBackColor = true;
@@ -1826,7 +1838,7 @@
             this.CheckBoxRfidEnabledInventory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxRfidEnabledInventory.Location = new System.Drawing.Point(349, 559);
             this.CheckBoxRfidEnabledInventory.Name = "CheckBoxRfidEnabledInventory";
-            this.CheckBoxRfidEnabledInventory.Size = new System.Drawing.Size(207, 24);
+            this.CheckBoxRfidEnabledInventory.Size = new System.Drawing.Size(168, 20);
             this.CheckBoxRfidEnabledInventory.TabIndex = 23;
             this.CheckBoxRfidEnabledInventory.Text = "RFID Enabled Inventory";
             this.CheckBoxRfidEnabledInventory.UseVisualStyleBackColor = true;
@@ -1837,7 +1849,7 @@
             this.CheckBoxUsePr1Processor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUsePr1Processor.Location = new System.Drawing.Point(349, 526);
             this.CheckBoxUsePr1Processor.Name = "CheckBoxUsePr1Processor";
-            this.CheckBoxUsePr1Processor.Size = new System.Drawing.Size(180, 24);
+            this.CheckBoxUsePr1Processor.Size = new System.Drawing.Size(145, 20);
             this.CheckBoxUsePr1Processor.TabIndex = 23;
             this.CheckBoxUsePr1Processor.Text = "Use PR1 Processor";
             this.CheckBoxUsePr1Processor.UseVisualStyleBackColor = true;
@@ -1848,7 +1860,7 @@
             this.CheckBoxUsePr1StyleOutputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUsePr1StyleOutputProcessor.Location = new System.Drawing.Point(349, 490);
             this.CheckBoxUsePr1StyleOutputProcessor.Name = "CheckBoxUsePr1StyleOutputProcessor";
-            this.CheckBoxUsePr1StyleOutputProcessor.Size = new System.Drawing.Size(227, 24);
+            this.CheckBoxUsePr1StyleOutputProcessor.Size = new System.Drawing.Size(179, 20);
             this.CheckBoxUsePr1StyleOutputProcessor.TabIndex = 22;
             this.CheckBoxUsePr1StyleOutputProcessor.Text = "Use PR1 Style Output File";
             this.CheckBoxUsePr1StyleOutputProcessor.UseVisualStyleBackColor = true;
@@ -1859,7 +1871,7 @@
             this.CheckBoxUsePr1StyleInputProcessor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUsePr1StyleInputProcessor.Location = new System.Drawing.Point(349, 454);
             this.CheckBoxUsePr1StyleInputProcessor.Name = "CheckBoxUsePr1StyleInputProcessor";
-            this.CheckBoxUsePr1StyleInputProcessor.Size = new System.Drawing.Size(213, 24);
+            this.CheckBoxUsePr1StyleInputProcessor.Size = new System.Drawing.Size(169, 20);
             this.CheckBoxUsePr1StyleInputProcessor.TabIndex = 21;
             this.CheckBoxUsePr1StyleInputProcessor.Text = "Use PR1 Style Input File";
             this.CheckBoxUsePr1StyleInputProcessor.UseVisualStyleBackColor = true;
@@ -1870,7 +1882,7 @@
             this.CheckBoxParkPositionAfterBatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxParkPositionAfterBatch.Location = new System.Drawing.Point(349, 418);
             this.CheckBoxParkPositionAfterBatch.Name = "CheckBoxParkPositionAfterBatch";
-            this.CheckBoxParkPositionAfterBatch.Size = new System.Drawing.Size(220, 24);
+            this.CheckBoxParkPositionAfterBatch.Size = new System.Drawing.Size(172, 20);
             this.CheckBoxParkPositionAfterBatch.TabIndex = 20;
             this.CheckBoxParkPositionAfterBatch.Text = "Park Position After Batch";
             this.CheckBoxParkPositionAfterBatch.UseVisualStyleBackColor = true;
@@ -1881,7 +1893,7 @@
             this.CheckBoxPrintPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPrintPreview.Location = new System.Drawing.Point(349, 382);
             this.CheckBoxPrintPreview.Name = "CheckBoxPrintPreview";
-            this.CheckBoxPrintPreview.Size = new System.Drawing.Size(245, 24);
+            this.CheckBoxPrintPreview.Size = new System.Drawing.Size(192, 20);
             this.CheckBoxPrintPreview.TabIndex = 19;
             this.CheckBoxPrintPreview.Text = "Print Preview All Documents";
             this.CheckBoxPrintPreview.UseVisualStyleBackColor = true;
@@ -1892,7 +1904,7 @@
             this.CheckBoxEnableLabelPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableLabelPrinter.Location = new System.Drawing.Point(349, 346);
             this.CheckBoxEnableLabelPrinter.Name = "CheckBoxEnableLabelPrinter";
-            this.CheckBoxEnableLabelPrinter.Size = new System.Drawing.Size(183, 24);
+            this.CheckBoxEnableLabelPrinter.Size = new System.Drawing.Size(147, 20);
             this.CheckBoxEnableLabelPrinter.TabIndex = 18;
             this.CheckBoxEnableLabelPrinter.Text = "Enable Label Printer";
             this.CheckBoxEnableLabelPrinter.UseVisualStyleBackColor = true;
@@ -1903,7 +1915,7 @@
             this.CheckBoxEnableDocumentPrinter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableDocumentPrinter.Location = new System.Drawing.Point(349, 310);
             this.CheckBoxEnableDocumentPrinter.Name = "CheckBoxEnableDocumentPrinter";
-            this.CheckBoxEnableDocumentPrinter.Size = new System.Drawing.Size(219, 24);
+            this.CheckBoxEnableDocumentPrinter.Size = new System.Drawing.Size(174, 20);
             this.CheckBoxEnableDocumentPrinter.TabIndex = 17;
             this.CheckBoxEnableDocumentPrinter.Text = "Enable Document Printer";
             this.CheckBoxEnableDocumentPrinter.UseVisualStyleBackColor = true;
@@ -1920,7 +1932,7 @@
             "01--01--01--01"});
             this.ComboBoxStationNumber.Location = new System.Drawing.Point(167, 55);
             this.ComboBoxStationNumber.Name = "ComboBoxStationNumber";
-            this.ComboBoxStationNumber.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxStationNumber.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxStationNumber.TabIndex = 0;
             // 
             // ComboBoxSlotFormat
@@ -1936,7 +1948,7 @@
             "0101010101"});
             this.ComboBoxSlotFormat.Location = new System.Drawing.Point(167, 234);
             this.ComboBoxSlotFormat.Name = "ComboBoxSlotFormat";
-            this.ComboBoxSlotFormat.Size = new System.Drawing.Size(114, 28);
+            this.ComboBoxSlotFormat.Size = new System.Drawing.Size(114, 24);
             this.ComboBoxSlotFormat.TabIndex = 5;
             // 
             // NumericUpDownLogLevel
@@ -1954,7 +1966,7 @@
             0,
             0});
             this.NumericUpDownLogLevel.Name = "NumericUpDownLogLevel";
-            this.NumericUpDownLogLevel.Size = new System.Drawing.Size(65, 26);
+            this.NumericUpDownLogLevel.Size = new System.Drawing.Size(65, 22);
             this.NumericUpDownLogLevel.TabIndex = 4;
             this.NumericUpDownLogLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownLogLevel.Value = new decimal(new int[] {
@@ -1969,7 +1981,7 @@
             this.CheckBoxRfidEnabledPicking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxRfidEnabledPicking.Location = new System.Drawing.Point(601, 559);
             this.CheckBoxRfidEnabledPicking.Name = "CheckBoxRfidEnabledPicking";
-            this.CheckBoxRfidEnabledPicking.Size = new System.Drawing.Size(194, 24);
+            this.CheckBoxRfidEnabledPicking.Size = new System.Drawing.Size(158, 20);
             this.CheckBoxRfidEnabledPicking.TabIndex = 36;
             this.CheckBoxRfidEnabledPicking.Text = "RFID Enabled Picking";
             this.CheckBoxRfidEnabledPicking.UseVisualStyleBackColor = true;
@@ -1980,7 +1992,7 @@
             this.CheckBoxPinLoginOnly.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPinLoginOnly.Location = new System.Drawing.Point(598, 274);
             this.CheckBoxPinLoginOnly.Name = "CheckBoxPinLoginOnly";
-            this.CheckBoxPinLoginOnly.Size = new System.Drawing.Size(140, 24);
+            this.CheckBoxPinLoginOnly.Size = new System.Drawing.Size(111, 20);
             this.CheckBoxPinLoginOnly.TabIndex = 29;
             this.CheckBoxPinLoginOnly.Text = "Pin Login Only";
             this.CheckBoxPinLoginOnly.UseVisualStyleBackColor = true;
@@ -1993,7 +2005,7 @@
             this.CheckBoxUpdateItemDefinitionDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUpdateItemDefinitionDescription.Location = new System.Drawing.Point(601, 526);
             this.CheckBoxUpdateItemDefinitionDescription.Name = "CheckBoxUpdateItemDefinitionDescription";
-            this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(288, 24);
+            this.CheckBoxUpdateItemDefinitionDescription.Size = new System.Drawing.Size(228, 20);
             this.CheckBoxUpdateItemDefinitionDescription.TabIndex = 36;
             this.CheckBoxUpdateItemDefinitionDescription.Text = "Update Item Definition Description";
             this.CheckBoxUpdateItemDefinitionDescription.UseVisualStyleBackColor = true;
@@ -2001,15 +2013,14 @@
             // CheckBoxSpecialBackorder
             // 
             this.CheckBoxSpecialBackorder.AutoSize = true;
-            this.CheckBoxSpecialBackorder.Checked = true;
-            this.CheckBoxSpecialBackorder.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxSpecialBackorder.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxSpecialBackorder.Location = new System.Drawing.Point(838, 559);
             this.CheckBoxSpecialBackorder.Name = "CheckBoxSpecialBackorder";
-            this.CheckBoxSpecialBackorder.Size = new System.Drawing.Size(168, 24);
+            this.CheckBoxSpecialBackorder.Size = new System.Drawing.Size(138, 20);
             this.CheckBoxSpecialBackorder.TabIndex = 35;
             this.CheckBoxSpecialBackorder.Text = "Special Backorder";
             this.CheckBoxSpecialBackorder.UseVisualStyleBackColor = true;
+            this.CheckBoxSpecialBackorder.Visible = false;
             // 
             // CheckBoxSerialPicking
             // 
@@ -2017,7 +2028,7 @@
             this.CheckBoxSerialPicking.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxSerialPicking.Location = new System.Drawing.Point(600, 490);
             this.CheckBoxSerialPicking.Name = "CheckBoxSerialPicking";
-            this.CheckBoxSerialPicking.Size = new System.Drawing.Size(133, 24);
+            this.CheckBoxSerialPicking.Size = new System.Drawing.Size(108, 20);
             this.CheckBoxSerialPicking.TabIndex = 35;
             this.CheckBoxSerialPicking.Text = "Serial Picking";
             this.CheckBoxSerialPicking.UseVisualStyleBackColor = true;
@@ -2028,7 +2039,7 @@
             this.CheckBoxLoadRackOrders.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxLoadRackOrders.Location = new System.Drawing.Point(598, 454);
             this.CheckBoxLoadRackOrders.Name = "CheckBoxLoadRackOrders";
-            this.CheckBoxLoadRackOrders.Size = new System.Drawing.Size(168, 24);
+            this.CheckBoxLoadRackOrders.Size = new System.Drawing.Size(136, 20);
             this.CheckBoxLoadRackOrders.TabIndex = 34;
             this.CheckBoxLoadRackOrders.Text = "Load Rack Orders";
             this.CheckBoxLoadRackOrders.UseVisualStyleBackColor = true;
@@ -2039,7 +2050,7 @@
             this.CheckBoxIptiDisplays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxIptiDisplays.Location = new System.Drawing.Point(598, 418);
             this.CheckBoxIptiDisplays.Name = "CheckBoxIptiDisplays";
-            this.CheckBoxIptiDisplays.Size = new System.Drawing.Size(130, 24);
+            this.CheckBoxIptiDisplays.Size = new System.Drawing.Size(106, 20);
             this.CheckBoxIptiDisplays.TabIndex = 33;
             this.CheckBoxIptiDisplays.Text = "IPTI Displays";
             this.CheckBoxIptiDisplays.UseVisualStyleBackColor = true;
@@ -2050,7 +2061,7 @@
             this.CheckBoxAutoEnlargeImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxAutoEnlargeImage.Location = new System.Drawing.Point(598, 382);
             this.CheckBoxAutoEnlargeImage.Name = "CheckBoxAutoEnlargeImage";
-            this.CheckBoxAutoEnlargeImage.Size = new System.Drawing.Size(177, 24);
+            this.CheckBoxAutoEnlargeImage.Size = new System.Drawing.Size(144, 20);
             this.CheckBoxAutoEnlargeImage.TabIndex = 32;
             this.CheckBoxAutoEnlargeImage.Text = "Auto Enlarge Image";
             this.CheckBoxAutoEnlargeImage.UseVisualStyleBackColor = true;
@@ -2061,7 +2072,7 @@
             this.CheckBoxUseMenuSecurity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseMenuSecurity.Location = new System.Drawing.Point(598, 238);
             this.CheckBoxUseMenuSecurity.Name = "CheckBoxUseMenuSecurity";
-            this.CheckBoxUseMenuSecurity.Size = new System.Drawing.Size(173, 24);
+            this.CheckBoxUseMenuSecurity.Size = new System.Drawing.Size(138, 20);
             this.CheckBoxUseMenuSecurity.TabIndex = 28;
             this.CheckBoxUseMenuSecurity.Text = "Use Menu Security";
             this.CheckBoxUseMenuSecurity.UseVisualStyleBackColor = true;
@@ -2073,7 +2084,7 @@
             this.ComboBoxDefaultStorageType.FormattingEnabled = true;
             this.ComboBoxDefaultStorageType.Location = new System.Drawing.Point(167, 379);
             this.ComboBoxDefaultStorageType.Name = "ComboBoxDefaultStorageType";
-            this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxDefaultStorageType.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDefaultStorageType.TabIndex = 10;
             // 
             // ComboBoxDefaultLanguage
@@ -2083,7 +2094,7 @@
             this.ComboBoxDefaultLanguage.FormattingEnabled = true;
             this.ComboBoxDefaultLanguage.Location = new System.Drawing.Point(167, 90);
             this.ComboBoxDefaultLanguage.Name = "ComboBoxDefaultLanguage";
-            this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxDefaultLanguage.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDefaultLanguage.TabIndex = 1;
             // 
             // TextBoxRunCompressInterval
@@ -2091,7 +2102,7 @@
             this.TextBoxRunCompressInterval.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxRunCompressInterval.Location = new System.Drawing.Point(994, 513);
             this.TextBoxRunCompressInterval.Name = "TextBoxRunCompressInterval";
-            this.TextBoxRunCompressInterval.Size = new System.Drawing.Size(40, 26);
+            this.TextBoxRunCompressInterval.Size = new System.Drawing.Size(40, 22);
             this.TextBoxRunCompressInterval.TabIndex = 46;
             this.TextBoxRunCompressInterval.Text = "8";
             this.TextBoxRunCompressInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2110,7 +2121,7 @@
             "MP12N"});
             this.ComboBoxDeviceDriver.Location = new System.Drawing.Point(167, 160);
             this.ComboBoxDeviceDriver.Name = "ComboBoxDeviceDriver";
-            this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(150, 28);
+            this.ComboBoxDeviceDriver.Size = new System.Drawing.Size(150, 24);
             this.ComboBoxDeviceDriver.TabIndex = 3;
             // 
             // TextBoxCompressDays
@@ -2118,7 +2129,7 @@
             this.TextBoxCompressDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxCompressDays.Location = new System.Drawing.Point(994, 479);
             this.TextBoxCompressDays.Name = "TextBoxCompressDays";
-            this.TextBoxCompressDays.Size = new System.Drawing.Size(40, 26);
+            this.TextBoxCompressDays.Size = new System.Drawing.Size(40, 22);
             this.TextBoxCompressDays.TabIndex = 46;
             this.TextBoxCompressDays.Text = "30";
             this.TextBoxCompressDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2128,7 +2139,7 @@
             this.TextBoxUploadDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxUploadDelay.Location = new System.Drawing.Point(1022, 269);
             this.TextBoxUploadDelay.Name = "TextBoxUploadDelay";
-            this.TextBoxUploadDelay.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxUploadDelay.Size = new System.Drawing.Size(62, 22);
             this.TextBoxUploadDelay.TabIndex = 42;
             this.TextBoxUploadDelay.Text = "60";
             this.TextBoxUploadDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2138,7 +2149,7 @@
             this.TextBoxDeviceFlashRate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxDeviceFlashRate.Location = new System.Drawing.Point(1022, 412);
             this.TextBoxDeviceFlashRate.Name = "TextBoxDeviceFlashRate";
-            this.TextBoxDeviceFlashRate.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxDeviceFlashRate.Size = new System.Drawing.Size(62, 22);
             this.TextBoxDeviceFlashRate.TabIndex = 46;
             this.TextBoxDeviceFlashRate.Text = "500";
             this.TextBoxDeviceFlashRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2158,7 +2169,7 @@
             this.TextBoxLoaderDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxLoaderDelay.Location = new System.Drawing.Point(1022, 234);
             this.TextBoxLoaderDelay.Name = "TextBoxLoaderDelay";
-            this.TextBoxLoaderDelay.Size = new System.Drawing.Size(62, 26);
+            this.TextBoxLoaderDelay.Size = new System.Drawing.Size(62, 22);
             this.TextBoxLoaderDelay.TabIndex = 41;
             this.TextBoxLoaderDelay.Text = "60";
             this.TextBoxLoaderDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2218,7 +2229,7 @@
             this.TextBoxActionCodes.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxActionCodes.Location = new System.Drawing.Point(1022, 305);
             this.TextBoxActionCodes.Name = "TextBoxActionCodes";
-            this.TextBoxActionCodes.Size = new System.Drawing.Size(103, 26);
+            this.TextBoxActionCodes.Size = new System.Drawing.Size(103, 22);
             this.TextBoxActionCodes.TabIndex = 43;
             this.TextBoxActionCodes.Text = "1, 5, 46, 51";
             this.TextBoxActionCodes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2238,7 +2249,7 @@
             this.TextBoxStoreBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxStoreBatchRows.Location = new System.Drawing.Point(287, 311);
             this.TextBoxStoreBatchRows.Name = "TextBoxStoreBatchRows";
-            this.TextBoxStoreBatchRows.Size = new System.Drawing.Size(31, 26);
+            this.TextBoxStoreBatchRows.Size = new System.Drawing.Size(31, 22);
             this.TextBoxStoreBatchRows.TabIndex = 8;
             this.TextBoxStoreBatchRows.Text = "1";
             this.TextBoxStoreBatchRows.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2248,7 +2259,7 @@
             this.TextBoxPickBatchRows.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxPickBatchRows.Location = new System.Drawing.Point(287, 274);
             this.TextBoxPickBatchRows.Name = "TextBoxPickBatchRows";
-            this.TextBoxPickBatchRows.Size = new System.Drawing.Size(31, 26);
+            this.TextBoxPickBatchRows.Size = new System.Drawing.Size(31, 22);
             this.TextBoxPickBatchRows.TabIndex = 8;
             this.TextBoxPickBatchRows.Text = "1";
             this.TextBoxPickBatchRows.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2258,7 +2269,7 @@
             this.TextBoxFieldDelimiter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxFieldDelimiter.Location = new System.Drawing.Point(167, 347);
             this.TextBoxFieldDelimiter.Name = "TextBoxFieldDelimiter";
-            this.TextBoxFieldDelimiter.Size = new System.Drawing.Size(31, 26);
+            this.TextBoxFieldDelimiter.Size = new System.Drawing.Size(31, 22);
             this.TextBoxFieldDelimiter.TabIndex = 8;
             this.TextBoxFieldDelimiter.Text = "|";
             this.TextBoxFieldDelimiter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2268,7 +2279,7 @@
             this.TextBoxLicenseCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxLicenseCode.Location = new System.Drawing.Point(167, 126);
             this.TextBoxLicenseCode.Name = "TextBoxLicenseCode";
-            this.TextBoxLicenseCode.Size = new System.Drawing.Size(150, 26);
+            this.TextBoxLicenseCode.Size = new System.Drawing.Size(150, 22);
             this.TextBoxLicenseCode.TabIndex = 2;
             this.TextBoxLicenseCode.Text = "PR1";
             this.TextBoxLicenseCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2278,7 +2289,7 @@
             this.TextBoxStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxStationNumber.Location = new System.Drawing.Point(17, 10);
             this.TextBoxStationNumber.Name = "TextBoxStationNumber";
-            this.TextBoxStationNumber.Size = new System.Drawing.Size(31, 26);
+            this.TextBoxStationNumber.Size = new System.Drawing.Size(31, 22);
             this.TextBoxStationNumber.TabIndex = 9;
             this.TextBoxStationNumber.Text = "1";
             this.TextBoxStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2290,7 +2301,7 @@
             this.CheckBoxUseLAC.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseLAC.Location = new System.Drawing.Point(349, 274);
             this.CheckBoxUseLAC.Name = "CheckBoxUseLAC";
-            this.CheckBoxUseLAC.Size = new System.Drawing.Size(250, 24);
+            this.CheckBoxUseLAC.Size = new System.Drawing.Size(198, 20);
             this.CheckBoxUseLAC.TabIndex = 16;
             this.CheckBoxUseLAC.Text = "Use Location Access Control";
             this.CheckBoxUseLAC.UseVisualStyleBackColor = true;
@@ -2301,7 +2312,7 @@
             this.CheckBoxUsePrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUsePrimeBin.Location = new System.Drawing.Point(598, 61);
             this.CheckBoxUsePrimeBin.Name = "CheckBoxUsePrimeBin";
-            this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(256, 24);
+            this.CheckBoxUsePrimeBin.Size = new System.Drawing.Size(204, 20);
             this.CheckBoxUsePrimeBin.TabIndex = 9;
             this.CheckBoxUsePrimeBin.Text = "Use Prime Bin Replenishment";
             this.CheckBoxUsePrimeBin.UseVisualStyleBackColor = true;
@@ -2312,7 +2323,7 @@
             this.CheckBoxSendAllPicksToHost.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxSendAllPicksToHost.Location = new System.Drawing.Point(349, 238);
             this.CheckBoxSendAllPicksToHost.Name = "CheckBoxSendAllPicksToHost";
-            this.CheckBoxSendAllPicksToHost.Size = new System.Drawing.Size(204, 24);
+            this.CheckBoxSendAllPicksToHost.Size = new System.Drawing.Size(163, 20);
             this.CheckBoxSendAllPicksToHost.TabIndex = 15;
             this.CheckBoxSendAllPicksToHost.Text = "Send All Picks To Host";
             this.CheckBoxSendAllPicksToHost.UseVisualStyleBackColor = true;
@@ -2325,7 +2336,7 @@
             this.CheckBoxDisplaysEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxDisplaysEnabled.Location = new System.Drawing.Point(349, 202);
             this.CheckBoxDisplaysEnabled.Name = "CheckBoxDisplaysEnabled";
-            this.CheckBoxDisplaysEnabled.Size = new System.Drawing.Size(161, 24);
+            this.CheckBoxDisplaysEnabled.Size = new System.Drawing.Size(133, 20);
             this.CheckBoxDisplaysEnabled.TabIndex = 14;
             this.CheckBoxDisplaysEnabled.Text = "Displays Enabled";
             this.CheckBoxDisplaysEnabled.UseVisualStyleBackColor = true;
@@ -2338,7 +2349,7 @@
             this.CheckBoxShuttleEnabled.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxShuttleEnabled.Location = new System.Drawing.Point(349, 166);
             this.CheckBoxShuttleEnabled.Name = "CheckBoxShuttleEnabled";
-            this.CheckBoxShuttleEnabled.Size = new System.Drawing.Size(157, 24);
+            this.CheckBoxShuttleEnabled.Size = new System.Drawing.Size(130, 20);
             this.CheckBoxShuttleEnabled.TabIndex = 13;
             this.CheckBoxShuttleEnabled.Text = "Devices Enabled";
             this.CheckBoxShuttleEnabled.UseVisualStyleBackColor = true;
@@ -2349,7 +2360,7 @@
             this.CheckBoxCreateStoreOrderWithRts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxCreateStoreOrderWithRts.Location = new System.Drawing.Point(349, 130);
             this.CheckBoxCreateStoreOrderWithRts.Name = "CheckBoxCreateStoreOrderWithRts";
-            this.CheckBoxCreateStoreOrderWithRts.Size = new System.Drawing.Size(251, 24);
+            this.CheckBoxCreateStoreOrderWithRts.Size = new System.Drawing.Size(198, 20);
             this.CheckBoxCreateStoreOrderWithRts.TabIndex = 12;
             this.CheckBoxCreateStoreOrderWithRts.Text = "Create Store Order With RTS";
             this.CheckBoxCreateStoreOrderWithRts.UseVisualStyleBackColor = true;
@@ -2380,7 +2391,7 @@
             this.CheckBoxUseAutoCompress.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseAutoCompress.Location = new System.Drawing.Point(838, 448);
             this.CheckBoxUseAutoCompress.Name = "CheckBoxUseAutoCompress";
-            this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(182, 24);
+            this.CheckBoxUseAutoCompress.Size = new System.Drawing.Size(146, 20);
             this.CheckBoxUseAutoCompress.TabIndex = 45;
             this.CheckBoxUseAutoCompress.Text = "Use Auto Compress";
             this.CheckBoxUseAutoCompress.UseVisualStyleBackColor = true;
@@ -2392,7 +2403,7 @@
             this.CheckBoxUseImages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseImages.Location = new System.Drawing.Point(838, 379);
             this.CheckBoxUseImages.Name = "CheckBoxUseImages";
-            this.CheckBoxUseImages.Size = new System.Drawing.Size(120, 24);
+            this.CheckBoxUseImages.Size = new System.Drawing.Size(99, 20);
             this.CheckBoxUseImages.TabIndex = 45;
             this.CheckBoxUseImages.Text = "Use Images";
             this.CheckBoxUseImages.UseVisualStyleBackColor = true;
@@ -2403,7 +2414,7 @@
             this.CheckBoxUseCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseCostCenter.Location = new System.Drawing.Point(838, 343);
             this.CheckBoxUseCostCenter.Name = "CheckBoxUseCostCenter";
-            this.CheckBoxUseCostCenter.Size = new System.Drawing.Size(225, 24);
+            this.CheckBoxUseCostCenter.Size = new System.Drawing.Size(176, 20);
             this.CheckBoxUseCostCenter.TabIndex = 44;
             this.CheckBoxUseCostCenter.Text = "Use Cost Center Hot Pick";
             this.CheckBoxUseCostCenter.UseVisualStyleBackColor = true;
@@ -2414,7 +2425,7 @@
             this.CheckBoxPrintPackingListManual.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPrintPackingListManual.Location = new System.Drawing.Point(838, 200);
             this.CheckBoxPrintPackingListManual.Name = "CheckBoxPrintPackingListManual";
-            this.CheckBoxPrintPackingListManual.Size = new System.Drawing.Size(234, 24);
+            this.CheckBoxPrintPackingListManual.Size = new System.Drawing.Size(184, 20);
             this.CheckBoxPrintPackingListManual.TabIndex = 39;
             this.CheckBoxPrintPackingListManual.Text = "Print Packing List Manually";
             this.CheckBoxPrintPackingListManual.UseVisualStyleBackColor = true;
@@ -2425,7 +2436,7 @@
             this.CheckBoxRunUploadOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxRunUploadOnStartup.Location = new System.Drawing.Point(598, 203);
             this.CheckBoxRunUploadOnStartup.Name = "CheckBoxRunUploadOnStartup";
-            this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(204, 24);
+            this.CheckBoxRunUploadOnStartup.Size = new System.Drawing.Size(163, 20);
             this.CheckBoxRunUploadOnStartup.TabIndex = 27;
             this.CheckBoxRunUploadOnStartup.Text = "Run Upload On Startup";
             this.CheckBoxRunUploadOnStartup.UseVisualStyleBackColor = true;
@@ -2436,7 +2447,7 @@
             this.CheckBoxRunLoaderOnStartup.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxRunLoaderOnStartup.Location = new System.Drawing.Point(598, 166);
             this.CheckBoxRunLoaderOnStartup.Name = "CheckBoxRunLoaderOnStartup";
-            this.CheckBoxRunLoaderOnStartup.Size = new System.Drawing.Size(204, 24);
+            this.CheckBoxRunLoaderOnStartup.Size = new System.Drawing.Size(161, 20);
             this.CheckBoxRunLoaderOnStartup.TabIndex = 26;
             this.CheckBoxRunLoaderOnStartup.Text = "Run Loader On Startup";
             this.CheckBoxRunLoaderOnStartup.UseVisualStyleBackColor = true;
@@ -2447,7 +2458,7 @@
             this.CheckBoxPrintPackingListEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPrintPackingListEnd.Location = new System.Drawing.Point(838, 164);
             this.CheckBoxPrintPackingListEnd.Name = "CheckBoxPrintPackingListEnd";
-            this.CheckBoxPrintPackingListEnd.Size = new System.Drawing.Size(287, 24);
+            this.CheckBoxPrintPackingListEnd.Size = new System.Drawing.Size(221, 20);
             this.CheckBoxPrintPackingListEnd.TabIndex = 38;
             this.CheckBoxPrintPackingListEnd.Text = "Print Packing List at End Of Order";
             this.CheckBoxPrintPackingListEnd.UseVisualStyleBackColor = true;
@@ -2458,7 +2469,7 @@
             this.CheckBoxPrintPackingListStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxPrintPackingListStart.Location = new System.Drawing.Point(838, 128);
             this.CheckBoxPrintPackingListStart.Name = "CheckBoxPrintPackingListStart";
-            this.CheckBoxPrintPackingListStart.Size = new System.Drawing.Size(290, 24);
+            this.CheckBoxPrintPackingListStart.Size = new System.Drawing.Size(222, 20);
             this.CheckBoxPrintPackingListStart.TabIndex = 37;
             this.CheckBoxPrintPackingListStart.Text = "Print Packing List at Start of Order";
             this.CheckBoxPrintPackingListStart.UseVisualStyleBackColor = true;
@@ -2469,7 +2480,7 @@
             this.CheckBoxCheckForUsedItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxCheckForUsedItem.Location = new System.Drawing.Point(598, 130);
             this.CheckBoxCheckForUsedItem.Name = "CheckBoxCheckForUsedItem";
-            this.CheckBoxCheckForUsedItem.Size = new System.Drawing.Size(189, 24);
+            this.CheckBoxCheckForUsedItem.Size = new System.Drawing.Size(151, 20);
             this.CheckBoxCheckForUsedItem.TabIndex = 25;
             this.CheckBoxCheckForUsedItem.Text = "Check For Used Item";
             this.CheckBoxCheckForUsedItem.UseVisualStyleBackColor = true;
@@ -2480,7 +2491,7 @@
             this.CheckBoxAutoLogOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxAutoLogOff.Location = new System.Drawing.Point(598, 94);
             this.CheckBoxAutoLogOff.Name = "CheckBoxAutoLogOff";
-            this.CheckBoxAutoLogOff.Size = new System.Drawing.Size(216, 24);
+            this.CheckBoxAutoLogOff.Size = new System.Drawing.Size(165, 20);
             this.CheckBoxAutoLogOff.TabIndex = 24;
             this.CheckBoxAutoLogOff.Text = "Auto Log Off After Batch";
             this.CheckBoxAutoLogOff.UseVisualStyleBackColor = true;
@@ -2491,7 +2502,7 @@
             this.CheckBoxEnableEmailNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxEnableEmailNotification.Location = new System.Drawing.Point(349, 61);
             this.CheckBoxEnableEmailNotification.Name = "CheckBoxEnableEmailNotification";
-            this.CheckBoxEnableEmailNotification.Size = new System.Drawing.Size(218, 24);
+            this.CheckBoxEnableEmailNotification.Size = new System.Drawing.Size(175, 20);
             this.CheckBoxEnableEmailNotification.TabIndex = 11;
             this.CheckBoxEnableEmailNotification.Text = "Enable Email Notification";
             this.CheckBoxEnableEmailNotification.UseVisualStyleBackColor = true;
@@ -2502,7 +2513,7 @@
             this.CheckBoxUseReturnToStock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxUseReturnToStock.Location = new System.Drawing.Point(349, 94);
             this.CheckBoxUseReturnToStock.Name = "CheckBoxUseReturnToStock";
-            this.CheckBoxUseReturnToStock.Size = new System.Drawing.Size(187, 24);
+            this.CheckBoxUseReturnToStock.Size = new System.Drawing.Size(150, 20);
             this.CheckBoxUseReturnToStock.TabIndex = 11;
             this.CheckBoxUseReturnToStock.Text = "Use Return To Stock";
             this.CheckBoxUseReturnToStock.UseVisualStyleBackColor = true;
@@ -2537,10 +2548,10 @@
             // 
             this.HardwareDevices.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.HardwareDevices.Controls.Add(this.tabControl2);
-            this.HardwareDevices.Location = new System.Drawing.Point(4, 25);
+            this.HardwareDevices.Location = new System.Drawing.Point(4, 22);
             this.HardwareDevices.Name = "HardwareDevices";
             this.HardwareDevices.Padding = new System.Windows.Forms.Padding(3);
-            this.HardwareDevices.Size = new System.Drawing.Size(1227, 633);
+            this.HardwareDevices.Size = new System.Drawing.Size(1227, 636);
             this.HardwareDevices.TabIndex = 9;
             this.HardwareDevices.Text = "Hardware Devices";
             // 
@@ -2554,7 +2565,7 @@
             this.tabControl2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(1221, 627);
+            this.tabControl2.Size = new System.Drawing.Size(1221, 630);
             this.tabControl2.TabIndex = 43;
             // 
             // Listing
@@ -2567,11 +2578,11 @@
             this.Listing.Controls.Add(this.MBPrintHardwareDevices);
             this.Listing.Controls.Add(this.MBHardwareDevicesListing);
             this.Listing.Controls.Add(this.MBHardwareDevicesViewEdit);
-            this.Listing.Location = new System.Drawing.Point(4, 25);
+            this.Listing.Location = new System.Drawing.Point(4, 22);
             this.Listing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Listing.Name = "Listing";
             this.Listing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Listing.Size = new System.Drawing.Size(1213, 598);
+            this.Listing.Size = new System.Drawing.Size(1213, 604);
             this.Listing.TabIndex = 0;
             this.Listing.Text = "Listing";
             // 
@@ -2701,11 +2712,11 @@
             this.ViewEdit.Controls.Add(this.MBViewEditDeviceBack);
             this.ViewEdit.Controls.Add(this.MBViewEditDeviceSave);
             this.ViewEdit.Controls.Add(this.panel2);
-            this.ViewEdit.Location = new System.Drawing.Point(4, 25);
+            this.ViewEdit.Location = new System.Drawing.Point(4, 22);
             this.ViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ViewEdit.Name = "ViewEdit";
             this.ViewEdit.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ViewEdit.Size = new System.Drawing.Size(1213, 598);
+            this.ViewEdit.Size = new System.Drawing.Size(1213, 601);
             this.ViewEdit.TabIndex = 1;
             this.ViewEdit.Text = "View/Edit";
             // 
@@ -2813,7 +2824,7 @@
             0,
             0});
             this.NumericUpDownViewEditDeviceLogLevel.Name = "NumericUpDownViewEditDeviceLogLevel";
-            this.NumericUpDownViewEditDeviceLogLevel.Size = new System.Drawing.Size(55, 34);
+            this.NumericUpDownViewEditDeviceLogLevel.Size = new System.Drawing.Size(55, 28);
             this.NumericUpDownViewEditDeviceLogLevel.TabIndex = 9;
             // 
             // CheckBoxViewEditDeviceEnabled
@@ -2845,7 +2856,7 @@
             this.ComboBoxViewEditSerialConfiguration.Location = new System.Drawing.Point(803, 403);
             this.ComboBoxViewEditSerialConfiguration.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditSerialConfiguration.Name = "ComboBoxViewEditSerialConfiguration";
-            this.ComboBoxViewEditSerialConfiguration.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxViewEditSerialConfiguration.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditSerialConfiguration.TabIndex = 12;
             // 
             // LabelViewEditDeviceSerialConfiguration
@@ -2864,7 +2875,7 @@
             this.ComboBoxViewEditCommunicationType.Location = new System.Drawing.Point(803, 307);
             this.ComboBoxViewEditCommunicationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditCommunicationType.Name = "ComboBoxViewEditCommunicationType";
-            this.ComboBoxViewEditCommunicationType.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxViewEditCommunicationType.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditCommunicationType.TabIndex = 10;
             this.ComboBoxViewEditCommunicationType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxViewEditCommunicationType_SelectedIndexChanged);
             // 
@@ -2884,7 +2895,7 @@
             this.ComboBoxViewEditTcpConfiguration.Location = new System.Drawing.Point(803, 355);
             this.ComboBoxViewEditTcpConfiguration.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditTcpConfiguration.Name = "ComboBoxViewEditTcpConfiguration";
-            this.ComboBoxViewEditTcpConfiguration.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxViewEditTcpConfiguration.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditTcpConfiguration.TabIndex = 11;
             // 
             // LabelViewEditDeviceTcpConfiguration
@@ -2914,7 +2925,7 @@
             this.ComboBoxViewEditDeviceStation.Location = new System.Drawing.Point(325, 159);
             this.ComboBoxViewEditDeviceStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditDeviceStation.Name = "ComboBoxViewEditDeviceStation";
-            this.ComboBoxViewEditDeviceStation.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxViewEditDeviceStation.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditDeviceStation.TabIndex = 1;
             // 
             // LabelViewEditDeviceStation
@@ -2934,7 +2945,7 @@
             this.ComboBoxViewEditDeviceType.Location = new System.Drawing.Point(325, 209);
             this.ComboBoxViewEditDeviceType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditDeviceType.Name = "ComboBoxViewEditDeviceType";
-            this.ComboBoxViewEditDeviceType.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxViewEditDeviceType.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxViewEditDeviceType.TabIndex = 2;
             this.ComboBoxViewEditDeviceType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxViewEditDeviceType_SelectedIndexChanged);
             // 
@@ -2944,7 +2955,7 @@
             this.TextBoxViewEditCarrierLevel.Location = new System.Drawing.Point(325, 355);
             this.TextBoxViewEditCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditCarrierLevel.Name = "TextBoxViewEditCarrierLevel";
-            this.TextBoxViewEditCarrierLevel.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxViewEditCarrierLevel.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditCarrierLevel.TabIndex = 5;
             this.TextBoxViewEditCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditCarrierLevel.Visible = false;
@@ -2955,7 +2966,7 @@
             this.TextBoxViewEditCarrierWidth.Location = new System.Drawing.Point(325, 405);
             this.TextBoxViewEditCarrierWidth.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditCarrierWidth.Name = "TextBoxViewEditCarrierWidth";
-            this.TextBoxViewEditCarrierWidth.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxViewEditCarrierWidth.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditCarrierWidth.TabIndex = 5;
             this.TextBoxViewEditCarrierWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditCarrierWidth.Visible = false;
@@ -2966,7 +2977,7 @@
             this.TextBoxViewEditNumberOfCarriers.Location = new System.Drawing.Point(325, 307);
             this.TextBoxViewEditNumberOfCarriers.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditNumberOfCarriers.Name = "TextBoxViewEditNumberOfCarriers";
-            this.TextBoxViewEditNumberOfCarriers.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxViewEditNumberOfCarriers.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditNumberOfCarriers.TabIndex = 4;
             this.TextBoxViewEditNumberOfCarriers.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -2976,7 +2987,7 @@
             this.TextBoxViewEditDeviceName.Location = new System.Drawing.Point(509, 84);
             this.TextBoxViewEditDeviceName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditDeviceName.Name = "TextBoxViewEditDeviceName";
-            this.TextBoxViewEditDeviceName.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxViewEditDeviceName.Size = new System.Drawing.Size(246, 28);
             this.TextBoxViewEditDeviceName.TabIndex = 0;
             this.TextBoxViewEditDeviceName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -2986,7 +2997,7 @@
             this.TextBoxViewEditDeviceNumber.Location = new System.Drawing.Point(325, 259);
             this.TextBoxViewEditDeviceNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditDeviceNumber.Name = "TextBoxViewEditDeviceNumber";
-            this.TextBoxViewEditDeviceNumber.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxViewEditDeviceNumber.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditDeviceNumber.TabIndex = 3;
             this.TextBoxViewEditDeviceNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -2996,7 +3007,7 @@
             this.TextBoxViewEditCarrierDepth.Location = new System.Drawing.Point(325, 453);
             this.TextBoxViewEditCarrierDepth.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditCarrierDepth.Name = "TextBoxViewEditCarrierDepth";
-            this.TextBoxViewEditCarrierDepth.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxViewEditCarrierDepth.Size = new System.Drawing.Size(98, 28);
             this.TextBoxViewEditCarrierDepth.TabIndex = 6;
             this.TextBoxViewEditCarrierDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditCarrierDepth.Visible = false;
@@ -3075,11 +3086,11 @@
             this.New.Controls.Add(this.MBNewDeviceSave);
             this.New.Controls.Add(this.panel3);
             this.New.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.New.Location = new System.Drawing.Point(4, 25);
+            this.New.Location = new System.Drawing.Point(4, 22);
             this.New.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.New.Name = "New";
             this.New.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.New.Size = new System.Drawing.Size(1213, 598);
+            this.New.Size = new System.Drawing.Size(1213, 601);
             this.New.TabIndex = 2;
             this.New.Text = "New";
             // 
@@ -3172,7 +3183,7 @@
             this.TextBoxNewCarrierLevel.Location = new System.Drawing.Point(325, 355);
             this.TextBoxNewCarrierLevel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewCarrierLevel.Name = "TextBoxNewCarrierLevel";
-            this.TextBoxNewCarrierLevel.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxNewCarrierLevel.Size = new System.Drawing.Size(98, 28);
             this.TextBoxNewCarrierLevel.TabIndex = 31;
             this.TextBoxNewCarrierLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewCarrierLevel.Visible = false;
@@ -3196,7 +3207,7 @@
             0,
             0});
             this.NumericUpDownNewDeviceLogLevel.Name = "NumericUpDownNewDeviceLogLevel";
-            this.NumericUpDownNewDeviceLogLevel.Size = new System.Drawing.Size(55, 34);
+            this.NumericUpDownNewDeviceLogLevel.Size = new System.Drawing.Size(55, 28);
             this.NumericUpDownNewDeviceLogLevel.TabIndex = 9;
             // 
             // CheckBoxNewDeviceEnabled
@@ -3229,7 +3240,7 @@
             this.ComboBoxNewSerialConfiguration.Location = new System.Drawing.Point(803, 403);
             this.ComboBoxNewSerialConfiguration.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewSerialConfiguration.Name = "ComboBoxNewSerialConfiguration";
-            this.ComboBoxNewSerialConfiguration.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxNewSerialConfiguration.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewSerialConfiguration.TabIndex = 12;
             // 
             // LabelNewDeviceSerialConfiguration
@@ -3249,7 +3260,7 @@
             this.ComboBoxNewCommunicationType.Location = new System.Drawing.Point(803, 307);
             this.ComboBoxNewCommunicationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewCommunicationType.Name = "ComboBoxNewCommunicationType";
-            this.ComboBoxNewCommunicationType.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxNewCommunicationType.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewCommunicationType.TabIndex = 10;
             this.ComboBoxNewCommunicationType.SelectedIndexChanged += new System.EventHandler(this.ComboBoxNewCommunicationType_SelectedIndexChanged);
             // 
@@ -3270,7 +3281,7 @@
             this.ComboBoxNewTcpConfiguration.Location = new System.Drawing.Point(803, 355);
             this.ComboBoxNewTcpConfiguration.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewTcpConfiguration.Name = "ComboBoxNewTcpConfiguration";
-            this.ComboBoxNewTcpConfiguration.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxNewTcpConfiguration.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewTcpConfiguration.TabIndex = 11;
             // 
             // LabelNewDeviceTcpConfiguration
@@ -3300,7 +3311,7 @@
             this.ComboBoxNewDeviceStation.Location = new System.Drawing.Point(325, 159);
             this.ComboBoxNewDeviceStation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewDeviceStation.Name = "ComboBoxNewDeviceStation";
-            this.ComboBoxNewDeviceStation.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxNewDeviceStation.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewDeviceStation.TabIndex = 1;
             // 
             // LabelNewDeviceStation
@@ -3320,7 +3331,7 @@
             this.ComboBoxNewDeviceType.Location = new System.Drawing.Point(325, 209);
             this.ComboBoxNewDeviceType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewDeviceType.Name = "ComboBoxNewDeviceType";
-            this.ComboBoxNewDeviceType.Size = new System.Drawing.Size(190, 37);
+            this.ComboBoxNewDeviceType.Size = new System.Drawing.Size(190, 30);
             this.ComboBoxNewDeviceType.TabIndex = 2;
             // 
             // TextBoxNewCarrierWidth
@@ -3329,7 +3340,7 @@
             this.TextBoxNewCarrierWidth.Location = new System.Drawing.Point(325, 403);
             this.TextBoxNewCarrierWidth.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewCarrierWidth.Name = "TextBoxNewCarrierWidth";
-            this.TextBoxNewCarrierWidth.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxNewCarrierWidth.Size = new System.Drawing.Size(98, 28);
             this.TextBoxNewCarrierWidth.TabIndex = 5;
             this.TextBoxNewCarrierWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewCarrierWidth.Visible = false;
@@ -3340,7 +3351,7 @@
             this.TextBoxNewNumberOfCarriers.Location = new System.Drawing.Point(325, 307);
             this.TextBoxNewNumberOfCarriers.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewNumberOfCarriers.Name = "TextBoxNewNumberOfCarriers";
-            this.TextBoxNewNumberOfCarriers.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxNewNumberOfCarriers.Size = new System.Drawing.Size(98, 28);
             this.TextBoxNewNumberOfCarriers.TabIndex = 4;
             this.TextBoxNewNumberOfCarriers.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewNumberOfCarriers.Visible = false;
@@ -3351,7 +3362,7 @@
             this.TextBoxNewDeviceName.Location = new System.Drawing.Point(509, 84);
             this.TextBoxNewDeviceName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewDeviceName.Name = "TextBoxNewDeviceName";
-            this.TextBoxNewDeviceName.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxNewDeviceName.Size = new System.Drawing.Size(246, 28);
             this.TextBoxNewDeviceName.TabIndex = 0;
             this.TextBoxNewDeviceName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -3361,7 +3372,7 @@
             this.TextBoxNewDeviceNumber.Location = new System.Drawing.Point(325, 259);
             this.TextBoxNewDeviceNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewDeviceNumber.Name = "TextBoxNewDeviceNumber";
-            this.TextBoxNewDeviceNumber.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxNewDeviceNumber.Size = new System.Drawing.Size(98, 28);
             this.TextBoxNewDeviceNumber.TabIndex = 3;
             this.TextBoxNewDeviceNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -3371,7 +3382,7 @@
             this.TextBoxNewCarrierDepth.Location = new System.Drawing.Point(325, 451);
             this.TextBoxNewCarrierDepth.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewCarrierDepth.Name = "TextBoxNewCarrierDepth";
-            this.TextBoxNewCarrierDepth.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxNewCarrierDepth.Size = new System.Drawing.Size(98, 28);
             this.TextBoxNewCarrierDepth.TabIndex = 6;
             this.TextBoxNewCarrierDepth.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewCarrierDepth.Visible = false;
@@ -3442,10 +3453,10 @@
             this.ManageLookups.Controls.Add(this.LabelLookupName);
             this.ManageLookups.Controls.Add(this.MBManageLookupsBack);
             this.ManageLookups.Controls.Add(this.MBAddNew);
-            this.ManageLookups.Location = new System.Drawing.Point(4, 25);
+            this.ManageLookups.Location = new System.Drawing.Point(4, 22);
             this.ManageLookups.Name = "ManageLookups";
             this.ManageLookups.Padding = new System.Windows.Forms.Padding(3);
-            this.ManageLookups.Size = new System.Drawing.Size(1227, 633);
+            this.ManageLookups.Size = new System.Drawing.Size(1227, 636);
             this.ManageLookups.TabIndex = 10;
             this.ManageLookups.Text = "Manage Lookups";
             // 
@@ -3456,10 +3467,10 @@
             this.ListBoxCodeNames.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ListBoxCodeNames.ForeColor = System.Drawing.SystemColors.WindowText;
             this.ListBoxCodeNames.FormattingEnabled = true;
-            this.ListBoxCodeNames.ItemHeight = 25;
+            this.ListBoxCodeNames.ItemHeight = 20;
             this.ListBoxCodeNames.Location = new System.Drawing.Point(34, 112);
             this.ListBoxCodeNames.Name = "ListBoxCodeNames";
-            this.ListBoxCodeNames.Size = new System.Drawing.Size(271, 479);
+            this.ListBoxCodeNames.Size = new System.Drawing.Size(271, 464);
             this.ListBoxCodeNames.TabIndex = 2;
             this.ListBoxCodeNames.ValueMember = "TableName";
             this.ListBoxCodeNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxCodeNames_SelectedIndexChanged);
@@ -3563,9 +3574,9 @@
             // Stations
             // 
             this.Stations.Controls.Add(this.TabControl3);
-            this.Stations.Location = new System.Drawing.Point(4, 25);
+            this.Stations.Location = new System.Drawing.Point(4, 22);
             this.Stations.Name = "Stations";
-            this.Stations.Size = new System.Drawing.Size(1227, 633);
+            this.Stations.Size = new System.Drawing.Size(1227, 636);
             this.Stations.TabIndex = 11;
             this.Stations.Text = "Stations";
             this.Stations.UseVisualStyleBackColor = true;
@@ -3580,7 +3591,7 @@
             this.TabControl3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabControl3.Name = "TabControl3";
             this.TabControl3.SelectedIndex = 0;
-            this.TabControl3.Size = new System.Drawing.Size(1227, 633);
+            this.TabControl3.Size = new System.Drawing.Size(1227, 636);
             this.TabControl3.TabIndex = 44;
             // 
             // StationListing
@@ -3591,9 +3602,9 @@
             this.StationListing.Controls.Add(this.MBStationsNew);
             this.StationListing.Controls.Add(this.MBStationsSaveToFile);
             this.StationListing.Controls.Add(this.MBStationsViewEdit);
-            this.StationListing.Location = new System.Drawing.Point(4, 25);
+            this.StationListing.Location = new System.Drawing.Point(4, 22);
             this.StationListing.Name = "StationListing";
-            this.StationListing.Size = new System.Drawing.Size(1219, 604);
+            this.StationListing.Size = new System.Drawing.Size(1219, 610);
             this.StationListing.TabIndex = 5;
             this.StationListing.Text = "Listing";
             // 
@@ -3697,9 +3708,9 @@
             this.StationViewEdit.Controls.Add(this.MBStationsViewEditBack);
             this.StationViewEdit.Controls.Add(this.MBStationsViewEditSave);
             this.StationViewEdit.Controls.Add(this.panel11);
-            this.StationViewEdit.Location = new System.Drawing.Point(4, 25);
+            this.StationViewEdit.Location = new System.Drawing.Point(4, 22);
             this.StationViewEdit.Name = "StationViewEdit";
-            this.StationViewEdit.Size = new System.Drawing.Size(1219, 604);
+            this.StationViewEdit.Size = new System.Drawing.Size(1219, 607);
             this.StationViewEdit.TabIndex = 10;
             this.StationViewEdit.Text = "View/Edit";
             // 
@@ -3785,7 +3796,7 @@
             this.TextBoxViewEditStationSequence.Location = new System.Drawing.Point(252, 280);
             this.TextBoxViewEditStationSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationSequence.Name = "TextBoxViewEditStationSequence";
-            this.TextBoxViewEditStationSequence.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxViewEditStationSequence.Size = new System.Drawing.Size(55, 28);
             this.TextBoxViewEditStationSequence.TabIndex = 3;
             this.TextBoxViewEditStationSequence.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -3815,7 +3826,7 @@
             this.ComboBoxViewEditArea.Location = new System.Drawing.Point(252, 233);
             this.ComboBoxViewEditArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditArea.Name = "ComboBoxViewEditArea";
-            this.ComboBoxViewEditArea.Size = new System.Drawing.Size(209, 37);
+            this.ComboBoxViewEditArea.Size = new System.Drawing.Size(209, 30);
             this.ComboBoxViewEditArea.TabIndex = 2;
             // 
             // LabelViewEditStationNumber
@@ -3835,7 +3846,7 @@
             this.ComboBoxViewEditStationType.Location = new System.Drawing.Point(252, 188);
             this.ComboBoxViewEditStationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditStationType.Name = "ComboBoxViewEditStationType";
-            this.ComboBoxViewEditStationType.Size = new System.Drawing.Size(209, 37);
+            this.ComboBoxViewEditStationType.Size = new System.Drawing.Size(209, 30);
             this.ComboBoxViewEditStationType.TabIndex = 2;
             // 
             // TextBoxViewEditStationName
@@ -3844,7 +3855,7 @@
             this.TextBoxViewEditStationName.Location = new System.Drawing.Point(252, 138);
             this.TextBoxViewEditStationName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationName.Name = "TextBoxViewEditStationName";
-            this.TextBoxViewEditStationName.Size = new System.Drawing.Size(247, 34);
+            this.TextBoxViewEditStationName.Size = new System.Drawing.Size(247, 28);
             this.TextBoxViewEditStationName.TabIndex = 1;
             // 
             // TextBoxViewEditStationNumber
@@ -3854,7 +3865,7 @@
             this.TextBoxViewEditStationNumber.Location = new System.Drawing.Point(252, 88);
             this.TextBoxViewEditStationNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditStationNumber.Name = "TextBoxViewEditStationNumber";
-            this.TextBoxViewEditStationNumber.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxViewEditStationNumber.Size = new System.Drawing.Size(55, 28);
             this.TextBoxViewEditStationNumber.TabIndex = 0;
             this.TextBoxViewEditStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -3874,9 +3885,9 @@
             this.StationNew.Controls.Add(this.label62);
             this.StationNew.Controls.Add(this.MBStationsNewBack);
             this.StationNew.Controls.Add(this.MBStationsNewSave);
-            this.StationNew.Location = new System.Drawing.Point(4, 25);
+            this.StationNew.Location = new System.Drawing.Point(4, 22);
             this.StationNew.Name = "StationNew";
-            this.StationNew.Size = new System.Drawing.Size(1219, 604);
+            this.StationNew.Size = new System.Drawing.Size(1219, 607);
             this.StationNew.TabIndex = 11;
             this.StationNew.Text = "New";
             // 
@@ -3917,7 +3928,7 @@
             this.ComboBoxNewArea.Location = new System.Drawing.Point(252, 236);
             this.ComboBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewArea.Name = "ComboBoxNewArea";
-            this.ComboBoxNewArea.Size = new System.Drawing.Size(209, 37);
+            this.ComboBoxNewArea.Size = new System.Drawing.Size(209, 30);
             this.ComboBoxNewArea.TabIndex = 16;
             // 
             // LabelStationSequence
@@ -3935,7 +3946,7 @@
             this.TextBoxNewStationSequence.Location = new System.Drawing.Point(252, 285);
             this.TextBoxNewStationSequence.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationSequence.Name = "TextBoxNewStationSequence";
-            this.TextBoxNewStationSequence.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxNewStationSequence.Size = new System.Drawing.Size(55, 28);
             this.TextBoxNewStationSequence.TabIndex = 3;
             this.TextBoxNewStationSequence.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -3965,7 +3976,7 @@
             this.ComboBoxNewStationType.Location = new System.Drawing.Point(252, 188);
             this.ComboBoxNewStationType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewStationType.Name = "ComboBoxNewStationType";
-            this.ComboBoxNewStationType.Size = new System.Drawing.Size(209, 37);
+            this.ComboBoxNewStationType.Size = new System.Drawing.Size(209, 30);
             this.ComboBoxNewStationType.TabIndex = 2;
             // 
             // TextBoxNewStationName
@@ -3974,7 +3985,7 @@
             this.TextBoxNewStationName.Location = new System.Drawing.Point(252, 138);
             this.TextBoxNewStationName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationName.Name = "TextBoxNewStationName";
-            this.TextBoxNewStationName.Size = new System.Drawing.Size(247, 34);
+            this.TextBoxNewStationName.Size = new System.Drawing.Size(247, 28);
             this.TextBoxNewStationName.TabIndex = 1;
             // 
             // TextBoxNewStationNumber
@@ -3983,7 +3994,7 @@
             this.TextBoxNewStationNumber.Location = new System.Drawing.Point(252, 88);
             this.TextBoxNewStationNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewStationNumber.Name = "TextBoxNewStationNumber";
-            this.TextBoxNewStationNumber.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxNewStationNumber.Size = new System.Drawing.Size(55, 28);
             this.TextBoxNewStationNumber.TabIndex = 0;
             this.TextBoxNewStationNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4034,9 +4045,9 @@
             // Communications
             // 
             this.Communications.Controls.Add(this.TabControlCommunications);
-            this.Communications.Location = new System.Drawing.Point(4, 25);
+            this.Communications.Location = new System.Drawing.Point(4, 22);
             this.Communications.Name = "Communications";
-            this.Communications.Size = new System.Drawing.Size(1227, 633);
+            this.Communications.Size = new System.Drawing.Size(1227, 636);
             this.Communications.TabIndex = 12;
             this.Communications.Text = "Communications";
             this.Communications.UseVisualStyleBackColor = true;
@@ -4055,7 +4066,7 @@
             this.TabControlCommunications.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TabControlCommunications.Name = "TabControlCommunications";
             this.TabControlCommunications.SelectedIndex = 0;
-            this.TabControlCommunications.Size = new System.Drawing.Size(1227, 633);
+            this.TabControlCommunications.Size = new System.Drawing.Size(1227, 636);
             this.TabControlCommunications.TabIndex = 44;
             // 
             // Communication
@@ -4064,9 +4075,9 @@
             this.Communication.Controls.Add(this.MBCommunicationSerial);
             this.Communication.Controls.Add(this.MBCommunicationBack);
             this.Communication.Controls.Add(this.MBCommunicationTcp);
-            this.Communication.Location = new System.Drawing.Point(4, 25);
+            this.Communication.Location = new System.Drawing.Point(4, 22);
             this.Communication.Name = "Communication";
-            this.Communication.Size = new System.Drawing.Size(1219, 604);
+            this.Communication.Size = new System.Drawing.Size(1219, 610);
             this.Communication.TabIndex = 3;
             this.Communication.Text = "Communication";
             // 
@@ -4115,9 +4126,9 @@
             this.Tcp.Controls.Add(this.MBTcpNew);
             this.Tcp.Controls.Add(this.MBTcpSaveToFile);
             this.Tcp.Controls.Add(this.MBTcpViewEdit);
-            this.Tcp.Location = new System.Drawing.Point(4, 25);
+            this.Tcp.Location = new System.Drawing.Point(4, 22);
             this.Tcp.Name = "Tcp";
-            this.Tcp.Size = new System.Drawing.Size(1219, 604);
+            this.Tcp.Size = new System.Drawing.Size(1219, 607);
             this.Tcp.TabIndex = 4;
             this.Tcp.Text = "TCP";
             // 
@@ -4221,9 +4232,9 @@
             this.TcpViewEdit.Controls.Add(this.MBTcpViewEditBack);
             this.TcpViewEdit.Controls.Add(this.MBTcpViewEditSave);
             this.TcpViewEdit.Controls.Add(this.panel4);
-            this.TcpViewEdit.Location = new System.Drawing.Point(4, 25);
+            this.TcpViewEdit.Location = new System.Drawing.Point(4, 22);
             this.TcpViewEdit.Name = "TcpViewEdit";
-            this.TcpViewEdit.Size = new System.Drawing.Size(1219, 604);
+            this.TcpViewEdit.Size = new System.Drawing.Size(1219, 607);
             this.TcpViewEdit.TabIndex = 8;
             this.TcpViewEdit.Text = "TCP ViewEdit";
             // 
@@ -4309,7 +4320,7 @@
             this.TextBoxTcpViewEditDeviceCount.Location = new System.Drawing.Point(240, 164);
             this.TextBoxTcpViewEditDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditDeviceCount.Name = "TextBoxTcpViewEditDeviceCount";
-            this.TextBoxTcpViewEditDeviceCount.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpViewEditDeviceCount.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpViewEditDeviceCount.TabIndex = 3;
             this.TextBoxTcpViewEditDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4319,7 +4330,7 @@
             this.TextBoxTcpViewEditPort.Location = new System.Drawing.Point(240, 117);
             this.TextBoxTcpViewEditPort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditPort.Name = "TextBoxTcpViewEditPort";
-            this.TextBoxTcpViewEditPort.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpViewEditPort.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpViewEditPort.TabIndex = 2;
             this.TextBoxTcpViewEditPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4329,7 +4340,7 @@
             this.TextBoxTcpViewEditName.Location = new System.Drawing.Point(240, 23);
             this.TextBoxTcpViewEditName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditName.Name = "TextBoxTcpViewEditName";
-            this.TextBoxTcpViewEditName.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxTcpViewEditName.Size = new System.Drawing.Size(246, 28);
             this.TextBoxTcpViewEditName.TabIndex = 0;
             this.TextBoxTcpViewEditName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4339,7 +4350,7 @@
             this.TextBoxTcpViewEditIPAddress.Location = new System.Drawing.Point(240, 70);
             this.TextBoxTcpViewEditIPAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditIPAddress.Name = "TextBoxTcpViewEditIPAddress";
-            this.TextBoxTcpViewEditIPAddress.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxTcpViewEditIPAddress.Size = new System.Drawing.Size(246, 28);
             this.TextBoxTcpViewEditIPAddress.TabIndex = 1;
             this.TextBoxTcpViewEditIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4349,7 +4360,7 @@
             this.TextBoxTcpViewEditNotificationTimeout.Location = new System.Drawing.Point(240, 211);
             this.TextBoxTcpViewEditNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpViewEditNotificationTimeout.Name = "TextBoxTcpViewEditNotificationTimeout";
-            this.TextBoxTcpViewEditNotificationTimeout.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpViewEditNotificationTimeout.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpViewEditNotificationTimeout.TabIndex = 4;
             this.TextBoxTcpViewEditNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4396,9 +4407,9 @@
             this.TcpNew.Controls.Add(this.LabelTcpNewTitle);
             this.TcpNew.Controls.Add(this.TcpNewBack);
             this.TcpNew.Controls.Add(this.TcpNewSave);
-            this.TcpNew.Location = new System.Drawing.Point(4, 25);
+            this.TcpNew.Location = new System.Drawing.Point(4, 22);
             this.TcpNew.Name = "TcpNew";
-            this.TcpNew.Size = new System.Drawing.Size(1219, 604);
+            this.TcpNew.Size = new System.Drawing.Size(1219, 607);
             this.TcpNew.TabIndex = 9;
             this.TcpNew.Text = "TCP New";
             // 
@@ -4437,7 +4448,7 @@
             this.TextBoxTcpNewDeviceCount.Location = new System.Drawing.Point(240, 164);
             this.TextBoxTcpNewDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewDeviceCount.Name = "TextBoxTcpNewDeviceCount";
-            this.TextBoxTcpNewDeviceCount.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpNewDeviceCount.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpNewDeviceCount.TabIndex = 3;
             this.TextBoxTcpNewDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4447,7 +4458,7 @@
             this.TextBoxTcpNewPort.Location = new System.Drawing.Point(240, 117);
             this.TextBoxTcpNewPort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewPort.Name = "TextBoxTcpNewPort";
-            this.TextBoxTcpNewPort.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpNewPort.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpNewPort.TabIndex = 2;
             this.TextBoxTcpNewPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4457,7 +4468,7 @@
             this.TextBoxTcpNewName.Location = new System.Drawing.Point(240, 23);
             this.TextBoxTcpNewName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewName.Name = "TextBoxTcpNewName";
-            this.TextBoxTcpNewName.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxTcpNewName.Size = new System.Drawing.Size(246, 28);
             this.TextBoxTcpNewName.TabIndex = 0;
             this.TextBoxTcpNewName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4467,7 +4478,7 @@
             this.TextBoxTcpNewIPAddress.Location = new System.Drawing.Point(240, 70);
             this.TextBoxTcpNewIPAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewIPAddress.Name = "TextBoxTcpNewIPAddress";
-            this.TextBoxTcpNewIPAddress.Size = new System.Drawing.Size(246, 34);
+            this.TextBoxTcpNewIPAddress.Size = new System.Drawing.Size(246, 28);
             this.TextBoxTcpNewIPAddress.TabIndex = 1;
             this.TextBoxTcpNewIPAddress.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4477,7 +4488,7 @@
             this.TextBoxTcpNewNotificationTimeout.Location = new System.Drawing.Point(240, 211);
             this.TextBoxTcpNewNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxTcpNewNotificationTimeout.Name = "TextBoxTcpNewNotificationTimeout";
-            this.TextBoxTcpNewNotificationTimeout.Size = new System.Drawing.Size(98, 34);
+            this.TextBoxTcpNewNotificationTimeout.Size = new System.Drawing.Size(98, 28);
             this.TextBoxTcpNewNotificationTimeout.TabIndex = 4;
             this.TextBoxTcpNewNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4560,9 +4571,9 @@
             this.Serial.Controls.Add(this.MBSerialNew);
             this.Serial.Controls.Add(this.MBSerialSaveToFile);
             this.Serial.Controls.Add(this.MBSerialViewEdit);
-            this.Serial.Location = new System.Drawing.Point(4, 25);
+            this.Serial.Location = new System.Drawing.Point(4, 22);
             this.Serial.Name = "Serial";
-            this.Serial.Size = new System.Drawing.Size(1219, 604);
+            this.Serial.Size = new System.Drawing.Size(1219, 607);
             this.Serial.TabIndex = 5;
             this.Serial.Text = "Serial";
             // 
@@ -4666,9 +4677,9 @@
             this.SerialViewEdit.Controls.Add(this.MBSerialViewEditBack);
             this.SerialViewEdit.Controls.Add(this.MBSerialViewEditSave);
             this.SerialViewEdit.Controls.Add(this.panel5);
-            this.SerialViewEdit.Location = new System.Drawing.Point(4, 25);
+            this.SerialViewEdit.Location = new System.Drawing.Point(4, 22);
             this.SerialViewEdit.Name = "SerialViewEdit";
-            this.SerialViewEdit.Size = new System.Drawing.Size(1219, 604);
+            this.SerialViewEdit.Size = new System.Drawing.Size(1219, 607);
             this.SerialViewEdit.TabIndex = 10;
             this.SerialViewEdit.Text = "Serial ViewEdit";
             // 
@@ -4775,7 +4786,7 @@
             0,
             0});
             this.NumericUpDownSerialViewEditPortNumber.Name = "NumericUpDownSerialViewEditPortNumber";
-            this.NumericUpDownSerialViewEditPortNumber.Size = new System.Drawing.Size(56, 34);
+            this.NumericUpDownSerialViewEditPortNumber.Size = new System.Drawing.Size(56, 28);
             this.NumericUpDownSerialViewEditPortNumber.TabIndex = 2;
             this.NumericUpDownSerialViewEditPortNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownSerialViewEditPortNumber.Value = new decimal(new int[] {
@@ -4793,7 +4804,7 @@
             0,
             0});
             this.NumericUpDownSerialViewEditLogLevel.Name = "NumericUpDownSerialViewEditLogLevel";
-            this.NumericUpDownSerialViewEditLogLevel.Size = new System.Drawing.Size(55, 34);
+            this.NumericUpDownSerialViewEditLogLevel.Size = new System.Drawing.Size(55, 28);
             this.NumericUpDownSerialViewEditLogLevel.TabIndex = 9;
             this.NumericUpDownSerialViewEditLogLevel.Value = new decimal(new int[] {
             2,
@@ -4868,7 +4879,7 @@
             this.ComboBoxSerialViewEditPortName.Location = new System.Drawing.Point(240, 78);
             this.ComboBoxSerialViewEditPortName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditPortName.Name = "ComboBoxSerialViewEditPortName";
-            this.ComboBoxSerialViewEditPortName.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialViewEditPortName.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialViewEditPortName.TabIndex = 1;
             // 
             // ComboBoxSerialViewEditBaudRate
@@ -4879,7 +4890,7 @@
             this.ComboBoxSerialViewEditBaudRate.Location = new System.Drawing.Point(240, 174);
             this.ComboBoxSerialViewEditBaudRate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditBaudRate.Name = "ComboBoxSerialViewEditBaudRate";
-            this.ComboBoxSerialViewEditBaudRate.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialViewEditBaudRate.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialViewEditBaudRate.TabIndex = 3;
             // 
             // LabelSerialViewEditBaudRate
@@ -4899,7 +4910,7 @@
             this.ComboBoxSerialViewEditStopBits.Location = new System.Drawing.Point(240, 319);
             this.ComboBoxSerialViewEditStopBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditStopBits.Name = "ComboBoxSerialViewEditStopBits";
-            this.ComboBoxSerialViewEditStopBits.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialViewEditStopBits.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialViewEditStopBits.TabIndex = 6;
             // 
             // ComboBoxSerialViewEditDataBits
@@ -4910,7 +4921,7 @@
             this.ComboBoxSerialViewEditDataBits.Location = new System.Drawing.Point(240, 271);
             this.ComboBoxSerialViewEditDataBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditDataBits.Name = "ComboBoxSerialViewEditDataBits";
-            this.ComboBoxSerialViewEditDataBits.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialViewEditDataBits.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialViewEditDataBits.TabIndex = 5;
             // 
             // ComboBoxSerialViewEditParity
@@ -4921,7 +4932,7 @@
             this.ComboBoxSerialViewEditParity.Location = new System.Drawing.Point(240, 223);
             this.ComboBoxSerialViewEditParity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialViewEditParity.Name = "ComboBoxSerialViewEditParity";
-            this.ComboBoxSerialViewEditParity.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialViewEditParity.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialViewEditParity.TabIndex = 4;
             // 
             // TextBoxSerialViewEditName
@@ -4930,7 +4941,7 @@
             this.TextBoxSerialViewEditName.Location = new System.Drawing.Point(240, 31);
             this.TextBoxSerialViewEditName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditName.Name = "TextBoxSerialViewEditName";
-            this.TextBoxSerialViewEditName.Size = new System.Drawing.Size(247, 34);
+            this.TextBoxSerialViewEditName.Size = new System.Drawing.Size(247, 28);
             this.TextBoxSerialViewEditName.TabIndex = 0;
             this.TextBoxSerialViewEditName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -4940,7 +4951,7 @@
             this.TextBoxSerialViewEditControllerId.Location = new System.Drawing.Point(634, 272);
             this.TextBoxSerialViewEditControllerId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditControllerId.Name = "TextBoxSerialViewEditControllerId";
-            this.TextBoxSerialViewEditControllerId.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialViewEditControllerId.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialViewEditControllerId.TabIndex = 11;
             this.TextBoxSerialViewEditControllerId.Text = "1";
             this.TextBoxSerialViewEditControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -4951,7 +4962,7 @@
             this.TextBoxSerialViewEditNotificationTimeout.Location = new System.Drawing.Point(634, 223);
             this.TextBoxSerialViewEditNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditNotificationTimeout.Name = "TextBoxSerialViewEditNotificationTimeout";
-            this.TextBoxSerialViewEditNotificationTimeout.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialViewEditNotificationTimeout.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialViewEditNotificationTimeout.TabIndex = 10;
             this.TextBoxSerialViewEditNotificationTimeout.Text = "60";
             this.TextBoxSerialViewEditNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -4962,7 +4973,7 @@
             this.TextBoxSerialViewEditDeviceCount.Location = new System.Drawing.Point(634, 78);
             this.TextBoxSerialViewEditDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialViewEditDeviceCount.Name = "TextBoxSerialViewEditDeviceCount";
-            this.TextBoxSerialViewEditDeviceCount.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialViewEditDeviceCount.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialViewEditDeviceCount.TabIndex = 7;
             this.TextBoxSerialViewEditDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5027,9 +5038,9 @@
             this.SerialNew.Controls.Add(this.LabelSerialViewNew);
             this.SerialNew.Controls.Add(this.MBSerialNewBack);
             this.SerialNew.Controls.Add(this.MBSerialNewSave);
-            this.SerialNew.Location = new System.Drawing.Point(4, 25);
+            this.SerialNew.Location = new System.Drawing.Point(4, 22);
             this.SerialNew.Name = "SerialNew";
-            this.SerialNew.Size = new System.Drawing.Size(1219, 604);
+            this.SerialNew.Size = new System.Drawing.Size(1219, 607);
             this.SerialNew.TabIndex = 11;
             this.SerialNew.Text = "Serial New";
             // 
@@ -5079,7 +5090,7 @@
             this.ComboBoxSerialNewStopBits.Location = new System.Drawing.Point(240, 319);
             this.ComboBoxSerialNewStopBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewStopBits.Name = "ComboBoxSerialNewStopBits";
-            this.ComboBoxSerialNewStopBits.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialNewStopBits.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialNewStopBits.TabIndex = 6;
             // 
             // ComboBoxSerialNewDataBits
@@ -5095,7 +5106,7 @@
             this.ComboBoxSerialNewDataBits.Location = new System.Drawing.Point(240, 271);
             this.ComboBoxSerialNewDataBits.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewDataBits.Name = "ComboBoxSerialNewDataBits";
-            this.ComboBoxSerialNewDataBits.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialNewDataBits.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialNewDataBits.TabIndex = 5;
             // 
             // LabelSerialNewPortName
@@ -5121,7 +5132,7 @@
             0,
             0});
             this.NumericUpDownSerialNewPortNumber.Name = "NumericUpDownSerialNewPortNumber";
-            this.NumericUpDownSerialNewPortNumber.Size = new System.Drawing.Size(56, 34);
+            this.NumericUpDownSerialNewPortNumber.Size = new System.Drawing.Size(56, 28);
             this.NumericUpDownSerialNewPortNumber.TabIndex = 2;
             this.NumericUpDownSerialNewPortNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownSerialNewPortNumber.Value = new decimal(new int[] {
@@ -5139,7 +5150,7 @@
             0,
             0});
             this.NumericUpDownSerialNewLogLevel.Name = "NumericUpDownSerialNewLogLevel";
-            this.NumericUpDownSerialNewLogLevel.Size = new System.Drawing.Size(55, 34);
+            this.NumericUpDownSerialNewLogLevel.Size = new System.Drawing.Size(55, 28);
             this.NumericUpDownSerialNewLogLevel.TabIndex = 9;
             this.NumericUpDownSerialNewLogLevel.Value = new decimal(new int[] {
             2,
@@ -5214,7 +5225,7 @@
             this.ComboBoxSerialNewPortName.Location = new System.Drawing.Point(240, 78);
             this.ComboBoxSerialNewPortName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewPortName.Name = "ComboBoxSerialNewPortName";
-            this.ComboBoxSerialNewPortName.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialNewPortName.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialNewPortName.TabIndex = 1;
             // 
             // ComboBoxSerialNewBaudRate
@@ -5225,7 +5236,7 @@
             this.ComboBoxSerialNewBaudRate.Location = new System.Drawing.Point(240, 174);
             this.ComboBoxSerialNewBaudRate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewBaudRate.Name = "ComboBoxSerialNewBaudRate";
-            this.ComboBoxSerialNewBaudRate.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialNewBaudRate.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialNewBaudRate.TabIndex = 3;
             // 
             // LabelSerialNewBaudRate
@@ -5245,7 +5256,7 @@
             this.ComboBoxSerialNewParity.Location = new System.Drawing.Point(240, 223);
             this.ComboBoxSerialNewParity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxSerialNewParity.Name = "ComboBoxSerialNewParity";
-            this.ComboBoxSerialNewParity.Size = new System.Drawing.Size(133, 37);
+            this.ComboBoxSerialNewParity.Size = new System.Drawing.Size(133, 30);
             this.ComboBoxSerialNewParity.TabIndex = 4;
             // 
             // TextBoxSerialNewName
@@ -5254,7 +5265,7 @@
             this.TextBoxSerialNewName.Location = new System.Drawing.Point(240, 31);
             this.TextBoxSerialNewName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewName.Name = "TextBoxSerialNewName";
-            this.TextBoxSerialNewName.Size = new System.Drawing.Size(247, 34);
+            this.TextBoxSerialNewName.Size = new System.Drawing.Size(247, 28);
             this.TextBoxSerialNewName.TabIndex = 0;
             this.TextBoxSerialNewName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5264,7 +5275,7 @@
             this.TextBoxSerialNewControllerId.Location = new System.Drawing.Point(634, 272);
             this.TextBoxSerialNewControllerId.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewControllerId.Name = "TextBoxSerialNewControllerId";
-            this.TextBoxSerialNewControllerId.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialNewControllerId.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialNewControllerId.TabIndex = 11;
             this.TextBoxSerialNewControllerId.Text = "1";
             this.TextBoxSerialNewControllerId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5275,7 +5286,7 @@
             this.TextBoxSerialNewNotificationTimeout.Location = new System.Drawing.Point(634, 223);
             this.TextBoxSerialNewNotificationTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewNotificationTimeout.Name = "TextBoxSerialNewNotificationTimeout";
-            this.TextBoxSerialNewNotificationTimeout.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialNewNotificationTimeout.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialNewNotificationTimeout.TabIndex = 10;
             this.TextBoxSerialNewNotificationTimeout.Text = "60";
             this.TextBoxSerialNewNotificationTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5286,7 +5297,7 @@
             this.TextBoxSerialNewDeviceCount.Location = new System.Drawing.Point(634, 78);
             this.TextBoxSerialNewDeviceCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSerialNewDeviceCount.Name = "TextBoxSerialNewDeviceCount";
-            this.TextBoxSerialNewDeviceCount.Size = new System.Drawing.Size(55, 34);
+            this.TextBoxSerialNewDeviceCount.Size = new System.Drawing.Size(55, 28);
             this.TextBoxSerialNewDeviceCount.TabIndex = 7;
             this.TextBoxSerialNewDeviceCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5388,9 +5399,9 @@
             this.EmailServer.Controls.Add(this.ButtonSaveEmailServer);
             this.EmailServer.Controls.Add(this.groupBox2);
             this.EmailServer.Controls.Add(this.groupBox1);
-            this.EmailServer.Location = new System.Drawing.Point(4, 25);
+            this.EmailServer.Location = new System.Drawing.Point(4, 22);
             this.EmailServer.Name = "EmailServer";
-            this.EmailServer.Size = new System.Drawing.Size(1227, 633);
+            this.EmailServer.Size = new System.Drawing.Size(1227, 636);
             this.EmailServer.TabIndex = 13;
             this.EmailServer.Text = "Email Server";
             // 
@@ -5411,7 +5422,7 @@
             // 
             this.TextBoxEmailFromAddress.Location = new System.Drawing.Point(236, 39);
             this.TextBoxEmailFromAddress.Name = "TextBoxEmailFromAddress";
-            this.TextBoxEmailFromAddress.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxEmailFromAddress.Size = new System.Drawing.Size(359, 26);
             this.TextBoxEmailFromAddress.TabIndex = 6;
             // 
             // label7
@@ -5419,7 +5430,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(26, 42);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(206, 25);
+            this.label7.Size = new System.Drawing.Size(170, 20);
             this.label7.TabIndex = 5;
             this.label7.Text = "Email From Address";
             // 
@@ -5451,7 +5462,7 @@
             // 
             this.TextBoxSendToEmailAddress.Location = new System.Drawing.Point(236, 37);
             this.TextBoxSendToEmailAddress.Name = "TextBoxSendToEmailAddress";
-            this.TextBoxSendToEmailAddress.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxSendToEmailAddress.Size = new System.Drawing.Size(359, 26);
             this.TextBoxSendToEmailAddress.TabIndex = 4;
             // 
             // label6
@@ -5459,7 +5470,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(26, 40);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(240, 25);
+            this.label6.Size = new System.Drawing.Size(196, 20);
             this.label6.TabIndex = 3;
             this.label6.Text = "Send To Email Address";
             // 
@@ -5508,7 +5519,7 @@
             this.CheckBoxUseSsl.AutoSize = true;
             this.CheckBoxUseSsl.Location = new System.Drawing.Point(420, 36);
             this.CheckBoxUseSsl.Name = "CheckBoxUseSsl";
-            this.CheckBoxUseSsl.Size = new System.Drawing.Size(120, 29);
+            this.CheckBoxUseSsl.Size = new System.Drawing.Size(99, 24);
             this.CheckBoxUseSsl.TabIndex = 3;
             this.CheckBoxUseSsl.Text = "Use SSL";
             this.CheckBoxUseSsl.UseVisualStyleBackColor = true;
@@ -5517,14 +5528,14 @@
             // 
             this.TextBoxPassword.Location = new System.Drawing.Point(236, 112);
             this.TextBoxPassword.Name = "TextBoxPassword";
-            this.TextBoxPassword.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxPassword.Size = new System.Drawing.Size(359, 26);
             this.TextBoxPassword.TabIndex = 2;
             // 
             // TextBoxUsername
             // 
             this.TextBoxUsername.Location = new System.Drawing.Point(236, 75);
             this.TextBoxUsername.Name = "TextBoxUsername";
-            this.TextBoxUsername.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxUsername.Size = new System.Drawing.Size(359, 26);
             this.TextBoxUsername.TabIndex = 2;
             // 
             // label5
@@ -5532,7 +5543,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(24, 115);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(113, 25);
+            this.label5.Size = new System.Drawing.Size(91, 20);
             this.label5.TabIndex = 1;
             this.label5.Text = "Password:";
             // 
@@ -5541,7 +5552,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(24, 78);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(117, 25);
+            this.label4.Size = new System.Drawing.Size(96, 20);
             this.label4.TabIndex = 1;
             this.label4.Text = "Username:";
             // 
@@ -5552,7 +5563,7 @@
             this.CheckBoxRequiredUsername.CheckState = System.Windows.Forms.CheckState.Checked;
             this.CheckBoxRequiredUsername.Location = new System.Drawing.Point(24, 36);
             this.CheckBoxRequiredUsername.Name = "CheckBoxRequiredUsername";
-            this.CheckBoxRequiredUsername.Size = new System.Drawing.Size(365, 29);
+            this.CheckBoxRequiredUsername.Size = new System.Drawing.Size(304, 24);
             this.CheckBoxRequiredUsername.TabIndex = 0;
             this.CheckBoxRequiredUsername.Text = "Requires Username and Password";
             this.CheckBoxRequiredUsername.UseVisualStyleBackColor = true;
@@ -5581,7 +5592,7 @@
             this.TextBoxPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TextBoxPort.Location = new System.Drawing.Point(236, 127);
             this.TextBoxPort.Name = "TextBoxPort";
-            this.TextBoxPort.Size = new System.Drawing.Size(74, 30);
+            this.TextBoxPort.Size = new System.Drawing.Size(74, 26);
             this.TextBoxPort.TabIndex = 1;
             this.TextBoxPort.Text = "587";
             // 
@@ -5590,7 +5601,7 @@
             this.TextBoxServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TextBoxServerName.Location = new System.Drawing.Point(236, 88);
             this.TextBoxServerName.Name = "TextBoxServerName";
-            this.TextBoxServerName.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxServerName.Size = new System.Drawing.Size(359, 26);
             this.TextBoxServerName.TabIndex = 1;
             // 
             // TextBoxDescription
@@ -5598,7 +5609,7 @@
             this.TextBoxDescription.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.TextBoxDescription.Location = new System.Drawing.Point(236, 49);
             this.TextBoxDescription.Name = "TextBoxDescription";
-            this.TextBoxDescription.Size = new System.Drawing.Size(359, 30);
+            this.TextBoxDescription.Size = new System.Drawing.Size(359, 26);
             this.TextBoxDescription.TabIndex = 1;
             this.TextBoxDescription.Text = "Email Server";
             // 
@@ -5638,9 +5649,9 @@
             this.EmailAddresses.Controls.Add(this.groupBox5);
             this.EmailAddresses.Controls.Add(this.ButtonCancelEmailAddresses);
             this.EmailAddresses.Controls.Add(this.ButtonSaveEmailAddresses);
-            this.EmailAddresses.Location = new System.Drawing.Point(4, 25);
+            this.EmailAddresses.Location = new System.Drawing.Point(4, 22);
             this.EmailAddresses.Name = "EmailAddresses";
-            this.EmailAddresses.Size = new System.Drawing.Size(1227, 633);
+            this.EmailAddresses.Size = new System.Drawing.Size(1227, 636);
             this.EmailAddresses.TabIndex = 14;
             this.EmailAddresses.Text = "EmailAddresses";
             // 
@@ -5668,7 +5679,7 @@
             this.TextBoxEmailAddressesEmail2.Location = new System.Drawing.Point(118, 133);
             this.TextBoxEmailAddressesEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxEmailAddressesEmail2.Name = "TextBoxEmailAddressesEmail2";
-            this.TextBoxEmailAddressesEmail2.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxEmailAddressesEmail2.Size = new System.Drawing.Size(326, 26);
             this.TextBoxEmailAddressesEmail2.TabIndex = 10;
             this.TextBoxEmailAddressesEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5689,7 +5700,7 @@
             this.TextBoxEmailAddressesEmail1.Location = new System.Drawing.Point(118, 97);
             this.TextBoxEmailAddressesEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxEmailAddressesEmail1.Name = "TextBoxEmailAddressesEmail1";
-            this.TextBoxEmailAddressesEmail1.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxEmailAddressesEmail1.Size = new System.Drawing.Size(326, 26);
             this.TextBoxEmailAddressesEmail1.TabIndex = 12;
             this.TextBoxEmailAddressesEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5700,7 +5711,7 @@
             this.TextBoxEmailAddressesEmail3.Location = new System.Drawing.Point(118, 169);
             this.TextBoxEmailAddressesEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxEmailAddressesEmail3.Name = "TextBoxEmailAddressesEmail3";
-            this.TextBoxEmailAddressesEmail3.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxEmailAddressesEmail3.Size = new System.Drawing.Size(326, 26);
             this.TextBoxEmailAddressesEmail3.TabIndex = 13;
             this.TextBoxEmailAddressesEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -5731,7 +5742,7 @@
             this.LabelEmailInfo.Location = new System.Drawing.Point(134, 31);
             this.LabelEmailInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelEmailInfo.Name = "LabelEmailInfo";
-            this.LabelEmailInfo.Size = new System.Drawing.Size(287, 25);
+            this.LabelEmailInfo.Size = new System.Drawing.Size(239, 20);
             this.LabelEmailInfo.TabIndex = 9;
             this.LabelEmailInfo.Text = "Notification Email Addresses";
             // 
@@ -5765,9 +5776,9 @@
             this.ProLite.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.ProLite.Controls.Add(this.ButtonProLiteBack);
             this.ProLite.Controls.Add(this.PanelProLite);
-            this.ProLite.Location = new System.Drawing.Point(4, 25);
+            this.ProLite.Location = new System.Drawing.Point(4, 22);
             this.ProLite.Name = "ProLite";
-            this.ProLite.Size = new System.Drawing.Size(1227, 633);
+            this.ProLite.Size = new System.Drawing.Size(1227, 636);
             this.ProLite.TabIndex = 15;
             this.ProLite.Text = "Pro-Lite";
             // 
@@ -5821,7 +5832,7 @@
             this.LabelProLiteTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProLiteTester.Location = new System.Drawing.Point(194, 19);
             this.LabelProLiteTester.Name = "LabelProLiteTester";
-            this.LabelProLiteTester.Size = new System.Drawing.Size(209, 31);
+            this.LabelProLiteTester.Size = new System.Drawing.Size(169, 25);
             this.LabelProLiteTester.TabIndex = 8;
             this.LabelProLiteTester.Text = "Pro-Lite Tester";
             // 
@@ -5876,7 +5887,7 @@
             this.LabelProLiteQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LabelProLiteQuantity.Location = new System.Drawing.Point(106, 238);
             this.LabelProLiteQuantity.Name = "LabelProLiteQuantity";
-            this.LabelProLiteQuantity.Size = new System.Drawing.Size(93, 25);
+            this.LabelProLiteQuantity.Size = new System.Drawing.Size(76, 20);
             this.LabelProLiteQuantity.TabIndex = 8;
             this.LabelProLiteQuantity.Text = "Quantity";
             // 
@@ -5886,7 +5897,7 @@
             this.LabelProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProLiteBack.Location = new System.Drawing.Point(133, 196);
             this.LabelProLiteBack.Name = "LabelProLiteBack";
-            this.LabelProLiteBack.Size = new System.Drawing.Size(60, 25);
+            this.LabelProLiteBack.Size = new System.Drawing.Size(49, 20);
             this.LabelProLiteBack.TabIndex = 9;
             this.LabelProLiteBack.Text = "Back";
             // 
@@ -5896,7 +5907,7 @@
             this.LabelProLiteUnit.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProLiteUnit.Location = new System.Drawing.Point(52, 112);
             this.LabelProLiteUnit.Name = "LabelProLiteUnit";
-            this.LabelProLiteUnit.Size = new System.Drawing.Size(159, 25);
+            this.LabelProLiteUnit.Size = new System.Drawing.Size(130, 20);
             this.LabelProLiteUnit.TabIndex = 10;
             this.LabelProLiteUnit.Text = "Device Number";
             // 
@@ -5906,7 +5917,7 @@
             this.LabelProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelProLiteOver.Location = new System.Drawing.Point(136, 154);
             this.LabelProLiteOver.Name = "LabelProLiteOver";
-            this.LabelProLiteOver.Size = new System.Drawing.Size(59, 25);
+            this.LabelProLiteOver.Size = new System.Drawing.Size(46, 20);
             this.LabelProLiteOver.TabIndex = 10;
             this.LabelProLiteOver.Text = "Over";
             // 
@@ -5915,7 +5926,7 @@
             this.TextBoxProLiteQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxProLiteQuantity.Location = new System.Drawing.Point(193, 232);
             this.TextBoxProLiteQuantity.Name = "TextBoxProLiteQuantity";
-            this.TextBoxProLiteQuantity.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxProLiteQuantity.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteQuantity.TabIndex = 4;
             this.TextBoxProLiteQuantity.Text = "1";
             this.TextBoxProLiteQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5925,7 +5936,7 @@
             this.TextBoxProLiteDeviceNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxProLiteDeviceNumber.Location = new System.Drawing.Point(193, 106);
             this.TextBoxProLiteDeviceNumber.Name = "TextBoxProLiteDeviceNumber";
-            this.TextBoxProLiteDeviceNumber.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxProLiteDeviceNumber.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteDeviceNumber.TabIndex = 6;
             this.TextBoxProLiteDeviceNumber.Text = "1";
             this.TextBoxProLiteDeviceNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5935,7 +5946,7 @@
             this.TextBoxProLiteBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxProLiteBack.Location = new System.Drawing.Point(193, 190);
             this.TextBoxProLiteBack.Name = "TextBoxProLiteBack";
-            this.TextBoxProLiteBack.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxProLiteBack.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteBack.TabIndex = 5;
             this.TextBoxProLiteBack.Text = "1";
             this.TextBoxProLiteBack.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5945,7 +5956,7 @@
             this.TextBoxProLiteOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxProLiteOver.Location = new System.Drawing.Point(193, 148);
             this.TextBoxProLiteOver.Name = "TextBoxProLiteOver";
-            this.TextBoxProLiteOver.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxProLiteOver.Size = new System.Drawing.Size(62, 26);
             this.TextBoxProLiteOver.TabIndex = 6;
             this.TextBoxProLiteOver.Text = "1";
             this.TextBoxProLiteOver.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -5957,10 +5968,10 @@
             this.SapServer.Controls.Add(this.MBSapServerBack);
             this.SapServer.Controls.Add(this.MBSapServerSave);
             this.SapServer.Controls.Add(this.PanelSapServer);
-            this.SapServer.Location = new System.Drawing.Point(4, 25);
+            this.SapServer.Location = new System.Drawing.Point(4, 22);
             this.SapServer.Name = "SapServer";
             this.SapServer.Padding = new System.Windows.Forms.Padding(3);
-            this.SapServer.Size = new System.Drawing.Size(1227, 633);
+            this.SapServer.Size = new System.Drawing.Size(1227, 636);
             this.SapServer.TabIndex = 16;
             this.SapServer.Text = "SapServer";
             // 
@@ -6056,7 +6067,7 @@
             this.TextBoxSapServerConnectionIdleTimeout.Location = new System.Drawing.Point(1012, 103);
             this.TextBoxSapServerConnectionIdleTimeout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerConnectionIdleTimeout.Name = "TextBoxSapServerConnectionIdleTimeout";
-            this.TextBoxSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(99, 30);
+            this.TextBoxSapServerConnectionIdleTimeout.Size = new System.Drawing.Size(99, 26);
             this.TextBoxSapServerConnectionIdleTimeout.TabIndex = 1;
             this.TextBoxSapServerConnectionIdleTimeout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6077,7 +6088,7 @@
             this.TextBoxSapServerPeakConnectionsLimit.Location = new System.Drawing.Point(1012, 67);
             this.TextBoxSapServerPeakConnectionsLimit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerPeakConnectionsLimit.Name = "TextBoxSapServerPeakConnectionsLimit";
-            this.TextBoxSapServerPeakConnectionsLimit.Size = new System.Drawing.Size(99, 30);
+            this.TextBoxSapServerPeakConnectionsLimit.Size = new System.Drawing.Size(99, 26);
             this.TextBoxSapServerPeakConnectionsLimit.TabIndex = 1;
             this.TextBoxSapServerPeakConnectionsLimit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6099,7 +6110,7 @@
             this.TextBoxSapServerEmail2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail2.Name = "TextBoxSapServerEmail2";
             this.TextBoxSapServerEmail2.ReadOnly = true;
-            this.TextBoxSapServerEmail2.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxSapServerEmail2.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail2.TabIndex = 1;
             this.TextBoxSapServerEmail2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6110,7 +6121,7 @@
             this.TextBoxSapServerSystemNumber.Location = new System.Drawing.Point(597, 67);
             this.TextBoxSapServerSystemNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerSystemNumber.Name = "TextBoxSapServerSystemNumber";
-            this.TextBoxSapServerSystemNumber.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerSystemNumber.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerSystemNumber.TabIndex = 1;
             this.TextBoxSapServerSystemNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6131,7 +6142,7 @@
             this.TextBoxSapServerLanguage.Location = new System.Drawing.Point(597, 139);
             this.TextBoxSapServerLanguage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerLanguage.Name = "TextBoxSapServerLanguage";
-            this.TextBoxSapServerLanguage.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerLanguage.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerLanguage.TabIndex = 1;
             this.TextBoxSapServerLanguage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6152,7 +6163,7 @@
             this.TextBoxSapServerPoolSize.Location = new System.Drawing.Point(1012, 31);
             this.TextBoxSapServerPoolSize.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerPoolSize.Name = "TextBoxSapServerPoolSize";
-            this.TextBoxSapServerPoolSize.Size = new System.Drawing.Size(99, 30);
+            this.TextBoxSapServerPoolSize.Size = new System.Drawing.Size(99, 26);
             this.TextBoxSapServerPoolSize.TabIndex = 3;
             this.TextBoxSapServerPoolSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6163,7 +6174,7 @@
             this.TextBoxSapServerSapBusyFile.Location = new System.Drawing.Point(204, 399);
             this.TextBoxSapServerSapBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerSapBusyFile.Name = "TextBoxSapServerSapBusyFile";
-            this.TextBoxSapServerSapBusyFile.Size = new System.Drawing.Size(542, 30);
+            this.TextBoxSapServerSapBusyFile.Size = new System.Drawing.Size(542, 26);
             this.TextBoxSapServerSapBusyFile.TabIndex = 1;
             this.TextBoxSapServerSapBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6174,7 +6185,7 @@
             this.TextBoxSapServerPassword.Location = new System.Drawing.Point(204, 283);
             this.TextBoxSapServerPassword.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerPassword.Name = "TextBoxSapServerPassword";
-            this.TextBoxSapServerPassword.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerPassword.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerPassword.TabIndex = 1;
             this.TextBoxSapServerPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6186,7 +6197,7 @@
             this.TextBoxSapServerEmail1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail1.Name = "TextBoxSapServerEmail1";
             this.TextBoxSapServerEmail1.ReadOnly = true;
-            this.TextBoxSapServerEmail1.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxSapServerEmail1.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail1.TabIndex = 3;
             this.TextBoxSapServerEmail1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6207,7 +6218,7 @@
             this.TextBoxSapServerAppServerHost.Location = new System.Drawing.Point(597, 31);
             this.TextBoxSapServerAppServerHost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerAppServerHost.Name = "TextBoxSapServerAppServerHost";
-            this.TextBoxSapServerAppServerHost.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerAppServerHost.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerAppServerHost.TabIndex = 3;
             this.TextBoxSapServerAppServerHost.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6239,7 +6250,7 @@
             this.TextBoxSapServerEmail3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEmail3.Name = "TextBoxSapServerEmail3";
             this.TextBoxSapServerEmail3.ReadOnly = true;
-            this.TextBoxSapServerEmail3.Size = new System.Drawing.Size(326, 30);
+            this.TextBoxSapServerEmail3.Size = new System.Drawing.Size(326, 26);
             this.TextBoxSapServerEmail3.TabIndex = 3;
             this.TextBoxSapServerEmail3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6270,7 +6281,7 @@
             this.TextBoxSapServerClient.Location = new System.Drawing.Point(597, 103);
             this.TextBoxSapServerClient.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerClient.Name = "TextBoxSapServerClient";
-            this.TextBoxSapServerClient.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerClient.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerClient.TabIndex = 3;
             this.TextBoxSapServerClient.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6301,7 +6312,7 @@
             this.TextBoxSapServerNeutronBusyFile.Location = new System.Drawing.Point(204, 363);
             this.TextBoxSapServerNeutronBusyFile.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerNeutronBusyFile.Name = "TextBoxSapServerNeutronBusyFile";
-            this.TextBoxSapServerNeutronBusyFile.Size = new System.Drawing.Size(542, 30);
+            this.TextBoxSapServerNeutronBusyFile.Size = new System.Drawing.Size(542, 26);
             this.TextBoxSapServerNeutronBusyFile.TabIndex = 3;
             this.TextBoxSapServerNeutronBusyFile.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6332,7 +6343,7 @@
             this.TextBoxSapServerUsername.Location = new System.Drawing.Point(204, 247);
             this.TextBoxSapServerUsername.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerUsername.Name = "TextBoxSapServerUsername";
-            this.TextBoxSapServerUsername.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerUsername.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerUsername.TabIndex = 3;
             this.TextBoxSapServerUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6353,7 +6364,7 @@
             this.TextBoxSapServerEndMinute.Location = new System.Drawing.Point(204, 211);
             this.TextBoxSapServerEndMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEndMinute.Name = "TextBoxSapServerEndMinute";
-            this.TextBoxSapServerEndMinute.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerEndMinute.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerEndMinute.TabIndex = 0;
             this.TextBoxSapServerEndMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6374,7 +6385,7 @@
             this.TextBoxSapServerStartMinute.Location = new System.Drawing.Point(204, 139);
             this.TextBoxSapServerStartMinute.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerStartMinute.Name = "TextBoxSapServerStartMinute";
-            this.TextBoxSapServerStartMinute.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerStartMinute.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerStartMinute.TabIndex = 0;
             this.TextBoxSapServerStartMinute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6395,7 +6406,7 @@
             this.TextBoxSapServerEndHour.Location = new System.Drawing.Point(204, 175);
             this.TextBoxSapServerEndHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerEndHour.Name = "TextBoxSapServerEndHour";
-            this.TextBoxSapServerEndHour.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerEndHour.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerEndHour.TabIndex = 0;
             this.TextBoxSapServerEndHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6406,7 +6417,7 @@
             this.TextBoxSapServerSleepTime.Location = new System.Drawing.Point(204, 67);
             this.TextBoxSapServerSleepTime.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerSleepTime.Name = "TextBoxSapServerSleepTime";
-            this.TextBoxSapServerSleepTime.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerSleepTime.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerSleepTime.TabIndex = 0;
             this.TextBoxSapServerSleepTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6417,7 +6428,7 @@
             this.TextBoxSapServerStartHour.Location = new System.Drawing.Point(204, 103);
             this.TextBoxSapServerStartHour.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerStartHour.Name = "TextBoxSapServerStartHour";
-            this.TextBoxSapServerStartHour.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerStartHour.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerStartHour.TabIndex = 0;
             this.TextBoxSapServerStartHour.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6458,7 +6469,7 @@
             this.TextBoxSapServerName.Location = new System.Drawing.Point(204, 31);
             this.TextBoxSapServerName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxSapServerName.Name = "TextBoxSapServerName";
-            this.TextBoxSapServerName.Size = new System.Drawing.Size(182, 30);
+            this.TextBoxSapServerName.Size = new System.Drawing.Size(182, 26);
             this.TextBoxSapServerName.TabIndex = 0;
             this.TextBoxSapServerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -6478,10 +6489,10 @@
             this.BatchLights.Controls.Add(this.ButtonSaveIptiConfig);
             this.BatchLights.Controls.Add(this.MBBatchLightBack);
             this.BatchLights.Controls.Add(this.PanelBatchLightTesterBottom);
-            this.BatchLights.Location = new System.Drawing.Point(4, 25);
+            this.BatchLights.Location = new System.Drawing.Point(4, 22);
             this.BatchLights.Name = "BatchLights";
             this.BatchLights.Padding = new System.Windows.Forms.Padding(3);
-            this.BatchLights.Size = new System.Drawing.Size(1227, 633);
+            this.BatchLights.Size = new System.Drawing.Size(1227, 636);
             this.BatchLights.TabIndex = 17;
             this.BatchLights.Text = "BatchLights";
             // 
@@ -6568,7 +6579,7 @@
             this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CheckBoxClientConnected.Location = new System.Drawing.Point(287, 205);
             this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
-            this.CheckBoxClientConnected.Size = new System.Drawing.Size(193, 29);
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
             this.CheckBoxClientConnected.TabIndex = 39;
             this.CheckBoxClientConnected.Text = "Transmitter Ready";
             this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
@@ -6657,7 +6668,7 @@
             this.label9.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.label9.Location = new System.Drawing.Point(265, 250);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(196, 25);
+            this.label9.Size = new System.Drawing.Size(161, 20);
             this.label9.TabIndex = 28;
             this.label9.Text = "Batch Table Tester";
             // 
@@ -6668,7 +6679,7 @@
             this.label12.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.label12.Location = new System.Drawing.Point(254, 279);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(55, 25);
+            this.label12.Size = new System.Drawing.Size(43, 20);
             this.label12.TabIndex = 29;
             this.label12.Text = "Text";
             // 
@@ -6678,7 +6689,7 @@
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(451, 279);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(253, 25);
+            this.label14.Size = new System.Drawing.Size(208, 20);
             this.label14.TabIndex = 31;
             this.label14.Text = "Batch Order Control Text";
             // 
@@ -6688,7 +6699,7 @@
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(112, 279);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(89, 25);
+            this.label15.Size = new System.Drawing.Size(73, 20);
             this.label15.TabIndex = 32;
             this.label15.Text = "Position";
             // 
@@ -6697,7 +6708,7 @@
             this.TextBoxTransmitDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxTransmitDelay.Location = new System.Drawing.Point(542, 504);
             this.TextBoxTransmitDelay.Name = "TextBoxTransmitDelay";
-            this.TextBoxTransmitDelay.Size = new System.Drawing.Size(76, 30);
+            this.TextBoxTransmitDelay.Size = new System.Drawing.Size(76, 26);
             this.TextBoxTransmitDelay.TabIndex = 26;
             this.TextBoxTransmitDelay.Text = "10";
             this.TextBoxTransmitDelay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6707,7 +6718,7 @@
             this.TextBoxBatchOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBatchOrderControlText.Location = new System.Drawing.Point(472, 304);
             this.TextBoxBatchOrderControlText.Name = "TextBoxBatchOrderControlText";
-            this.TextBoxBatchOrderControlText.Size = new System.Drawing.Size(159, 30);
+            this.TextBoxBatchOrderControlText.Size = new System.Drawing.Size(159, 26);
             this.TextBoxBatchOrderControlText.TabIndex = 26;
             this.TextBoxBatchOrderControlText.Text = "123456";
             this.TextBoxBatchOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6717,7 +6728,7 @@
             this.TextBoxBatchText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBatchText.Location = new System.Drawing.Point(249, 304);
             this.TextBoxBatchText.Name = "TextBoxBatchText";
-            this.TextBoxBatchText.Size = new System.Drawing.Size(56, 30);
+            this.TextBoxBatchText.Size = new System.Drawing.Size(56, 26);
             this.TextBoxBatchText.TabIndex = 25;
             this.TextBoxBatchText.Text = "21";
             this.TextBoxBatchText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6727,7 +6738,7 @@
             this.TextBoxBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBatchPosition.Location = new System.Drawing.Point(116, 304);
             this.TextBoxBatchPosition.Name = "TextBoxBatchPosition";
-            this.TextBoxBatchPosition.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxBatchPosition.Size = new System.Drawing.Size(62, 26);
             this.TextBoxBatchPosition.TabIndex = 27;
             this.TextBoxBatchPosition.Text = "1";
             this.TextBoxBatchPosition.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -6745,7 +6756,7 @@
             "500"});
             this.ComboBoxButtonOffTime.Location = new System.Drawing.Point(542, 470);
             this.ComboBoxButtonOffTime.Name = "ComboBoxButtonOffTime";
-            this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 33);
+            this.ComboBoxButtonOffTime.Size = new System.Drawing.Size(76, 28);
             this.ComboBoxButtonOffTime.TabIndex = 24;
             // 
             // LabelTransmitDelay
@@ -6754,7 +6765,7 @@
             this.LabelTransmitDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelTransmitDelay.Location = new System.Drawing.Point(370, 507);
             this.LabelTransmitDelay.Name = "LabelTransmitDelay";
-            this.LabelTransmitDelay.Size = new System.Drawing.Size(206, 25);
+            this.LabelTransmitDelay.Size = new System.Drawing.Size(166, 20);
             this.LabelTransmitDelay.TabIndex = 23;
             this.LabelTransmitDelay.Text = "Transmit Delay(MS)";
             // 
@@ -6764,7 +6775,7 @@
             this.LabelButtonOffTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelButtonOffTime.Location = new System.Drawing.Point(400, 473);
             this.LabelButtonOffTime.Name = "LabelButtonOffTime";
-            this.LabelButtonOffTime.Size = new System.Drawing.Size(163, 25);
+            this.LabelButtonOffTime.Size = new System.Drawing.Size(136, 20);
             this.LabelButtonOffTime.TabIndex = 23;
             this.LabelButtonOffTime.Text = "Button Off Time";
             // 
@@ -6783,7 +6794,7 @@
             "White"});
             this.ComboBoxButtonColorTwo.Location = new System.Drawing.Point(541, 437);
             this.ComboBoxButtonColorTwo.Name = "ComboBoxButtonColorTwo";
-            this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 33);
+            this.ComboBoxButtonColorTwo.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxButtonColorTwo.TabIndex = 22;
             // 
             // ButtonColorTwo
@@ -6792,7 +6803,7 @@
             this.ButtonColorTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ButtonColorTwo.Location = new System.Drawing.Point(387, 440);
             this.ButtonColorTwo.Name = "ButtonColorTwo";
-            this.ButtonColorTwo.Size = new System.Drawing.Size(179, 25);
+            this.ButtonColorTwo.Size = new System.Drawing.Size(147, 20);
             this.ButtonColorTwo.TabIndex = 21;
             this.ButtonColorTwo.Text = "Button Color Two";
             // 
@@ -6827,7 +6838,7 @@
             "500"});
             this.ComboBoxButtonOnTime.Location = new System.Drawing.Point(196, 470);
             this.ComboBoxButtonOnTime.Name = "ComboBoxButtonOnTime";
-            this.ComboBoxButtonOnTime.Size = new System.Drawing.Size(76, 33);
+            this.ComboBoxButtonOnTime.Size = new System.Drawing.Size(76, 28);
             this.ComboBoxButtonOnTime.TabIndex = 17;
             // 
             // LabelButtonOnTime
@@ -6836,7 +6847,7 @@
             this.LabelButtonOnTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelButtonOnTime.Location = new System.Drawing.Point(56, 473);
             this.LabelButtonOnTime.Name = "LabelButtonOnTime";
-            this.LabelButtonOnTime.Size = new System.Drawing.Size(163, 25);
+            this.LabelButtonOnTime.Size = new System.Drawing.Size(134, 20);
             this.LabelButtonOnTime.TabIndex = 16;
             this.LabelButtonOnTime.Text = "Button On Time";
             // 
@@ -6851,7 +6862,7 @@
             "Blue Solid"});
             this.ComboBoxOrderControlButton.Location = new System.Drawing.Point(196, 504);
             this.ComboBoxOrderControlButton.Name = "ComboBoxOrderControlButton";
-            this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(121, 33);
+            this.ComboBoxOrderControlButton.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxOrderControlButton.TabIndex = 15;
             // 
             // ComboBoxButtonColorOne
@@ -6869,7 +6880,7 @@
             "White"});
             this.ComboBoxButtonColorOne.Location = new System.Drawing.Point(196, 437);
             this.ComboBoxButtonColorOne.Name = "ComboBoxButtonColorOne";
-            this.ComboBoxButtonColorOne.Size = new System.Drawing.Size(121, 33);
+            this.ComboBoxButtonColorOne.Size = new System.Drawing.Size(121, 28);
             this.ComboBoxButtonColorOne.TabIndex = 15;
             // 
             // NumericUpDownBayId
@@ -6887,7 +6898,7 @@
             0,
             0});
             this.NumericUpDownBayId.Name = "NumericUpDownBayId";
-            this.NumericUpDownBayId.Size = new System.Drawing.Size(63, 30);
+            this.NumericUpDownBayId.Size = new System.Drawing.Size(63, 26);
             this.NumericUpDownBayId.TabIndex = 14;
             this.NumericUpDownBayId.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.NumericUpDownBayId.Value = new decimal(new int[] {
@@ -6912,7 +6923,7 @@
             this.LabelBatchLightTester.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBatchLightTester.Location = new System.Drawing.Point(206, 19);
             this.LabelBatchLightTester.Name = "LabelBatchLightTester";
-            this.LabelBatchLightTester.Size = new System.Drawing.Size(400, 31);
+            this.LabelBatchLightTester.Size = new System.Drawing.Size(321, 25);
             this.LabelBatchLightTester.TabIndex = 8;
             this.LabelBatchLightTester.Text = "IPTI Configuration and Tester";
             // 
@@ -6977,7 +6988,7 @@
             this.LabelOrderControlButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelOrderControlButton.Location = new System.Drawing.Point(4, 507);
             this.LabelOrderControlButton.Name = "LabelOrderControlButton";
-            this.LabelOrderControlButton.Size = new System.Drawing.Size(211, 25);
+            this.LabelOrderControlButton.Size = new System.Drawing.Size(176, 20);
             this.LabelOrderControlButton.TabIndex = 9;
             this.LabelOrderControlButton.Text = "Order Control Button";
             // 
@@ -6988,7 +6999,7 @@
             this.label11.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.label11.Location = new System.Drawing.Point(294, 73);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(175, 25);
+            this.label11.Size = new System.Drawing.Size(145, 20);
             this.label11.TabIndex = 8;
             this.label11.Text = "Blastzone Tester";
             // 
@@ -6999,7 +7010,7 @@
             this.LabelBatchLightQuantity.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LabelBatchLightQuantity.Location = new System.Drawing.Point(301, 105);
             this.LabelBatchLightQuantity.Name = "LabelBatchLightQuantity";
-            this.LabelBatchLightQuantity.Size = new System.Drawing.Size(55, 25);
+            this.LabelBatchLightQuantity.Size = new System.Drawing.Size(43, 20);
             this.LabelBatchLightQuantity.TabIndex = 8;
             this.LabelBatchLightQuantity.Text = "Text";
             // 
@@ -7009,7 +7020,7 @@
             this.LabelButtonColorOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelButtonColorOne.Location = new System.Drawing.Point(42, 440);
             this.LabelButtonColorOne.Name = "LabelButtonColorOne";
-            this.LabelButtonColorOne.Size = new System.Drawing.Size(179, 25);
+            this.LabelButtonColorOne.Size = new System.Drawing.Size(148, 20);
             this.LabelButtonColorOne.TabIndex = 9;
             this.LabelButtonColorOne.Text = "Button Color One";
             // 
@@ -7019,7 +7030,7 @@
             this.LabelBayId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBayId.Location = new System.Drawing.Point(41, 105);
             this.LabelBayId.Name = "LabelBayId";
-            this.LabelBayId.Size = new System.Drawing.Size(73, 25);
+            this.LabelBayId.Size = new System.Drawing.Size(60, 20);
             this.LabelBayId.TabIndex = 9;
             this.LabelBayId.Text = "Bay Id";
             // 
@@ -7029,7 +7040,7 @@
             this.LabelOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelOrderControlText.Location = new System.Drawing.Point(434, 105);
             this.LabelOrderControlText.Name = "LabelOrderControlText";
-            this.LabelOrderControlText.Size = new System.Drawing.Size(293, 25);
+            this.LabelOrderControlText.Size = new System.Drawing.Size(241, 20);
             this.LabelOrderControlText.TabIndex = 9;
             this.LabelOrderControlText.Text = "Blastzone Order Control Text";
             // 
@@ -7039,7 +7050,7 @@
             this.LabelBatchPosition.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelBatchPosition.Location = new System.Drawing.Point(158, 105);
             this.LabelBatchPosition.Name = "LabelBatchPosition";
-            this.LabelBatchPosition.Size = new System.Drawing.Size(89, 25);
+            this.LabelBatchPosition.Size = new System.Drawing.Size(73, 20);
             this.LabelBatchPosition.TabIndex = 9;
             this.LabelBatchPosition.Text = "Position";
             // 
@@ -7048,7 +7059,7 @@
             this.TextBoxBlastzoneOrderControlText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBlastzoneOrderControlText.Location = new System.Drawing.Point(472, 130);
             this.TextBoxBlastzoneOrderControlText.Name = "TextBoxBlastzoneOrderControlText";
-            this.TextBoxBlastzoneOrderControlText.Size = new System.Drawing.Size(159, 30);
+            this.TextBoxBlastzoneOrderControlText.Size = new System.Drawing.Size(159, 26);
             this.TextBoxBlastzoneOrderControlText.TabIndex = 5;
             this.TextBoxBlastzoneOrderControlText.Text = "123456";
             this.TextBoxBlastzoneOrderControlText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -7058,7 +7069,7 @@
             this.TextBoxBlastzoneText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBlastzoneText.Location = new System.Drawing.Point(295, 130);
             this.TextBoxBlastzoneText.Name = "TextBoxBlastzoneText";
-            this.TextBoxBlastzoneText.Size = new System.Drawing.Size(56, 30);
+            this.TextBoxBlastzoneText.Size = new System.Drawing.Size(56, 26);
             this.TextBoxBlastzoneText.TabIndex = 4;
             this.TextBoxBlastzoneText.Text = "21";
             this.TextBoxBlastzoneText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -7068,7 +7079,7 @@
             this.TextBoxBlastzoneDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxBlastzoneDisplay.Location = new System.Drawing.Point(162, 130);
             this.TextBoxBlastzoneDisplay.Name = "TextBoxBlastzoneDisplay";
-            this.TextBoxBlastzoneDisplay.Size = new System.Drawing.Size(62, 30);
+            this.TextBoxBlastzoneDisplay.Size = new System.Drawing.Size(62, 26);
             this.TextBoxBlastzoneDisplay.TabIndex = 5;
             this.TextBoxBlastzoneDisplay.Text = "1";
             this.TextBoxBlastzoneDisplay.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -7116,18 +7127,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // MBHanelTester
-            // 
-            this.MBHanelTester.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHanelTester.Location = new System.Drawing.Point(957, 165);
-            this.MBHanelTester.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.MBHanelTester.Name = "MBHanelTester";
-            this.MBHanelTester.Size = new System.Drawing.Size(241, 84);
-            this.MBHanelTester.TabIndex = 33;
-            this.MBHanelTester.Text = "Hanel Tester";
-            this.MBHanelTester.UseSelectable = true;
-            this.MBHanelTester.Click += new System.EventHandler(this.MBHanelTester_Click);
             // 
             // FrmUtilities
             // 

@@ -52,6 +52,7 @@ using SerialConfiguration = NeutronData.Models.SerialConfiguration;
 using NeutronData.Interfaces;
 using static System.Data.Entity.Migrations.Model.UpdateDatabaseOperation;
 using System.Configuration;
+using Neutron.Interfaces;
 
 
 namespace Neutron.Forms
@@ -114,9 +115,11 @@ namespace Neutron.Forms
         private IIptiDisplayFunctions _iptiDisplayFunctions;
         private IptiConfig _ipti;
         public FrmUtilities(IJsonData jsonData, NeutronVariables neutronVariables, NeutronLicense neutronLicense
-            , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions, Func<NeutronDb> contextFactory)
+            , WorkstationView workstationView, IEnumManager enumManager, IIptiDisplayFunctions iptiDisplayFunctions
+            , Func<NeutronDb> contextFactory, IDialogService dialogService)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _dialogService = dialogService;
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             //SetCulture(_cultureInfo.Name);
@@ -3699,6 +3702,7 @@ namespace Neutron.Forms
 
         private bool _isClientConnected;
         private readonly Func<NeutronDb> _contextFactory;
+        private readonly IDialogService _dialogService;
 
         #endregion
 
@@ -3888,7 +3892,7 @@ namespace Neutron.Forms
 
         private void MBHanelTester_Click(object sender, EventArgs e)
         {
-            using (var frm = new FrmMp12DTest(_jsonData, _neutronVariables, _workstationView ))
+            using (var frm = new FrmMp12DTest(_jsonData, _neutronVariables, _workstationView, _dialogService ))
             {
                 frm.ShowDialog();
                 Show();
