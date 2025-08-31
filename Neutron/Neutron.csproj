@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>654</ApplicationRevision>
+    <ApplicationRevision>694</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -50,7 +50,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
-    <!-- <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner> -->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -220,6 +219,7 @@
     <Compile Include="Classes\ICompressService.cs" />
     <Compile Include="Classes\PanelManager.cs" />
     <Compile Include="Controllers\BlastzoneDisplayController.cs" />
+    <Compile Include="Controllers\Mp12DAllied.cs" />
     <Compile Include="Controllers\Mp12D.cs" />
     <Compile Include="Controllers\Mp12N.cs" />
     <Compile Include="Extensions\FormUtilities.cs" />
@@ -296,7 +296,6 @@
     <Compile Include="Forms\PickStoreBase.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
-    <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\GridData.cs" />
     <Compile Include="Models\HeaderTextManager.cs" />
     <Compile Include="Models\MyDataReceivedEventArgs.cs" />
