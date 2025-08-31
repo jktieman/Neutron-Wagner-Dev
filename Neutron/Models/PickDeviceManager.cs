@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
+using Neutron.Controllers;
 using Neutron.Global;
+using Neutron.Interfaces;
+using NeutronCore.Global;
 using NeutronData.ModelViews;
 
 namespace Neutron.Models
 {
     public class PickDeviceManager
     {
+        private readonly int _logLevel;
         private readonly List<DeviceMover> _deviceMovers = new List<DeviceMover>();
         private readonly bool _shuttleEnabled;
         private readonly IDynamicLogger _logger;
         private readonly Dictionary<int, NeutronData.Models.Location> _currentLocations = new Dictionary<int, NeutronData.Models.Location>();
 
-        public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled)
+        public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled, int logLevel)
         {
-            _logger = NeutronCore.Global.Logger.SetupLogger(@"PickDeviceManager");
+            _logLevel = logLevel;
+            _logger = NeutronCore.Global.Logger.SetupLogger(@"HanelLog");
             try
             {
                 for (var i = 0; i < carList.Count; i++)
@@ -112,9 +118,18 @@ namespace Neutron.Models
             //}
         }
 
-        public void Reset()
+        public void Reset(Form frm, WorkstationView workstationView)
         {
             _logger.LogDetailAsync($"Reset:").SafeFireAndForget();
+
+            // Close Hanel controller
+            //GlobalVar.Hanel.CloseController();
+           // _logger.LogDetailAsync($"Back from CloseController:").SafeFireAndForget();
+            // Create New Hanel controller
+           // GlobalVar.Hanel = new Mp12D(frm, workstationView, _logger, _logLevel);
+          //  _logger.LogDetailAsync($"Back from Creating a new Mp12D").SafeFireAndForget();
+
+            _logger.LogDetailAsync($"Starting a LOOP over Current Locations").SafeFireAndForget();
             foreach (var kvp in _currentLocations)
             {
                 if (kvp.Value != null)
@@ -128,9 +143,12 @@ namespace Neutron.Models
                     _logger.LogDetailAsync($"Reset: Loc1: {loc1}  Loc2: {loc2}").SafeFireAndForget();
                     if (_shuttleEnabled)
                     {
+                        _logger.LogDetailAsync($"Shuttles Enabled").SafeFireAndForget();
                         if (GlobalVar.Shuttle != null)
                         {
+                           
                             GlobalVar.Shuttle.PositionDevice(loc1, loc2);
+                            _logger.LogDetailAsync($"Shuttles Enabled").SafeFireAndForget();
                             //Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
                             //if (response.Result != DeviceResponse.Success)
                             //{
@@ -139,7 +157,7 @@ namespace Neutron.Models
                             //}
                         }
                         if (GlobalVar.Hanel != null)
-                        {
+                        { 
                             _logger.LogDetailAsync($"GlobalVar.Hanel.PositionDevice Loc1:{loc1}  Loc2:{loc2} Loc3:{loc3} Loc4:{loc4} Loc5:{loc5}").SafeFireAndForget();
 
                             GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4);
@@ -147,6 +165,7 @@ namespace Neutron.Models
                     }
                 }
             }
+            _logger.LogDetailAsync($"Reset Complete").SafeFireAndForget();
         }
 
         public void ResetMoveNext(int moveNext = default)
