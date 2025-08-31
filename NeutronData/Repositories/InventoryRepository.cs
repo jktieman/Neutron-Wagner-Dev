@@ -307,12 +307,15 @@ namespace NeutronData.Repositories
             return slot;
         }
 
-        public async Task<List<Inventory>> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId)
+        public List<Inventory> GetInventoryWithReleaseStorageAndZeroQuantityByArea(int areaId)
         {
             using (var context = _contextFactory())
             {
-                return await context.Inventory.Where(i => i.AreaId == areaId && i.Quantity == 0 &&
-                                                          i.StorageTypeId == (int)StorageType.Release).ToListAsync();
+                return context.Inventory
+                    .Include(i => i.ItemDefinition)
+                    .Include(i => i.StorageType)
+                    .Where(i => i.AreaId == areaId && i.Quantity == 0 && i.StorageTypeId == (int)StorageType.Release)
+                    .ToList();
             }
         }
 
