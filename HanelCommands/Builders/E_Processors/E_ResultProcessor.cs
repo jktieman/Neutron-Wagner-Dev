@@ -13,7 +13,9 @@ namespace HanelCommands.Builders.E_Processors
             new E00MatchRule(),
             new E02MatchRule(),
             new E05MatchRule(),
+            new E95MatchRule(),
             new E97MatchRule(),
+            new E98MatchRule(),
             new E99MatchRule(),
         };
 
