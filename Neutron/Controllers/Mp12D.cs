@@ -17,6 +17,12 @@ using NeutronCore;
 using NeutronCore.Enums;
 using AsyncAwaitBestPractices;
 using Hanel_DC.Extensions;
+using NeutronCore.Global;
+using NeutronCore.Models;
+using Neutron.Models;
+using NeutronData.Models;
+using System.Text;
+using Hanel_DC.HanelStatics;
 
 namespace Neutron.Controllers
 {
@@ -34,6 +40,7 @@ namespace Neutron.Controllers
         public static char AST = Convert.ToChar(42);
 
         private Hanel_DeviceController _hanel;
+        
         private SendOrPostCallback _callBackHandlerInit;
         private HanelTellMeWhenTrayArrives _myTrayArrivedNotificationDelegate = MyTrayArrived;
         private Guid _myNotificationHandle;
@@ -44,35 +51,48 @@ namespace Neutron.Controllers
         private readonly int _deviceAlignmentDontCare = 0;
 
         private IDynamicLogger _logger;
+        private int _logLevel;
+        private readonly IDialogService _dialogService;
+
         private readonly WorkstationView _workstationView;
+        private readonly NeutronVariables _neutronVariables;
         private Form _currentForm;
         private readonly Object _locker = new Object();
         private int[] _previousTray;
         private bool _testing;
 
-        public Mp12D(Form frm, WorkstationView workstationView)
+        public Mp12D(Form frm, WorkstationView workstationView, int logLevel, IDialogService dialogService)
         {
             _previousTray = new int[10];
             _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
+            _logLevel = logLevel;
+            _dialogService = dialogService;
             // FrmMain passed in
             _currentForm = frm;
             _testing = false;
-            _logger = NeutronCore.Global.Logger.SetupLogger("Mp12D");
+            //_logger = NeutronCore.Global.Logger.SetupLogger("Mp12D");
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
+
             Init();
         }
+
         /// <summary>
         /// Testing Constructor adds a logger
         /// </summary>
         /// <param name="frm"></param>
         /// <param name="workstationView"></param>
         /// <param name="logger"></param>
+        /// <param name="logLevel"></param>
+        /// <param name="dialogService"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public Mp12D(Form frm, WorkstationView workstationView, IDynamicLogger logger)
+        public Mp12D(Form frm, WorkstationView workstationView, IDynamicLogger logger, int logLevel, IDialogService dialogService)
         {
             _previousTray = new int[10];
             _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
             _testing = true;
             _logger = logger;
+            _logLevel = logLevel;
+            _dialogService = dialogService;
             // FrmMain passed in
             _currentForm = frm;
 
@@ -98,7 +118,8 @@ namespace Neutron.Controllers
         }
         private void LogInitializationStart()
         {
-            _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
+            if (_logLevel == 2 || _logLevel == 8)
+                _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
         }
         private void InitializeCallbackHandler()
         {
@@ -106,11 +127,12 @@ namespace Neutron.Controllers
         }
         private void CreateHanelDeviceController()
         {
-            _hanel = _testing ? new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D(), _logger, true) : new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
+            _hanel = _testing ? new Hanel_DeviceController(HanelDcStatics.Controller_Type_Hanel_Mp12D(), _dialogService, _logger, true) : new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D(), _dialogService);
         }
         private void LogDeviceControllerCreation()
         {
-            _logger.LogDetailAsync("Hanel Device Controller has been created: ").SafeFireAndForget();
+            if (_logLevel == 2 || _logLevel == 8)
+                _logger.LogDetailAsync("Hanel Device Controller has been created: ").SafeFireAndForget();
         }
 
 
@@ -120,7 +142,8 @@ namespace Neutron.Controllers
             set
             {
                 _currentForm = value;
-                _logger.LogDetailAsync($"Changed Form - {_currentForm}").SafeFireAndForget();
+                if (_logLevel == 2 || _logLevel == 8)
+                    _logger.LogDetailAsync($"Changed Form - {_currentForm}").SafeFireAndForget();
             }
         }
         /// <summary>
@@ -307,152 +330,293 @@ namespace Neutron.Controllers
             //}
         }
 
-        public DeviceResponse PositionDevice(int deviceNumber, int trayNumber, int facing = 0, int depth = 0, int quantity = 0, string display = "")
+        //public bool GetTrayInWindow(int lift, int accessPoint)
+        //{
+        //    var response = _hanel.GetTrayInWindow(lift, accessPoint);
+        //    return response;
+        //}
+
+        public void GetTraysInWindow()
+        {
+            _hanel.GetTraysInWindow();
+        }
+
+        #region New Position Device
+        public DeviceResponse PositionDeviceNEW(
+    int deviceNumber,
+    int trayNumber,
+    int facing = 0,
+    int depth = 0,
+    int quantity = 0,
+    string display = "")
         {
             var deviceResponse = DeviceResponse.UnknownFailure;
-            _logger.LogDetailAsync($"Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}  Thread: {Thread.CurrentThread.ManagedThreadId}").SafeFireAndForget();
-            var continueLoop = true;
-            var loopCounter = 0;
-            var device = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
-            if (device != null)
+            LogDevicePositionAttempt(deviceNumber, trayNumber);
+            var device = FindDeviceByNumber(deviceNumber);
+            if (device == null)
             {
-                if (device.Enabled)
+                LogDeviceNotFound();
+                return DeviceResponse.DeviceNotFound;
+            }
+            if (!device.Enabled)
+            {
+                LogDeviceNotEnabled();
+                return DeviceResponse.DeviceNotEnabled;
+            }
+            if (!_hanel.Init_Success)
+            {
+                LogDeviceNotInitialized(deviceNumber, trayNumber);
+                return DeviceResponse.DeviceNotInitialized;
+            }
+            return ProcessDevicePositioning(deviceNumber, trayNumber);
+        }
+        private void LogDevicePositionAttempt(int deviceNumber, int trayNumber)
+        {
+            _logger.LogDetailAsync(
+                $"Position Device: {deviceNumber} Tray: {trayNumber} Time: {DateTime.Now}")
+                .SafeFireAndForget();
+        }
+        private HardwareDevice FindDeviceByNumber(int deviceNumber)
+        {
+            return _workstationView.HardwareDevices
+                .FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+        }
+        private void LogDeviceNotFound()
+        {
+            _logger.LogDetailAsync("Position Device: Device not Found.")
+                .SafeFireAndForget();
+        }
+        private void LogDeviceNotEnabled()
+        {
+            _logger.LogDetailAsync("Position Device: Device not Enabled.")
+                .SafeFireAndForget();
+        }
+        private void LogDeviceNotInitialized(int deviceNumber, int trayNumber)
+        {
+            _logger.LogDetailAsync(
+                $"Device Not Initialized. Device: {deviceNumber} Tray: {trayNumber} " +
+                $"Code: {_hanel.LastStatus_Code} Message: {_hanel.LastStatus_Message}")
+                .SafeFireAndForget();
+        }
+        private DeviceResponse ProcessDevicePositioning(int deviceNumber, int trayNumber)
+        {
+            var continueLoop = true;
+            while (continueLoop)
+            {
+                var status = GetDeviceStatus(deviceNumber);
+                if (status.GoodStatus)
                 {
-                    if (_hanel.Init_Success)
-                    {
-                        while (continueLoop)
-                        {
-                            var status = GetDeviceStatus(deviceNumber);
-
-                            if (status.GoodStatus)
-                            {
-                                status.TargetTray = trayNumber;
-                                loopCounter = 0;
-                                // Command Executed should indicate that the tray has arrived
-                                if (!status.InMotion)
-                                {
-                                    if (status.CurrentTray != trayNumber)
-                                    {
-                                        var previousTray = _previousTray[deviceNumber];
-                                        if (previousTray != 0)
-                                        {
-                                            // here's where the CurrentTray should be the same as the previousTray
-                                            if (status.CurrentTray != _previousTray[deviceNumber])
-                                            {
-                                                _logger.LogDetailAsync($"Tray did NOT arrive.").SafeFireAndForget();
-                                                _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray} Tray Number: {trayNumber}").SafeFireAndForget();
-                                                _logger.LogDetailAsync($"PreviousTray: {_previousTray[deviceNumber]}").SafeFireAndForget();
-                                                deviceResponse = DeviceResponse.TrayDidNotArrive;
-                                                _previousTray[deviceNumber] = 0;
-                                                break;
-                                            }
-                                        }
-
-                                        cError = "";
-                                        if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
-                                        {
-                                            _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
-
-                                            continueLoop = false;
-                                            deviceResponse = DeviceResponse.Success;
-                                            _previousTray[deviceNumber] = trayNumber;
-
-
-                                            // status.TargetTray = trayNumber;
-                                            //status.CurrentTray = trayNumber;
-                                            status.CommandExecuted = false;
-                                            status.CommandAccepted = false;
-                                            status.InMotion = false;
-
-                                            _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
-                                        }
-                                        else
-                                        {
-                                            _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
-                                            continueLoop = false;
-                                        }
-                                    }
-                                    else  // current and requested trays are the same
-                                    {
-                                        cError = "";
-                                        if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
-                                        {
-                                            _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
-
-                                            continueLoop = false;
-                                            deviceResponse = DeviceResponse.Success;
-                                            _previousTray[deviceNumber] = trayNumber;
-
-
-                                            // status.TargetTray = trayNumber;
-                                            //status.CurrentTray = trayNumber;
-                                            status.CommandExecuted = false;
-                                            status.CommandAccepted = false;
-                                            status.InMotion = false;
-
-                                            _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
-                                        }
-                                        else
-                                        {
-                                            _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
-                                            continueLoop = false;
-                                        }
-                                        _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.CurrentTray.ToString()}  Tray Number:  {trayNumber.ToString()}").SafeFireAndForget();
-                                    }
-                                }
-                                else //Waiting for Command to execute
-                                {
-                                    if (loopCounter >= 10)
-                                    {
-                                        continueLoop = false;
-                                        deviceResponse = DeviceResponse.DeviceInMotion;
-                                    }
-                                    else
-                                    {
-                                        loopCounter += 1;
-                                        Thread.Sleep(millisecondsTimeout: 50);
-                                        var counter = loopCounter;
-                                        _logger.LogDetailAsync($"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.CurrentTray} CommandExecuted: {status.CommandExecuted}  Loop Count: {counter.ToString()}").SafeFireAndForget();
-                                    }
-                                }
-                            }
-                            else  //status.Good_Status = false
-                            {
-                                if (loopCounter >= 10)
-                                {
-                                    continueLoop = false;
-                                    deviceResponse = DeviceResponse.DeviceBadStatus;
-                                }
-                                else
-                                {
-                                    loopCounter += 1;
-                                    Thread.Sleep(millisecondsTimeout: 100);
-                                    var counter = loopCounter;
-                                    _logger.LogDetailAsync($"Device Response was Bad Status  LoopCounter: {counter}").SafeFireAndForget();
-                                }
-                            }
-                        } //while continue loop
-                    }
-                    else
-                    {
-                        _logger.LogDetailAsync($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
-                        deviceResponse = DeviceResponse.DeviceNotInitialized;
-                    }
+                    // Handle good status logic
                 }
                 else
                 {
-                    _logger.LogDetailAsync($"Position Device: Device not Enabled.").SafeFireAndForget();
-                    deviceResponse = DeviceResponse.DeviceNotEnabled;
+                    // Handle bad status logic
                 }
             }
-            else
-            {
-                _logger.LogDetailAsync($"Position Device: Device not Found.").SafeFireAndForget();
-                deviceResponse = DeviceResponse.DeviceNotFound;
-            }
-
-            return deviceResponse;
+            return DeviceResponse.Success; // Adjust based on actual logic
         }
+
+
+
+        #endregion
+
+
+        public DeviceResponse PositionDevice(int deviceNumber, int trayNumber, int facing = 0, int depth = 0,
+            int quantity = 0, string display = "")
+        {
+            var success = _hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError);
+            switch (success)
+            {
+                case true:
+                    _logger.LogDetailAsync(
+                            $"Drive tray {trayNumber} on device {deviceNumber} request submitted. Facing: {facing} Depth: {depth} Quantity: {quantity}")
+                        .SafeFireAndForget();
+                    return DeviceResponse.Success;
+
+                default:
+                    _logger.LogDetailAsync($"Problem submitting drive request. {cError}").SafeFireAndForget();
+                    return DeviceResponse.UnknownFailure;
+            }
+        }
+
+        //    var deviceResponse = DeviceResponse.UnknownFailure;
+        //    _logger.LogDetailAsync($"Position Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()}  Time: {DateTime.Now}").SafeFireAndForget();
+        //    var continueLoop = true;
+        //    var loopCounter = 0;
+        //    var device = _workstationView.HardwareDevices.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+        //    if (device != null)
+        //    {
+        //        if (device.Enabled)
+        //        {
+        //            if (_hanel.Init_Success)
+        //            {
+        //                while (continueLoop)
+        //                {
+        //                    var status = GetDeviceStatus(deviceNumber);
+
+        //                    // always true in the current implementation
+        //                    if (status.GoodStatus)
+        //                    {
+        //                        status.TargetTray = trayNumber;
+        //                        loopCounter = 0;
+        //                        // Command Executed should indicate that the tray has arrived
+        //                        // always true in the current implementation
+        //                        if (!status.InMotion)
+        //                        {
+        //                            if (status.CommandAccepted && !status.CommandExecuted)
+        //                            {
+        //                                _logger.LogDetailAsync($"Command Accepted: true  Executed: false  Tray: {status.CurrentTray} NOT executed");
+        //                                // first indication is that the tray did not arrive
+        //                                // the tray did not arrive, so we need to let the operator know
+        //                                // tell them to fix the problem and retrieve the tray manually
+                                        
+        //                                var prompt = new StringBuilder();
+        //                                prompt.AppendLine($"TOWER: {deviceNumber}{Environment.NewLine}" +
+        //                                                  $"{Environment.NewLine} It appears that tray {status.CurrentTray} is not in the window." +
+        //                                                  $"{Environment.NewLine} Fix the problem and retrieve the tray manually." +
+        //                                                  $"{Environment.NewLine} Press Yes when {status.CurrentTray} is in the window." +
+        //                                                  $"{Environment.NewLine}");
+
+        //                                var result = _dialogService.TowerError($"Tower Error - {deviceNumber}",
+        //                                    prompt.ToString(), "Yes", "No");
+        //                                if (result)
+        //                                {
+        //                                    // set status.CommandAccepted to false so that the next command can be sent
+        //                                    status.CommandAccepted = false;
+        //                                    status.CommandExecuted = false;
+        //                                    status.CurrentTray = trayNumber;
+        //                                    deviceResponse = DeviceResponse.Success;
+        //                                    _previousTray[deviceNumber] = trayNumber;
+        //                                    _logger.LogDetailAsync(
+        //                                        $"SET Accepted and Executed = false. CurrentTray equal to TargetTray.  Return Success.");
+        //                                    return deviceResponse;
+        //                                }
+        //                            }
+
+        //                            //if (status.CurrentTray != trayNumber)
+        //                            //{
+        //                            //var previousTray = _previousTray[deviceNumber];
+        //                            //if (previousTray != 0)
+        //                            //{
+        //                            //    // here's where the CurrentTray should be the same as the previousTray
+        //                            //    if (status.CurrentTray != _previousTray[deviceNumber])
+        //                            //    {
+        //                            //        _logger.LogDetailAsync($"Tray did NOT arrive.").SafeFireAndForget();
+        //                            //        _logger.LogDetailAsync($"Status.Current_Tray: {status.CurrentTray} Tray Number: {trayNumber}").SafeFireAndForget();
+        //                            //        _logger.LogDetailAsync($"PreviousTray: {_previousTray[deviceNumber]}").SafeFireAndForget();
+        //                            //        deviceResponse = DeviceResponse.TrayDidNotArrive;
+        //                            //        _previousTray[deviceNumber] = 0;
+        //                            //        break;
+        //                            //    }
+        //                            //}
+
+        //                            cError = "";
+        //                            if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
+        //                            {
+        //                                _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
+
+        //                                continueLoop = false;
+        //                                deviceResponse = DeviceResponse.Success;
+        //                                _previousTray[deviceNumber] = trayNumber;
+
+
+        //                                // status.TargetTray = trayNumber;
+        //                                //status.CurrentTray = trayNumber;
+        //                                status.CommandExecuted = false;
+        //                                status.CommandAccepted = false;
+        //                                status.InMotion = false;
+
+        //                                _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
+        //                            }
+        //                            else
+        //                            {
+        //                                _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
+        //                                continueLoop = false;
+        //                            }
+        //                            //}
+        //                            //else  // current and requested trays are the same
+        //                            //{
+        //                            //    cError = "";
+        //                            //    if (_hanel.Drive_Device(deviceNumber, trayNumber, facing, depth, quantity, display, ref cError))
+        //                            //    {
+        //                            //        _logger.LogDetailAsync($"Drive tray {trayNumber.ToString()} on device {deviceNumber.ToString()} request submitted.  Facing:{facing.ToString()}  Depth:{depth.ToString()}  Quantity:{quantity.ToString()}").SafeFireAndForget();
+
+        //                            //        continueLoop = false;
+        //                            //        deviceResponse = DeviceResponse.Success;
+        //                            //        _previousTray[deviceNumber] = trayNumber;
+
+
+        //                            //        // status.TargetTray = trayNumber;
+        //                            //        //status.CurrentTray = trayNumber;
+        //                            //        status.CommandExecuted = false;
+        //                            //        status.CommandAccepted = false;
+        //                            //        status.InMotion = false;
+
+        //                            //        _logger.LogDetailAsync($"PreviousTray Set to Device {deviceNumber.ToString()}  Tray: {trayNumber.ToString()}").SafeFireAndForget();
+        //                            //    }
+        //                            //    else
+        //                            //    {
+        //                            //        _logger.LogDetailAsync($"Problem submitting drive request.  {cError}").SafeFireAndForget();
+        //                            //        continueLoop = false;
+        //                            //    }
+        //                            //    _logger.LogDetailAsync($"Pick is on the same tray: Current Tray:  {status.CurrentTray.ToString()}  Tray Number:  {trayNumber.ToString()}").SafeFireAndForget();
+        //                            //}
+        //                        }
+        //                        else //Waiting for Command to execute
+        //                        {
+        //                            if (loopCounter >= 10)
+        //                            {
+        //                                continueLoop = false;
+        //                                deviceResponse = DeviceResponse.DeviceInMotion;
+        //                            }
+        //                            else
+        //                            {
+        //                                loopCounter += 1;
+        //                                Thread.Sleep(millisecondsTimeout: 50);
+        //                                var counter = loopCounter;
+        //                                _logger.LogDetailAsync($"Position Device: Waiting for tray to be in position to send new command.  Current Tray: {status.CurrentTray} CommandExecuted: {status.CommandExecuted}  Loop Count: {counter.ToString()}").SafeFireAndForget();
+        //                            }
+        //                        }
+        //                    }
+        //                    else  //status.Good_Status = false
+        //                    {
+        //                        if (loopCounter >= 10)
+        //                        {
+        //                            continueLoop = false;
+        //                            deviceResponse = DeviceResponse.DeviceBadStatus;
+        //                        }
+        //                        else
+        //                        {
+        //                            loopCounter += 1;
+        //                            Thread.Sleep(millisecondsTimeout: 100);
+        //                            var counter = loopCounter;
+        //                            _logger.LogDetailAsync($"Device Response was Bad Status  LoopCounter: {counter}").SafeFireAndForget();
+        //                        }
+        //                    }
+        //                } //while continue loop
+        //            }
+        //            else
+        //            {
+        //                _logger.LogDetailAsync($"Device Not Initialized.  Device: {deviceNumber.ToString()} Tray: {trayNumber.ToString()} Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
+        //                deviceResponse = DeviceResponse.DeviceNotInitialized;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _logger.LogDetailAsync($"Position Device: Device not Enabled.").SafeFireAndForget();
+        //            deviceResponse = DeviceResponse.DeviceNotEnabled;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _logger.LogDetailAsync($"Position Device: Device not Found.").SafeFireAndForget();
+        //        deviceResponse = DeviceResponse.DeviceNotFound;
+        //    }
+
+        //    return deviceResponse;
+        //}
+
+
 
         private void AbortNotification()
         {
@@ -467,7 +631,7 @@ namespace Neutron.Controllers
             else
                 _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
         }
-
+        
         public DeviceResponse Park()
         {
             var response = DeviceResponse.UnknownFailure;
@@ -491,10 +655,18 @@ namespace Neutron.Controllers
 
         public bool CloseController()
         {
+
+            _logger.LogDetailAsync($"Close Hanel MP12D");
             var result = false;
             try
             {
+                _logger.LogDetailAsync($"Call Stop");
+                _hanel.Stop();
+                _logger.LogDetailAsync($"Call Stop Return");
+                _logger.LogDetailAsync($"Call Close Controller");
+
                 result = _hanel.Close_Controller(ref cError);
+                _logger.LogDetailAsync($"Call Close Controller Return");
 
                 _logger.LogDetailAsync($"Close Hanel MP12D Controller - Success {cError}").SafeFireAndForget();
             }
@@ -638,6 +810,11 @@ namespace Neutron.Controllers
             }
 
             return -1; // Return -1 if asterisk is not found
+        }
+
+        public void Stop()
+        {
+
         }
     }
 }
