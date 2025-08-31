@@ -15,7 +15,7 @@ namespace Neutron.Classes
     public class CsvUtility
     {
         private Func<NeutronDb> _contextFactory;
-        private  readonly GenericRepository<Inventory> _repoInventory;
+        private readonly GenericRepository<Inventory> _repoInventory;
         private readonly char quote = '"';
 
         public CsvUtility(Func<NeutronDb> contextFactory)
@@ -23,11 +23,12 @@ namespace Neutron.Classes
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _repoInventory = new GenericRepository<Inventory>(contextFactory);
         }
-        
+
         public void SaveToCsv(DataGridView dgv)
         {
 
-            string rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\Neutron\CSV\");
+            var rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\CSV\");
+            
             if (!Directory.Exists(rootDirectory))
             {
                 Directory.CreateDirectory(rootDirectory);
