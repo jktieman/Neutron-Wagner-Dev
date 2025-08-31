@@ -59,6 +59,7 @@ using System.Reflection;
 using System.Web.UI.WebControls;
 using System.ComponentModel;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using HanelCommands;
 
 
 namespace Neutron.Forms
@@ -306,7 +307,7 @@ namespace Neutron.Forms
         {
             KeyPreview = true;
             this.KeyDown += FrmPick_KeyDownHandler;
-            _logger = NeutronCore.Global.Logger.SetupLogger("Pick");
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
             _logLevel = _neutronVariables.LogLevel;
             if (_logLevel == 8) _logger.LogDetailAsync($"Form Pick Company Code: {_neutronLicense.CompanyCode}").SafeFireAndForget();
 
@@ -340,6 +341,7 @@ namespace Neutron.Forms
             if (_workstationView.Hanels.Any())
             {
                 InitDeviceIndicators();
+                GetCurrentTrays();
             }
 
             _debounceTimer = new System.Windows.Forms.Timer();
@@ -353,10 +355,22 @@ namespace Neutron.Forms
             Mediator.GetInstance().StartStopLoader += (s, e) => StartStopLoaderAction(e.StartStop);
             Mediator.GetInstance().StartStopUpload += (s, e) => StartStopUploadAction(e.StartStop);
             Mediator.GetInstance().OrderComplete += (s, e) => ShowOrderComplete(e.Order);
-            Mediator.GetInstance().TrayInPosition += (s, e) => UpdateTraysInPosition(e.InPositionInfo);
+            Mediator.GetInstance().TrayInPosition += (s, e) => UpdateTrayInPosition(e.InPositionInfo);
             // Mediator.GetInstance().TransmitStateChanged += (s, e) => UpdateClientConnected(e.State);
             Mediator.GetInstance().IsClientConnected += FrmPick_IsClientConnected;
             Mediator.GetInstance().GeneralError += FrmPick_GeneralError;
+        }
+
+        private void GetCurrentTrays()
+        {
+            if (_workstationView.Hanels.Any())
+            {
+                foreach (var hardwareDevice in _workstationView.Hanels)
+                {
+                    var device = hardwareDevice.DeviceNumber;
+                    // var hanelCommand = new HanelCommandService(_currentHanelDeviceList.Count, _currentHanelDeviceStatusList)
+                }
+            }
         }
 
         private string GetCurrentUserString()
@@ -519,7 +533,7 @@ namespace Neutron.Forms
 
         private void FrmPick_GeneralError(object sender, LoaderErrorEventArgs e)
         {
-            MessageBox.Show(e.Message);
+            Mediator.GetInstance().OnDisplayMessage(this, (e.Message));
         }
 
         private void FrmPick_IsClientConnected(object sender, IsClientConnectedEventArgs e)
@@ -540,22 +554,77 @@ namespace Neutron.Forms
 
             CheckBoxClientConnected.Checked = state;
         }
-        private void UpdateTraysInPosition(InPositionInfo inPositionInfo)
+        //private void UpdateTraysInPosition(InPositionInfo inPositionInfo)
+        //{
+        //    _logger.LogDetailAsync(
+        //        $"InPositionInfo: 1-[{inPositionInfo.CurrentTray1}] 2-[{inPositionInfo.CurrentTray2}] 3-[{inPositionInfo.CurrentTray3}]");
+
+        //    var currentTray1 = inPositionInfo.CurrentTray1 <= 0 ? string.Empty : inPositionInfo.CurrentTray1.ToString();
+        //    var currentTray2 = inPositionInfo.CurrentTray2 <= 0 ? string.Empty : inPositionInfo.CurrentTray2.ToString();
+        //    var currentTray3 = inPositionInfo.CurrentTray3 <= 0 ? string.Empty : inPositionInfo.CurrentTray3.ToString();
+
+        //    TextCurrentTray1.Text = currentTray1;
+        //    TextCurrentTray2.Text = currentTray2;
+        //    TextCurrentTray3.Text = currentTray3;
+        //}
+
+        private void UpdateTrayInPosition(InPositionInfo inPositionInfo)
         {
-            if (inPositionInfo.OneInPosition)
+            if (inPositionInfo == null)
+                throw new ArgumentNullException(nameof(inPositionInfo), "InPositionInfo cannot be null.");
+            if (_logger == null)
+                throw new InvalidOperationException("Logger is not initialized.");
+            _logger.LogDetailAsync($"Lift:{inPositionInfo.Lift}  Tray: {inPositionInfo.Tray}").SafeFireAndForget();
+            void UpdateLabelText(Control label, string text)
             {
-                MBPickAccept.ForeColor = Color.DarkGreen;
-                MBPickAccept.Refresh();
+                if (label.InvokeRequired)
+                {
+                    label.Invoke(new Action(() => label.Text = text));
+                }
+                else
+                {
+                    label.Text = text;
+                }
             }
-            if (inPositionInfo.TwoInPosition)
+            switch (inPositionInfo.Lift)
             {
-                MBPickAccept.ForeColor = Color.Blue;
-            }
-            if (inPositionInfo.ThreeInPosition)
-            {
-                MBPickAccept.ForeColor = Color.Red;
+                case 1:
+                    UpdateLabelText(TextCurrentTray1, inPositionInfo.Tray.ToString());
+                    break;
+                case 2:
+                    UpdateLabelText(TextCurrentTray2, inPositionInfo.Tray.ToString());
+                    break;
+                case 3:
+                    UpdateLabelText(TextCurrentTray3, inPositionInfo.Tray.ToString());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(inPositionInfo.Lift), "Lift value is out of range.");
             }
         }
+
+
+
+        //private void UpdateTrayInPosition(InPositionInfo inPositionInfo)
+        //{
+        //    if (inPositionInfo == null)
+        //        throw new ArgumentNullException(nameof(inPositionInfo), "InPositionInfo cannot be null.");
+
+        //        _logger.LogDetailAsync($"Lift:{inPositionInfo.Lift}  Tray: {inPositionInfo.Tray}");
+        //        switch (inPositionInfo.Lift)
+        //        {
+        //            case 1:
+        //                TextCurrentTray1.Text = inPositionInfo.Tray.ToString();
+        //                break;
+        //            case 2:
+        //                TextCurrentTray2.Text = inPositionInfo.Tray.ToString();
+        //                break;
+        //            case 3:
+        //                TextCurrentTray3.Text = inPositionInfo.Tray.ToString();
+        //                break;
+        //        }
+
+        //}
+
         private void InitGrids()
         {
 
@@ -677,7 +746,7 @@ namespace Neutron.Forms
             }
             if (PickScreen.Controls.ContainsKey("PanelDeviceIndicators")) return;
             if (_logLevel == 8) _logger.LogDetailAsync("Initialize Device Indicators - Create New DeviceIndicatorManager").SafeFireAndForget();
-            _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(189, 0),
+            _deviceIndicatorManager = new DeviceIndicatorManager(_workstationView, new Point(195, 0),
                 new Size(769, 127), _neutronVariables);
 
             if (_deviceIndicatorManager != null)
@@ -762,8 +831,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Control not Found {Environment.NewLine}{ex.Message}"
-                    , "Control Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Mediator.GetInstance().OnDisplayMessage(this, $"Control not Found {Environment.NewLine}{ex.Message}");
             }
             bp.OrderComplete = true;
         }
@@ -1189,7 +1257,7 @@ namespace Neutron.Forms
             if (GlobalVar.LoaderRunning)
             {
                 MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
@@ -1209,7 +1277,7 @@ namespace Neutron.Forms
             if (GlobalVar.UploadRunning)
             {
                 MessageBox.Show("Upload is already running.", "Upload Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
@@ -1473,11 +1541,11 @@ namespace Neutron.Forms
                 else
                 {
 
-                   // DataGridViewAvailableOrders.Update();
+                    // DataGridViewAvailableOrders.Update();
                 }
                 DataGridViewAvailableOrders.ClearSelection();
-                
-                
+
+
                 //     CheckMarkSelectedAvailableOrders();
                 //ClearTextBoxPosBackColor();
                 //SetBatchPositionToFirstEmpty();
@@ -3204,7 +3272,7 @@ namespace Neutron.Forms
             }
             if (!orders.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
             }
             return orders;
         }
@@ -3229,7 +3297,7 @@ namespace Neutron.Forms
             }
             if (!recs.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
             }
             return recs;
         }
@@ -3283,6 +3351,7 @@ namespace Neutron.Forms
         private void ExecutePickBackProcess()
         {
             ClearIptiDisplayFunctions();
+            DeleteRelease();
             ResetHanelDeviceStatus();
             ClearProLites();
             ClearActiveDeviceIndicators();
@@ -3365,6 +3434,19 @@ namespace Neutron.Forms
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START after FinalCheckOfOrdersToPick"));
 
 
+            // Get the current trays in the window
+            // This is used to check if the trays are in the correct state before starting the batch
+
+            if (GlobalVar.Hanel != null)
+            {
+                _logger.LogDetailAsync($"[{DateTime.Now}]  GetTraysInWindow").SafeFireAndForget();
+                GlobalVar.Hanel.GetTraysInWindow();
+            }
+
+
+
+
+
             TextBoxFindAvailableOrders.Text = string.Empty;
             try
             {
@@ -3408,7 +3490,7 @@ namespace Neutron.Forms
                     }
                     else
                     {
-                        MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                        Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NothingtoPick"));
                         ClearAllSelectOrdersToPick();
                         ClearBatchPositions(_currentBatchPositions);
                         LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
@@ -3419,7 +3501,7 @@ namespace Neutron.Forms
                 else
                 {
                     // ---         Task.Run(() => _logger.LogDetailAsync($"No Orders Selected"));
-                    MessageBox.Show(_resourceManager.GetString($"NothingtoPick"));
+                    Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NothingtoPick"));
                     ClearAllSelectOrdersToPick();
                     ClearBatchPositions(_currentBatchPositions);
                     LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
@@ -3580,7 +3662,7 @@ namespace Neutron.Forms
                             var isMatch = isRealOrder.Ord1 == bp.Ord1 && isRealOrder.Ord2 == bp.Ord2;
                             if (!isMatch)
                             {
-                                MessageBox.Show(
+                                Mediator.GetInstance().OnDisplayMessage(this,
                                     $"The Delivery {order} in Position {pos} does not match the expected order.");
                                 ClearItemFromBatchByPosition(bp.PositionNumber);
                             }
@@ -3589,7 +3671,7 @@ namespace Neutron.Forms
                             continue;
                         }
 
-                        MessageBox.Show($"The Delivery {order} in Position {pos} does not exist.");
+                        Mediator.GetInstance().OnDisplayMessage(this, $"The Delivery {order} in Position {pos} does not exist.");
                         ClearItemFromBatchByPosition(bp.PositionNumber);
                     }
                 }
@@ -3597,8 +3679,8 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 if (_logLevel == 8 || _logLevel == 2) _logger.LogDetailAsync($"Error: {ex.Message}").SafeFireAndForget();
-                MessageBox.Show($"The Check for Valid Orders has failed. {Environment.NewLine}" +
-                                $"{ex.Message}");
+                Mediator.GetInstance().OnDisplayMessage(this, $"The Check for Valid Orders has failed. {Environment.NewLine}" +
+                                                              $"{ex.Message}");
                 return false;
             }
 
@@ -3853,10 +3935,10 @@ namespace Neutron.Forms
                                 // ---         Task.Run(() => _logger.LogDetailAsync($"PickListLoad Pick Zero Option Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
                                 // ---         Task.Run(() => _logger.LogDetailAsync($"PickListLoad SaveHistory Ord:{item.Ord1}   Res:{item.Ord2}   Item:{item.Item}"));
                                 _historyManager.SaveHistory(ActionCode.PickOrder, item.OrderDetail, item.OrderDetail.AreaId);
-                                //if (item.OrderDetail.Order != null)
-                                //{
-                                //    CheckForOrderComplete(item.OrderDetail.Order);
-                                //}
+                                if (item.OrderDetail.Order != null)
+                                {
+                                    CheckForOrderComplete(item.OrderDetail.Order);
+                                }
                             }
                         }
                     }
@@ -6113,7 +6195,7 @@ namespace Neutron.Forms
             //{
             if (_logLevel == 8) _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move").SafeFireAndForget();
 
-            _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
+            _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled, _logLevel);
 
             for (var i = 0; i < _workstationView.Hanels.Count; i++)
             {
@@ -6688,19 +6770,19 @@ namespace Neutron.Forms
 
             ClearProLites();
 
-            //await ClearIptiDisplayFunctions();
+            ClearIptiDisplayFunctions();
 
             //await UpdatePickViews();
 
-            //await UpdateBatchPositionsDisplay(_currentBatchPositions);
+            UpdateBatchPositionsDisplay(_currentBatchPositions);
 
             //await UpdateBlastzoneDisplay();
 
             //UpdatePickViews();
             UpdatePickViewsDisplayAndTurnOnBatchLights(_currentPickStop.PickViews);
 
-            ClearIptiDisplayFunctions();
-            UpdateBatchPositionsDisplay(_currentBatchPositions);
+            //ClearIptiDisplayFunctions();
+            //UpdateBatchPositionsDisplay(_currentBatchPositions);
             UpdateBlastzoneDisplay();
 
             TurnOnProlites();
@@ -7153,37 +7235,36 @@ namespace Neutron.Forms
 
         private void CloseBatchWithSkip(List<BatchPosition> batchPositions)
         {
-            if (_iptiDisplayFunctions != null)
-            {
-                _iptiDisplayFunctions.ClearBatchTable();
-                _iptiDisplayFunctions.TurnOffBatchOrderControl();
-            }
+            _logger.LogDetailAsync($"Close Batch With Skip").SafeFireAndForget();
 
+            //var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
 
-            //ClearOrderPositions();
-
+            LogCloseBatchStart();
+            ResetHanelDeviceStatus();
+            UpdateOrderStatus();
+            DeleteRelease();
+            // await ClearBatchRelatedData(batchPositions);
+            ClearAllDeviceIndicators();
+            ClearProLites();
             ClearBatchPositions(batchPositions);
+            //ClearPickPositions(batchPositions);
+            //ClearOrderPositions();
+            //ClearPickDisplays(batchPositions);
+            ClearInductionScreen();
 
-            _deviceIndicatorManager?.ClearAllDeviceIndicators();
-
-
-
-            //if (_neutronLicense.CompanyCode == "SFH")
-            //{
-            //    var shortReportProcessor = new ShortReportProcessor(_bindingSourcePickStops, _labelPrinterPreferences);
-            //}
+            ClearIptiDisplayFunctions();
 
             ParkPositionAfterBatch();
-
-            if (_neutronVariables.AutoLogOff)
-            {
-                CloseButtonPressed = true;
-                Close();
-            }
-            else
-            {
-                AvailableOrdersScreen();
-            }
+            HandlePostBatchActions();
+            //if (_neutronVariables.AutoLogOff)
+            //{
+            //    CloseButtonPressed = true;
+            //    Close();
+            //}
+            //else
+            //{
+            //    AvailableOrdersScreen();
+            //}
             // ---  _ =        Task.Run(() => _logger.LogDetailAsync($"CloseBatchWithSkip END"));
         }
 
@@ -7198,7 +7279,7 @@ namespace Neutron.Forms
             {
                 MessageBox.Show(response.AsString(EnumFormat.Description)
                     , caption: _resourceManager.GetString($"DeviceInformation")
-                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+                    , buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
 
@@ -7215,7 +7296,11 @@ namespace Neutron.Forms
             // Verify something else
             // Returns true is process is to continue
             // Return false if the process is canceled
-            if (!SelectAction.Accept(_currentPickStop)) return;
+            //if (!SelectAction.Accept(_currentPickStop))
+            //{
+            //    _logger.LogDetailAsync($"SelectAction Accept is FALSE").SafeFireAndForget();
+            //    //return;
+            //}
 
 
 
@@ -7232,45 +7317,47 @@ namespace Neutron.Forms
 
             Cursor.Current = Cursors.WaitCursor;
 
-            //var thisPick = IntegerExtensions.ParseInt(LabelPickQty.Text);
+            var thisPick = IntegerExtensions.ParseInt(LabelPickQty.Text);
 
-            // var pick = false;
+            var pick = false;
 
-            //var zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
+            // in case a hot action or Location Count changes the current inventory
+            // let's refresh the currentInventory
+            var inventory = _currentPickStop.CurrentInventoryLocation;
+            _currentPickStop.CurrentInventoryLocation.Quantity = GetCurrentInventoryLocationQuantity(inventory.Id);
 
-            //if (zeroInventory)
-            //{
-            //    // in case a hot action or Location Count changes the current inventory
-            //    // let's refresh the currentInventory
-            //    var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
-            //    _currentPickStop.CurrentInventoryLocation.Quantity = GetCurrentInventoryLocationQuantity(inventoryId);
+            var zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
 
-            //    zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
+            if (zeroInventory)
+            {
 
-            //    if (zeroInventory)
-            //    {
-            //        var prompt = new StringBuilder();
-            //        prompt.AppendLine($"Release Inventory Location{Environment.NewLine}Item: {_currentPickStop.Item}{Environment.NewLine}Location: {GetInventoryLocation(_currentPickStop.CurrentInventoryLocation.Location)} ?");
 
-            //        var result = await _dialogService.Show2("Release Inventory Location",
-            //            $"{prompt}", "Yes", "No");
-            //        if (result == true)
-            //        {
-            //            //await _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, _currentPickStop.CurrentInventoryLocation);
-            //            //await _repoInventory.DeleteAsync(inventory.Id);
-            //        }
-            //        else
-            //        {
-            //            var qty = await LocationCount(_currentPickStop.CurrentInventoryLocation.Id);
-            //            if (qty == -1)
-            //            {
-            //                MBPickAccept.Visible = true;
-            //                return;
-            //            }
-            //        }
+                //zeroInventory = _currentPickStop.CurrentInventoryLocation.Quantity <= _currentPickStop.QuantityToBePicked;
 
-            //    }
-            //}
+                if (zeroInventory)
+                {
+                    var prompt = new StringBuilder();
+                    prompt.AppendLine($"Release Inventory Location{Environment.NewLine}Item: {_currentPickStop.Item}{Environment.NewLine}Location: {GetInventoryLocation(_currentPickStop.CurrentInventoryLocation.Location)} ?");
+
+                    var result = _dialogService.Show2("Release Inventory Location",
+                        $"{prompt}", "Yes", "No");
+                    if (result)
+                    {
+                        // _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, _currentPickStop.CurrentInventoryLocation);
+                        //  _repoInventory.Delete(inventoryId);
+                    }
+                    else
+                    {
+                        var qty = LocationCount(inventory);
+                        //if (qty == -1)
+                        //{
+                        MBPickAccept.Visible = true;
+                        return;
+                        //}
+                    }
+
+                }
+            }
 
             MBPickAccept.Visible = false;
             var batchComplete = false;
@@ -7280,28 +7367,28 @@ namespace Neutron.Forms
 
             if (enoughInventory) //there is enough inventory at this location
             {
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 1").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Enough Inventory").SafeFireAndForget();
 
                 _currentPickStop.UpdatePickViews(GlobalVar.User); //good
 
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 2").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Updated Pickviews").SafeFireAndForget();
 
                 _currentPickStop.PickedQty = GetPickedSoFar(_currentPickStop.PickViews);
 
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 3").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Get Picked So Far").SafeFireAndForget();
 
                 _currentPickStop.QuantityToBePicked =
                     GetTotalQuantityToBePicked(_currentPickStop.PickViews); // QuantityToBePicked on ALL PickViews
 
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 4").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Get Quantity To Be Picked").SafeFireAndForget();
 
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
 
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 5").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Get Total Inventory").SafeFireAndForget();
 
                 _currentPickStop.TotalQuantityInInventory = total;
 
-                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - 6").SafeFireAndForget();
+                if (_logLevel == 8) _logger.LogDetailAsync($"Update Pick Views - Set Current Pick Stop Total in Inventory").SafeFireAndForget();
 
                 TextBoxTotalQuantity.Text = total.ToString();
 
@@ -7424,7 +7511,7 @@ namespace Neutron.Forms
                     else
                     {
                         // ---         Task.Run(() => _logger.LogDetailAsync($"CloseBatch"));
-                        CloseBatchAsync();
+                        CloseBatch();
                         batchComplete = true;
                     }
                 }
@@ -7458,7 +7545,7 @@ namespace Neutron.Forms
 
                 MessageBox.Show(text: _resourceManager.GetString($"PickExceedsInventory"),
                     caption: _resourceManager.GetString($"Inventory"), buttons: MessageBoxButtons.OK,
-                    icon: MessageBoxIcon.Stop);
+                    icon: MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
 
             if (_logLevel == 8) _logger.LogDetailAsync($"PickAccept End : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
@@ -7494,7 +7581,7 @@ namespace Neutron.Forms
             var status = pickView.OrderDetail.LineStatusId;
             var quantity = pickView.QuantityToBePicked;
 
-            using (var form = new FrmPickViewAdjustment(pickView))
+            using (var form = new FrmPickViewAdjustment(pickView, _logger))
             {
                 var result = form.ShowDialog();
                 var buttonPressed = form.ButtonPressed;
@@ -7549,6 +7636,8 @@ namespace Neutron.Forms
                 //open a form to update the pickview
                 if (PickStopAdjustmentForm(pickView) != true) return;
             }
+
+
         }
 
 
@@ -7620,7 +7709,7 @@ namespace Neutron.Forms
             else
             {
                 // ---         Task.Run(() => _logger.LogDetailAsync($"CloseBatch"));
-                CloseBatchAsync();
+                CloseBatch();
             }
         }
         /// <summary>
@@ -7814,7 +7903,7 @@ namespace Neutron.Forms
             if (_currentPickStop.QuantityToBePicked < 0)
             {
                 var response = MessageBox.Show(_resourceManager.GetString($"OverPickItem"), _resourceManager.GetString($"OverPickCaption")
-                    , MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    , MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 isStopComplete = response == DialogResult.Yes;
             }
 
@@ -7879,7 +7968,10 @@ namespace Neutron.Forms
         {
             foreach (var pickLocation in pickView.PickLocations)
             {
-                var inventory = _repoInventory.FindByKeyInclude(r => r.Id == pickLocation.Inventory.Id, r => r.Location);
+                //var inventory = _repoInventory.FindByKeyInclude(r => r.Id == pickLocation.Inventory.Id, r => r.Location);
+
+                var inventory = pickLocation.Inventory;
+
                 if (inventory == null) continue;
                 if (inventory.Quantity >= pickLocation.Quantity)
                 {
@@ -7917,7 +8009,7 @@ namespace Neutron.Forms
             var inventory = pickView.Inventory.FirstOrDefault();
             if (inventory != null)
             {
-                _historyManager.SaveHistoryAsync(ActionCode.PickOrder, inventory, 0, pickView).SafeFireAndForget();
+                _historyManager.SaveHistoryAsync(ActionCode.PickOrder, inventory, pickView.PickedQty, pickView).SafeFireAndForget();
             }
         }
 
@@ -8051,13 +8143,14 @@ namespace Neutron.Forms
         //    _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
         //}
 
-        private void CloseBatchAsync()
+        private void CloseBatch()
         {
             var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
 
             LogCloseBatchStart();
             ResetHanelDeviceStatus();
             UpdateOrderStatus();
+            DeleteRelease();
             // await ClearBatchRelatedData(batchPositions);
             ClearAllDeviceIndicators();
             ClearProLites();
@@ -8067,6 +8160,7 @@ namespace Neutron.Forms
             //ClearOrderPositions();
             //ClearPickDisplays(batchPositions);
             ClearInductionScreen();
+            ClearIptiDisplayFunctions();
             HandlePostBatchActions();
         }
 
@@ -8118,7 +8212,7 @@ namespace Neutron.Forms
             }
         }
 
-        //private async Task CloseBatchAsync()
+        //private async Task CloseBatch()
         //{
         //    Task.Run(() => _logger.LogDetailAsync($"CloseBatch START")).SafeFireAndForget();
 
@@ -8151,70 +8245,73 @@ namespace Neutron.Forms
         //    }
         //}
 
-        //private async Task DeleteRelease()
-        //{
-        //    _logger.LogDetailAsync($"DeleteRelease Start").SafeFireAndForget();
-        //    // check for Inventory locations that need to be Released
-        //    //var locationIds = new List<int>();
-        //    var inventoryManager = new InventoryManager(_repoInventory, _locationsRepository);
+        private void DeleteRelease()
+        {
+            _logger.LogDetailAsync($"DeleteRelease Start").SafeFireAndForget();
+            // check for Inventory locations that need to be Released
+            //var locationIds = new List<int>();
+            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
 
-        //    try
-        //    {
-        //        var invs = await _inventoryRepository.GetInventoryWithReleaseStorageAndZeroQuantityByArea(_currentAreaId);
+            try
+            {
+                var invs = _inventoryRepository.GetInventoryWithReleaseStorageAndZeroQuantityByArea(_currentAreaId);
 
-        //        if (invs.Count > 0)
-        //        {
-        //            var sb = new StringBuilder();
-        //            foreach (var inv in invs)
-        //            {
-        //                var canDelete = await inventoryManager.QuickReleaseCheckAsync(inv);
-        //                if (!canDelete) continue;
-        //                var item = inv.ItemDefinition != null ? inv.ItemDefinition.Item : string.Empty;
-        //                var storageType = inv.StorageType != null ? inv.StorageType.Name : string.Empty;
-        //                sb.AppendLine($"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
-        //                              $"ItemId: {inv.ItemDefinitionId} Item: {item} LocationId: {inv.LocationId}" +
-        //                              $"Quantity: {inv.Quantity} AreaId: {inv.AreaId} Storage: {storageType} ");
-        //                // locationIds.Add(inv.LocationId);
-        //                var result = MessageBox.Show($"{sb.ToString()}", "Delete Inventory Item",
-        //                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-        //                if (result == DialogResult.No)
-        //                {
-        //                    _logger.LogDetailAsync($"{sb.ToString()}").SafeFireAndForget();
-        //                    continue;
-        //                }
+                if (invs.Any())
+                {
 
-        //                await inventoryManager.ReleaseCheckAsync(inv);
-        //            }
+                    foreach (var inv in invs)
+                    {
+                        var canDelete = inventoryManager.QuickReleaseCheck(inv);
+                        if (!canDelete) continue;
+                        var sb = new StringBuilder();
+                        var item = inv.ItemDefinition != null ? inv.ItemDefinition.Item : string.Empty;
+                        var storageType = inv.StorageType != null ? inv.StorageType.Name : string.Empty;
 
 
+                        sb.AppendLine($"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
+                                      $"{Environment.NewLine}" +
+                                      $"                      Item: {item} ");
 
-        //            //foreach (var locationId in locationIds)
-        //            //{
-        //            //    // Look for other items in inventory where the location is the same.
-        //            //    // Don't want to change InUse to False is there are other items using this location.
-        //            //    _logger.LogDetailAsync($"Check the locations for other items.  Don't set InUse flag to false if other items in location.").SafeFireAndForget();
-        //            //    var items = await _repoInventory.FindByAsync(r => r.LocationId == locationId);
-        //            //    if (!items.Any())
-        //            //    {
-        //            //        var location = _repoLocation.FindByKey(locationId);
-        //            //        if (location == null) continue;
-        //            //        _logger.LogDetailAsync($"Set Location InUse to False. Location ID: {location.Id}").SafeFireAndForget();
-        //            //        location.InUse = false;
-        //            //        await _repoLocation.UpdateAsync(location);
-        //            //    }
-        //            //    else
-        //            //    {
-        //            //        _logger.LogDetailAsync($"Location still has items associated with it.  InUse remains True.").SafeFireAndForget();
-        //            //    }
-        //            //}
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogDetailAsync($"DeleteRelease Error: {ex.Message}").SafeFireAndForget();
-        //    }
-        //    _logger.LogDetailAsync($"DeleteRelease End").SafeFireAndForget();
-        //}
+                        var result = MessageBox.Show($"{sb.ToString()}", "Delete Inventory Item",
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2, MessageBoxOptions.DefaultDesktopOnly);
+                        if (result == DialogResult.No)
+                        {
+                            _logger.LogDetailAsync($"{sb.ToString()}").SafeFireAndForget();
+                            continue;
+                        }
+
+                        inventoryManager.ReleaseCheck(inv);
+                    }
+
+
+
+                    //foreach (var locationId in locationIds)
+                    //{
+                    //    // Look for other items in inventory where the location is the same.
+                    //    // Don't want to change InUse to False is there are other items using this location.
+                    //    _logger.LogDetailAsync($"Check the locations for other items.  Don't set InUse flag to false if other items in location.").SafeFireAndForget();
+                    //    var items = await _repoInventory.FindByAsync(r => r.LocationId == locationId);
+                    //    if (!items.Any())
+                    //    {
+                    //        var location = _repoLocation.FindByKey(locationId);
+                    //        if (location == null) continue;
+                    //        _logger.LogDetailAsync($"Set Location InUse to False. Location ID: {location.Id}").SafeFireAndForget();
+                    //        location.InUse = false;
+                    //        await _repoLocation.UpdateAsync(location);
+                    //    }
+                    //    else
+                    //    {
+                    //        _logger.LogDetailAsync($"Location still has items associated with it.  InUse remains True.").SafeFireAndForget();
+                    //    }
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"DeleteRelease Error: {ex.Message}").SafeFireAndForget();
+            }
+            _logger.LogDetailAsync($"DeleteRelease End").SafeFireAndForget();
+        }
         /// <summary>
         /// Print all the documents for the current batch of Orders to Pick
         /// </summary>
@@ -8728,7 +8825,7 @@ namespace Neutron.Forms
             else
             {
                 // return message saying there is not enough inventory
-                MessageBox.Show("There is not enough inventory to pick the requested quantity.");
+                Mediator.GetInstance().OnDisplayMessage(this, "There is not enough inventory to pick the requested quantity.");
             }
         }
 
@@ -9004,7 +9101,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{_resourceManager.GetString($"ErrorSettingOrderDetailStatusCode")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
+                Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"ErrorSettingOrderDetailStatusCode")}{Environment.NewLine}{ex.Message}{Environment.NewLine}{ex.InnerException}");
             }
         }
 
@@ -9246,12 +9343,12 @@ namespace Neutron.Forms
 
         private int LocationCount()
         {
-            var inventoryId = _currentPickStop.CurrentInventoryLocation.Id;
-            var qty = OpenLocationCountForm(inventoryId);
+            var inventory = _currentPickStop.CurrentInventoryLocation;
+            var qty = OpenLocationCountForm(inventory);
 
             if (qty >= 0)
             {
-                var invQty = GetCurrentInventoryLocationQuantity(inventoryId);
+                var invQty = GetCurrentInventoryLocationQuantity(inventory.Id);
                 TextBoxLocationQuantity.Text = invQty.ToString();
                 _currentPickStop.CurrentInventoryLocation.Quantity = invQty;
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
@@ -9263,13 +9360,13 @@ namespace Neutron.Forms
             return qty;
         }
 
-        private int LocationCount(int inventoryId)
+        private int LocationCount(Inventory inventory)
         {
-            var qty = OpenLocationCountForm(inventoryId);
+            var qty = OpenLocationCountForm(inventory);
 
             if (qty >= 0)
             {
-                var invQty = GetCurrentInventoryLocationQuantity(inventoryId);
+                var invQty = GetCurrentInventoryLocationQuantity(inventory.Id);
                 TextBoxLocationQuantity.Text = invQty.ToString();
                 _currentPickStop.CurrentInventoryLocation.Quantity = invQty;
                 var total = _currentPickStop.Inventory.Sum(r => r.Quantity);
@@ -9281,7 +9378,7 @@ namespace Neutron.Forms
             return qty;
         }
 
-        private int OpenLocationCountForm(int inventoryId)
+        private int OpenLocationCountForm(Inventory inventory)
         {
             var qty = -1;
             using (var form = new FrmLocationCount())
@@ -9290,28 +9387,28 @@ namespace Neutron.Forms
                 if (result == DialogResult.OK)
                 {
                     qty = (form.NewQty).ParseInt();
-                    LocationCount(inventoryId, qty);
+                    LocationCount(inventory, qty);
                 }
             }
             return qty;
         }
 
-        private void LocationCount(int inventoryId, int qty)
+        private void LocationCount(Inventory inventory, int qty)
         {
-            var inv = _repoInventory.FindByKey(inventoryId);
-            if (inv == null) return;
-            _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, inv.Quantity, true).SafeFireAndForget();
+            //var inv = _repoInventory.FindByKey(inventoryId);
+            if (inventory == null) return;
+            _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, inventory.Quantity, true).SafeFireAndForget();
 
-            var prevQty = inv.Quantity;
-            inv.Quantity = qty;
-            _repoInventory.Update(inv);
-            _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inv, prevQty, true).SafeFireAndForget();
+            var prevQty = inventory.Quantity;
+            inventory.Quantity = qty;
+            _repoInventory.Update(inventory);
+            _historyManager.SaveHistoryAsync(ActionCode.InventoryModify, inventory, prevQty, true).SafeFireAndForget();
 
             var locationCount = new LocationCount()
             {
-                InventoryId = inv.Id,
-                ItemDefinitionId = inv.ItemDefinitionId,
-                LocationId = inv.LocationId,
+                InventoryId = inventory.Id,
+                ItemDefinitionId = inventory.ItemDefinitionId,
+                LocationId = inventory.LocationId,
                 UserId = GlobalVar.User.Id,
                 PreviousQty = prevQty,
                 NewQty = qty,
@@ -9432,7 +9529,7 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Find Error: " + ex.Message);
+                Mediator.GetInstance().OnDisplayMessage(this, "Find Error: " + ex.Message);
             }
         }
 
@@ -9927,44 +10024,45 @@ namespace Neutron.Forms
 
         }
 
-        /// <summary>
-        /// Get a list of orders from the AvailableOrders BindingSource
-        /// </summary>
-        /// <param name="orderNumber">Could represent an order number or an invoice number</param>
-        /// <returns>Return a List of <see cref="OrderView"/> records.</returns>
-        private List<AvailableOrdersView> GetValidOrdersFromBindingSource(string orderNumber)
-        {
-            var serialPicking = _neutronVariables.SerialPicking;
-            var list = _ordersRepository.GetAvailableOrdersForInductionScreen(_currentAreaId, string.Empty, serialPicking);
-            // Convert the AvailableOrders BindingSource to a List 
-            //var list =  _bindingSourceAvailableOrders.List.OfType<AvailableOrdersView>();
+        ///// <summary>
+        ///// Get a list of orders from the AvailableOrders BindingSource
+        ///// </summary>
+        ///// <param name="orderNumber">Could represent an order number or an invoice number</param>
+        ///// <returns>Return a List of <see cref="OrderView"/> records.</returns>
 
-            //var list = ((IList<AvailableOrdersView>)_bindingSourceAvailableOrders.List);
+        //private List<AvailableOrdersView> GetValidOrdersFromBindingSource(string orderNumber)
+        //{
+        //    var serialPicking = _neutronVariables.SerialPicking;
+        //    var list = _ordersRepository.GetAvailableOrdersForInductionScreen(_currentAreaId, string.Empty, serialPicking);
+        //    // Convert the AvailableOrders BindingSource to a List 
+        //    //var list =  _bindingSourceAvailableOrders.List.OfType<AvailableOrdersView>();
 
-            //var list = ((List<ObjectView<AvailableOrdersView>>)_bindingSourceAvailableOrders.List);
-            // Return all the orders where the order number or invoice number
-            // equals the passed in orderNumber value
-            var recs = list.Where(s => s.Ord1 == orderNumber || s.Ord2 == orderNumber).ToList();
-            return recs;
-        }
+        //    //var list = ((IList<AvailableOrdersView>)_bindingSourceAvailableOrders.List);
 
-        private bool CheckForMultipleOrders(string orderNumber)
-        {
-            var ordersWithThisOrderNumber = new List<DataGridViewRow>();
-            foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
-            {
-                var ord1 = (row.Cells["Ord1"].Value).ToString();
-                if (orderNumber == ord1)
-                {
-                    ordersWithThisOrderNumber.Add(row);
-                }
-            }
-            if (ordersWithThisOrderNumber.Count > 1)
-            {
-                return true;
-            }
-            return false;
-        }
+        //    //var list = ((List<ObjectView<AvailableOrdersView>>)_bindingSourceAvailableOrders.List);
+        //    // Return all the orders where the order number or invoice number
+        //    // equals the passed in orderNumber value
+        //    var recs = list.Where(s => s.Ord1 == orderNumber || s.Ord2 == orderNumber).ToList();
+        //    return recs;
+        //}
+
+        //private bool CheckForMultipleOrders(string orderNumber)
+        //{
+        //    var ordersWithThisOrderNumber = new List<DataGridViewRow>();
+        //    foreach (DataGridViewRow row in DataGridViewAvailableOrders.Rows)
+        //    {
+        //        var ord1 = (row.Cells["Ord1"].Value).ToString();
+        //        if (orderNumber == ord1)
+        //        {
+        //            ordersWithThisOrderNumber.Add(row);
+        //        }
+        //    }
+        //    if (ordersWithThisOrderNumber.Count > 1)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         private void TextBoxEnter(object sender, EventArgs e)
         {
@@ -10236,7 +10334,7 @@ namespace Neutron.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                    Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                 }
 
                 var storeItemDefinition = _repoItemDefinition.FindBy(r => r.Item == detailLine.PartNum).FirstOrDefault();
@@ -10269,17 +10367,17 @@ namespace Neutron.Forms
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show($"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                            Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                         }
                     }
                     else
                     {
-                        MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
+                        Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
+                    Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
                 }
             }
         }
@@ -10332,7 +10430,7 @@ namespace Neutron.Forms
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                        Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"InsertStoreOrderError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                     }
 
                     foreach (var hostOrder in hostOrderLines)
@@ -10367,17 +10465,17 @@ namespace Neutron.Forms
                                 }
                                 catch (Exception ex)
                                 {
-                                    MessageBox.Show($"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                                    Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"InsertStoreItemError")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
                                 }
                             }
                             else
                             {
-                                MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
+                                Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"BuildStoreOrderNoItemDefintion")}");
                             }
                         }
                         else
                         {
-                            MessageBox.Show($"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
+                            Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"BuildStoreOrderNoInventoryItem")}");
                         }
                     }
                 }
@@ -10466,7 +10564,7 @@ namespace Neutron.Forms
                 {
                     var result = frm.ShowDialog();
                     Show();
-                    _deviceManager?.Reset();
+                    _deviceManager?.Reset(this, _workstationView);
                     // ---         Task.Run(() => _logger.LogDetailAsync($"Reset After Hot Action : [{DateTime.Now.ToLongTimeString()}]"));
                 }
 
@@ -11022,7 +11120,7 @@ namespace Neutron.Forms
                     }
                     else
                     {
-                        MessageBox.Show($"No Anticipated Outs to print in Area: {area.AreaNumber}.");
+                        Mediator.GetInstance().OnDisplayMessage(this, $"No Anticipated Outs to print in Area: {area.AreaNumber}.");
                     }
                 }
             }
@@ -11038,7 +11136,7 @@ namespace Neutron.Forms
                 }
                 else
                 {
-                    MessageBox.Show($"No Anticipated Outs to print in Area: {areaNumber}.");
+                    Mediator.GetInstance().OnDisplayMessage(this, $"No Anticipated Outs to print in Area: {areaNumber}.");
                 }
             }
         }
@@ -11199,7 +11297,7 @@ namespace Neutron.Forms
         {
             if (_bindingSourceSkipView.Current == null)
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
                 return;
             }
 
@@ -11255,7 +11353,7 @@ namespace Neutron.Forms
         {
             if (_bindingSourceSkipView.Current == null)
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
                 return;
             }
 
@@ -11296,7 +11394,7 @@ namespace Neutron.Forms
         {
             if (_bindingSourceSkipView.Current == null)
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
                 return;
             }
 
@@ -11338,7 +11436,7 @@ namespace Neutron.Forms
         {
             if (_bindingSourceSkipView.Current == null)
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
                 return;
             }
 
@@ -11452,6 +11550,8 @@ namespace Neutron.Forms
                     // get the total of all pickLocations before clearing pickLocations
                     // use that total for the OrderDetail Update
                     var pickViewTotal = _currentPickStop.GetPickViewTotal(pickView);
+
+                    // _currentPickStop.UpdatePickViewZeroPicked(pickView, GlobalVar.User);
 
                     ////write any pickLocations to history
                     UpdatePickViewInventoryQuantity(pickView);
@@ -11593,7 +11693,7 @@ namespace Neutron.Forms
                 LabelPickedSoFar.Text = _resourceManager.GetString($"LabelPickedSoFar");
                 MBPickChangeQuantity.Text = _resourceManager.GetString($"MBPickChangeQuantity");
                 MBSkipPick.Text = _resourceManager.GetString($"MBSkipPick");
-                MBShortPick.Text = _resourceManager.GetString($"MBShortPick");
+                //MBShortPick.Text = _resourceManager.GetString($"MBShortPick");
                 MBPickAccept.Text = _resourceManager.GetString($"MBPickAccept");
 
                 //Order Details
@@ -11652,14 +11752,15 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{_resourceManager.GetString($"ErrorLoadingLanguages")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
+                Mediator.GetInstance().OnDisplayMessage(this, $"{_resourceManager.GetString($"ErrorLoadingLanguages")} {Environment.NewLine} {ex.Message} {Environment.NewLine} {ex.InnerException}");
             }
         }
 
         private void MBResetCarousels_Click(object sender, EventArgs e)
         {
-            _deviceManager?.Reset();
-            if (_logLevel == 8) _logger.LogDetailAsync($"Reset After Reset Carousel Button Pushed : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
+            _logger.LogDetailAsync($"Reset Start");
+            _deviceManager?.Reset(this, _workstationView);
+            if (_logLevel == 2 || _logLevel == 8) _logger.LogDetailAsync($"Reset Complete Reset Carousel Button Pushed : [{DateTime.Now.ToLongTimeString()}]").SafeFireAndForget();
         }
 
         public void StartSpaceBarEnableTimer()
@@ -11731,24 +11832,24 @@ namespace Neutron.Forms
                 case Keys.Space:
                     HandleSpaceKey(e);
                     break;
-                case Keys.L:
-                    HandleLKey(e);
-                    break;
-                case Keys.A:
-                    HandleAKey(e);
-                    break;
-                case Keys.S:
-                    HandleSKey(e);
-                    break;
-                case Keys.Q:
-                    HandleQKey(e);
-                    break;
-                case Keys.B:
-                    HandleBKey(e);
-                    break;
-                case Keys.H:
-                    HandleHKey(e);
-                    break;
+                //case Keys.L:
+                //    HandleLKey(e);
+                //    break;
+                //case Keys.A:
+                //    HandleAKey(e);
+                //    break;
+                //case Keys.S:
+                //    HandleSKey(e);
+                //    break;
+                //case Keys.Q:
+                //    HandleQKey(e);
+                //    break;
+                //case Keys.B:
+                //    HandleBKey(e);
+                //    break;
+                //case Keys.H:
+                //    HandleHKey(e);
+                //    break;
                 case Keys.F2:
                     HandleF2Key(e);
                     break;
@@ -11868,43 +11969,43 @@ namespace Neutron.Forms
                                     }
                                     break;
                                 }
-                            case Keys.L:
-                                {
-                                    if (_logLevel == 8) _logger.LogDetailAsync($"FrmPick_KeyDown: L  Key").SafeFireAndForget();
-                                    LocationCount();
-                                    e.Handled = true;
-                                    break;
-                                }
-                            case Keys.A:
-                                {
-                                    HotAction();
-                                    e.Handled = true;
-                                    break;
-                                }
-                            case Keys.S:
-                                {
-                                    ShowOrderOrQuantityToggle();
-                                    e.Handled = true;
-                                    break;
-                                }
-                            case Keys.Q:
-                                {
-                                    ChangeQuantity();
-                                    e.Handled = true;
-                                    break;
-                                }
-                            case Keys.B:
-                                {
-                                    e.Handled = true;
-                                    ShortPick();
-                                    break;
-                                }
-                            case Keys.H:
-                                {
-                                    e.Handled = true;
-                                    SkipPick();
-                                    break;
-                                }
+                            //case Keys.L:
+                            //    {
+                            //        if (_logLevel == 8) _logger.LogDetailAsync($"FrmPick_KeyDown: L  Key").SafeFireAndForget();
+                            //        LocationCount();
+                            //        e.Handled = true;
+                            //        break;
+                            //    }
+                            //case Keys.A:
+                            //    {
+                            //        HotAction();
+                            //        e.Handled = true;
+                            //        break;
+                            //    }
+                            //case Keys.S:
+                            //    {
+                            //        ShowOrderOrQuantityToggle();
+                            //        e.Handled = true;
+                            //        break;
+                            //    }
+                            //case Keys.Q:
+                            //    {
+                            //        ChangeQuantity();
+                            //        e.Handled = true;
+                            //        break;
+                            //    }
+                            //case Keys.B:
+                            //    {
+                            //        e.Handled = true;
+                            //        ShortPick();
+                            //        break;
+                            //    }
+                            //case Keys.H:
+                            //    {
+                            //        e.Handled = true;
+                            //        SkipPick();
+                            //        break;
+                            //    }
                             case Keys.F2:
                                 {
                                     PrintLabels(_currentPickStop, 2);
@@ -11971,7 +12072,7 @@ namespace Neutron.Forms
         {
             if (_bindingSourceSkipView.Current == null)
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
                 return;
             }
         }
@@ -12109,7 +12210,7 @@ namespace Neutron.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Kill Line Error {Environment.NewLine}{ex.Message}", "Kill Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
         }
         /// <summary>
@@ -12147,7 +12248,7 @@ namespace Neutron.Forms
             }
             if (!orderDetails.Any())
             {
-                MessageBox.Show(_resourceManager.GetString($"NoJobsSelected"));
+                Mediator.GetInstance().OnDisplayMessage(this, _resourceManager.GetString($"NoJobsSelected"));
             }
             return orderDetails;
         }
@@ -12179,7 +12280,7 @@ namespace Neutron.Forms
         {
             if (order == null) return false;
 
-            // ---         Task.Run(() => _logger.LogDetailAsync($"CheckForOrderComplete   Ord:{order.Ord1}   Res:{order.Ord2} "));
+            _logger.LogDetailAsync($"CheckForOrderComplete   Ord:{order.Ord1}   Res:{order.Ord2} ").SafeFireAndForget();
 
             var lines = _repoOrderDetails.FindBy(r => r.OrderId == order.Id);
             var linesNotComplete = lines.Where(r => r.LineStatusId != (int)LineStatus.Complete)
@@ -12187,14 +12288,19 @@ namespace Neutron.Forms
 
             if (linesNotComplete.Any())
             {
+                _logger.LogDetailAsync($"CheckForOrderComplete Order is NOT Complete.  Ord:{order.Ord1}   Res:{order.Ord2} ").SafeFireAndForget();
                 SetOrderStatusToAvailable(order);
                 return false;
             }
-            // ---         Task.Run(() => _logger.LogDetailAsync($"CheckForOrderComplete Order is Complete.  Ord:{order.Ord1}   Res:{order.Ord2} "));
-            order.OrderStatusId = (int)OrderStatus.Complete;
-            _historyManager.SaveHistoryAsync(ActionCode.OrderComplete, order);
-            _repoOrders.Update(order);
-            return true;
+            else
+            {
+                _logger.LogDetailAsync($"CheckForOrderComplete Order is Complete.  Ord:{order.Ord1}   Res:{order.Ord2} ").SafeFireAndForget();
+                order.OrderStatusId = (int)OrderStatus.Complete;
+                _historyManager.SaveHistoryAsync(ActionCode.OrderComplete, order);
+                _repoOrders.Update(order);
+                return true;
+            }
+
         }
 
         private void TextBoxNewOrderOrd1_TextChanged(object sender, EventArgs e)
