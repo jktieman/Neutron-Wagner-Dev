@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplenProcessorTest.cs" />
+    <Compile Include="Repositories\GenericRepositoryTest.cs" />
     <Compile Include="Repositories\WorkstationRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
