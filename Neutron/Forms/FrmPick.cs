@@ -8284,6 +8284,9 @@ namespace Neutron.Forms
                     }
 
 
+                        sb.AppendLine($"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
+                                      $"{Environment.NewLine}" +
+                                      $"                      Item: {item} " );
 
                     //foreach (var locationId in locationIds)
                     //{
