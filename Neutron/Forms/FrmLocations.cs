@@ -261,24 +261,24 @@ namespace Neutron.Forms
                 if (!grid.Columns.Contains(columnName: "Loc4")) return;
                 var part = grid["Loc4", rowIndex].Value.ToString().ParseInt();
 
-                // if there are Hanels on this station
-                // check to see if this lift is already moving before trying to move again
-                if (_workstationView.Hanels.Any())
-                {
-                    if (GlobalVar.Hanel == null)
-                    {
-                        return;
-                    }
-                    var status = GlobalVar.Hanel.GetDeviceStatus(deviceNumber);
+                //// if there are Hanels on this station
+                //// check to see if this lift is already moving before trying to move again
+                //if (_workstationView.Hanels.Any())
+                //{
+                //    if (GlobalVar.Hanel == null)
+                //    {
+                //        return;
+                //    }
+                //    var status = GlobalVar.Hanel.GetDeviceStatus(deviceNumber);
 
-                    if (status.CommandAccepted && !status.CommandExecuted)
-                    {
-                        var message =
-                            $"Unable to move Tower {deviceNumber}.{Environment.NewLine}It is currently moving Tray {status.TargetTray} into position.";
-                        MessageBox.Show(message, "Lift Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        return;
-                    }
-                }
+                //    if (status.CommandAccepted && !status.CommandExecuted)
+                //    {
+                //        var message =
+                //            $"Unable to move Tower {deviceNumber}.{Environment.NewLine}It is currently moving Tray {status.TargetTray} into position.";
+                //        MessageBox.Show(message, "Lift Running", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //        return;
+                //    }
+                //}
 
                 // if it's a Blastzone, turn on the Location
                 // and turn on the Prolite, if they're Enabled
