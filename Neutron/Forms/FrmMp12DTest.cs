@@ -18,6 +18,7 @@ using Hanel_DC.Extensions;
 using System.Windows.Markup;
 using HanelCommands;
 using HanelCommands.Builders;
+using NeutronCore.Models;
 using ByteExtensions = NeutronCore.Extensions.ByteExtensions;
 
 namespace Neutron.Forms
@@ -35,35 +36,45 @@ namespace Neutron.Forms
         private readonly IDynamicLogger _logger;
         private readonly bool _testing = true;
         private HanelCommandProcessor _hanelCommandProcessor = new HanelCommandProcessor();
+        private readonly IDialogService _dialogService;
 
-        public FrmMp12DTest(IJsonData jsonData, NeutronVariables neutronVariables, WorkstationView workstationView)
+        public FrmMp12DTest(IJsonData jsonData, NeutronVariables neutronVariables, WorkstationView workstationView, IDialogService dialogService)
         {
             InitializeComponent();
 
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
-            _logger = NeutronCore.Global.Logger.SetupLogger("HanelTester");
+            _dialogService = dialogService;
+            _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
         }
 
         private void InitializeMp12DController()
         {
-            bool result = false;
+            bool controllerClosed = false;
             try
             {
                 if (GlobalVar.Hanel != null)
                 {
-                    result = CloseControllerIfOpen(GlobalVar.Hanel);
+                    controllerClosed = CloseControllerIfOpen(GlobalVar.Hanel);
                 }
-                
-                if (result)
+
+                if (controllerClosed || GlobalVar.Hanel == null)
                 {
-                    _mp12D = new Mp12D(this, _workstationView, _logger);
-                    AddItemToListBox("Controller Initialized");
-                }
-                else
-                {
-                    AddItemToListBox("Controller initialization failed");
+                    if (_workstationView.Hanels.Count > 0)
+                    {
+                        _mp12D = new Mp12D(this, _workstationView, _logger, _neutronVariables.LogLevel, _dialogService);
+                        if (_mp12D == null)
+                        {
+                            AddItemToListBox("Controller initialization failed");
+                            return;
+                        }
+                        AddItemToListBox("Controller Initialized");
+                    }
+                    else
+                    {
+                        AddItemToListBox("Station not set up with Hanel devices.");
+                    }
                 }
 
             }
@@ -281,15 +292,15 @@ namespace Neutron.Forms
 
             var hanelCommandProcessor = new HanelCommandProcessor();
 
-            hanelCommandProcessor.Process(dataIn, ref deviceStatusList); 
+            hanelCommandProcessor.Process(dataIn, ref deviceStatusList);
 
         }
-        
+
         private List<HanelDeviceStatus> GetHanelDeviceStatusList()
         {
             var deviceStatusList = new List<HanelDeviceStatus>();
             deviceStatusList.Clear();
-            for (int index = 1; index <= 3; ++index)
+            for (var index = 1; index <= 3; ++index)
             {
                 deviceStatusList.Add(new HanelDeviceStatus(index));
                 deviceStatusList[index - 1].Device = index; // Adjusted index
@@ -302,6 +313,7 @@ namespace Neutron.Forms
                 deviceStatusList[index - 1].InMotion = false;
                 deviceStatusList[index - 1].InAlignment = true;
                 deviceStatusList[index - 1].StatusMessage = "";
+                deviceStatusList[index - 1].CommandSent = false;
                 deviceStatusList[index - 1].CommandAccepted = false;
                 deviceStatusList[index - 1].CommandExecuted = false;
 
@@ -320,7 +332,7 @@ namespace Neutron.Forms
 
         private void ButtonGetCurrentTrays_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Current Trays function not enabled. ");
+            _mp12D.GetTraysInWindow();
         }
 
 
