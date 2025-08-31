@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using AlliedLogger;
 using NeutronData.Interfaces;
 
 namespace NeutronData.Repositories
@@ -26,7 +25,7 @@ namespace NeutronData.Repositories
         Task InsertAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(int id);
-        Task<bool> DeleteWithReturnAsync(int id);
+        bool DeleteWithReturn(int id);
         Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 
         IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
