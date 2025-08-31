@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using HanelCommands.Builders.Interfaces;
+using NeutronCore.Extensions;
+using NeutronEvents;
 
 namespace HanelCommands.Builders.Rules.A12_Rules
 {
@@ -41,7 +43,16 @@ namespace HanelCommands.Builders.Rules.A12_Rules
                             if (device != null)
                             {
                                 device.CurrentTray = tray;
+                                Mediator.GetInstance().OnTrayInPosition(this
+                                    , new InPositionInfo
+                                    {
+                                        Lift = lift.ParseInt(),
+                                        Tray = tray
+                                    });
                                 device.StatusMessage = $"XA A12 E00 Command was Executed, Tray: {tray}";
+                                device.CommandSent = false;
+                                device.CommandAccepted = false;
+                                device.CommandExecuted = false;
                             }
                         }
                     }
