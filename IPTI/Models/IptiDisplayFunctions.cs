@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AlliedLogger;
 using JsonManager;
@@ -8,6 +9,7 @@ using NeutronCore.Global;
 using NeutronData.ModelViews;
 using AsyncAwaitBestPractices;
 using NeutronEvents;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IPTI.Models
 {
@@ -147,6 +149,7 @@ namespace IPTI.Models
                 var command = controller.TurnOnOrderControlModule(text);
                 if (command != string.Empty)
                 {
+                    _logger.LogDetailAsync($"SendText: {command}");
                     _tcpIptiController.SendText(command);
                 }
             }
@@ -170,6 +173,7 @@ namespace IPTI.Models
                 if (command != string.Empty)
                 {
                     _tcpIptiController.SendText(command);
+                    _logger.LogDetailAsync($"SendText: {command}");
                 }
             }
             catch (Exception ex)
@@ -189,8 +193,9 @@ namespace IPTI.Models
                 {
                     if (!bayController.Enabled) continue;
                     var text = bayController.ClearDisplays();
+                    _logger.LogDetailAsync($"SendText: {text}");
                     _tcpIptiController.SendText(text);
-                    //await Task.Delay(100);
+                    Thread.Sleep(100);
                     TurnOffBlastzoneOrderControl(bayController.BayId.ParseInt());
                 }
             }
