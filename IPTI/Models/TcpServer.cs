@@ -31,8 +31,13 @@ namespace IPTI.Models
         // Value: Metadata object containing information about the client.
         private readonly ConcurrentDictionary<string, Metadata> _connectedClients = new ConcurrentDictionary<string, Metadata>();
 
+        // create a new BlockingCollection of command strings
+
+        private readonly BlockingCollection<string> _commandQueue = new BlockingCollection<string>(new ConcurrentQueue<string>());
+
         private IDynamicLogger _logger;
         private bool _monitorTransmitter = true;
+        private bool _wait;
 
 
 
@@ -71,6 +76,9 @@ namespace IPTI.Models
 
             Task.Run(() => AcceptConnections(_token), _token);
             // Task.Run( () => MonitorTransmitter(_token), _token);
+
+            // Start command processing in the background
+            Task.Run(() => ProcessCommandQueue(_token), _token);
         }
 
         public TcpListener Listener => _listener;
@@ -80,6 +88,9 @@ namespace IPTI.Models
             try
             {
                 _monitorTransmitter = false;
+
+                _commandQueue.CompleteAdding();
+
 
                 if (_connectedClients != null && _connectedClients.Count > 0)
                 {
@@ -127,36 +138,113 @@ namespace IPTI.Models
 
         }
 
+        private async Task ProcessCommandQueue(CancellationToken token)
+        {
+            try
+            {
+                foreach (var value in _commandQueue.GetConsumingEnumerable(token))
+                {
+                    _logger.LogDetailAsync($"Incoming command: {value}").SafeFireAndForget();
+
+                    // Process the command here
+                    // For example, send it to all connected clients:
+                    if (_connectedClients.Any())
+                    {
+                        try
+                        {
+                            _logger.LogDetailAsync($"Begin Try: {value}").SafeFireAndForget();
+                            var key = _connectedClients.Keys.FirstOrDefault();
+                            if (key != null)
+                            {
+                                var client = _connectedClients[key];
+
+                                var command = new Put2LightCommand().GetCommand(value);
+
+                                var dataBytes = Encoding.UTF8.GetBytes(command);
+
+                                // try without the lock 
+                                // using a BlockingCollection should protect the collection
+                                //lock (client.SendLock)
+                                // {
+
+                                if (!client.NetworkStream.CanWrite)
+                                {
+                                    client.NetworkStream = client.TcpClient.GetStream();
+                                }
+                                _logger.LogDetailAsync($"Got the Stream.  Write it out the Network.").SafeFireAndForget();
+
+                                await client.NetworkStream.WriteAsync(dataBytes, 0, dataBytes.Length, token);
+                                await client.NetworkStream.FlushAsync(token);
+                                _wait = true;
+                                _logger.LogDetailAsync($"Flushed it.  {dataBytes.ByteArrayToHexString()}").SafeFireAndForget();
+                            }
+
+                            // }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogDetailAsync($"Error sending command: {ex.Message}").SafeFireAndForget();
+                        }
+                    }
+
+                    // Wait _transmitDelay ms before processing the next command
+                    // loop until _wait is false
+                    var waitTime = 0;
+                    while (_wait)
+                    {
+                        await Task.Delay(10, token); // Small delay to prevent busy-waiting
+                        waitTime += 10;
+                        _logger.LogDetailAsync($"Waiting: {waitTime}").SafeFireAndForget();
+                        if (waitTime >= _transmitDelay)
+                        {
+                            _wait = false;
+                        }
+                    }
+
+
+
+                    await Task.Delay(_transmitDelay, token);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when shutting down
+            }
+        }
+
+
+
         public void SendData(string value)
         {
             try
             {
+                _commandQueue.Add(value, _token);
 
-                // ListClients();
-               // _logger.LogDetailAsync($"Value: {value} ").SafeFireAndForget();
+                //ListClients();
+                //// _logger.LogDetailAsync($"Value: {value} ").SafeFireAndForget();
 
-                // if there are any _clients
-                // return the first _client
-                var key = _connectedClients.Keys.FirstOrDefault();
-                if (string.IsNullOrEmpty(key)) return;
-               // _logger.LogDetailAsync($"Key Value: {key} ").SafeFireAndForget();
-                var md = _connectedClients[key];
+                //// if there are any _clients
+                //// return the first _client
+                //var key = _connectedClients.Keys.FirstOrDefault();
+                //if (string.IsNullOrEmpty(key)) return;
+                //// _logger.LogDetailAsync($"Key Value: {key} ").SafeFireAndForget();
+                //var md = _connectedClients[key];
 
-                var command = new Put2LightCommand().GetCommand(value);
-                // _currentCommand = SetCurrentCommand(value);
-                _logger.LogDetailAsync($"Command: {command} ").SafeFireAndForget();
-                var dataBytes = Encoding.UTF8.GetBytes(command);
+                //var command = new Put2LightCommand().GetCommand(value);
+                //// _currentCommand = SetCurrentCommand(value);
+                //_logger.LogDetailAsync($"Command: {command} ").SafeFireAndForget();
+                //var dataBytes = Encoding.UTF8.GetBytes(command);
 
-                lock (md.SendLock)
-                {
-                    if (!md.NetworkStream.CanWrite)
-                    {
-                        md.NetworkStream = md.TcpClient.GetStream();
-                    }
-                    md.NetworkStream.WriteAsync(dataBytes, 0, dataBytes.Length, _token);
-                    md.NetworkStream.FlushAsync(_token);
+                //lock (md.SendLock)
+                //{
+                //    if (!md.NetworkStream.CanWrite)
+                //    {
+                //        md.NetworkStream = md.TcpClient.GetStream();
+                //    }
+                //    md.NetworkStream.WriteAsync(dataBytes, 0, dataBytes.Length, _token);
+                //    md.NetworkStream.FlushAsync(_token);
 
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -186,6 +274,8 @@ namespace IPTI.Models
                     _logger.LogDetailAsync($"Accept Connection LOOP TIME: {DateTime.Now.Millisecond}").SafeFireAndForget();
 
                     var client = await _listener.AcceptTcpClientAsync();
+
+                    await _logger.LogDetailAsync($"Client IpAddress: {client.Client.RemoteEndPoint}");
 
                     _logger.LogDetailAsync($"Got a Client: {DateTime.Now.Millisecond}").SafeFireAndForget();
 
@@ -260,7 +350,7 @@ namespace IPTI.Models
         private void ProcessDataReceived(byte[] data, int length)
         {
             var bytes = data.Take(length).ToArray();
-
+            _wait = false;
             _logger.LogDetailAsync($"Byte Data as HEX String: {bytes.ByteArrayToHexString()}").SafeFireAndForget();
             //_logger.LogDetailAsync($"Byte Data as Human String: {bytes.ByteArrayToHumanString()}").SafeFireAndForget();
             //_logger.LogDetailAsync($"Byte Data as RAW String: {bytes.ByteArrayToRawString()}").SafeFireAndForget();
