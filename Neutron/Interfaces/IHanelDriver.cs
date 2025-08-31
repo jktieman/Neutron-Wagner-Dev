@@ -14,5 +14,8 @@ namespace Neutron.Interfaces
         void ResetHanelDeviceStatus();
 
         byte[] ValidCommand(byte[] byteArray);
+        //bool GetTrayInWindow(int i, int i1);
+        void GetTraysInWindow();
+        void Stop();
     }
 }
