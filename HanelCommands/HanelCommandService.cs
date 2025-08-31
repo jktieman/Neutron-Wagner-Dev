@@ -328,6 +328,12 @@ namespace HanelCommands
             return hanelCommand;
         }
 
+        public IHanelCommand GetTrayInWindow(int lift, int accessPoint = 1)
+        {
+            var hanelCommand = new XR_E12Command(lift.ToString(), accessPoint.ToString());
+            return hanelCommand;
+        }
+
         public string GetResponse(byte[] dataIn)
         {
             IHanelResponse hanelCommand = GetHanelResponse(dataIn);
