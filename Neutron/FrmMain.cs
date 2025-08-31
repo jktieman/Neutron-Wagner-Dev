@@ -35,7 +35,6 @@ using NeutronData.DataContexts;
 using SqlSchemaManager;
 using NeutronData.Repositories;
 using NeutronData.Models.Lookups;
-//using ProLiteController;
 
 using Application = System.Windows.Forms.Application;
 using ProliteController;
@@ -44,8 +43,10 @@ using IDisplayController = IPTI.Models.IDisplayController;
 using AsyncAwaitBestPractices;
 using LogFileMaintenance;
 using System.Runtime.InteropServices;
+using System.Windows;
 using NeutronData.UnitOfWorks;
-
+using MessageBox = System.Windows.Forms.MessageBox;
+using MessageBoxOptions = System.Windows.Forms.MessageBoxOptions;
 
 #endregion
 
@@ -94,6 +95,7 @@ namespace Neutron
         private readonly IDynamicLogger _loggerExceptions;
         private IInventoryUnitOfWork _inventoryUnitOfWork;
         private readonly Func<NeutronDb> _contextFactory;
+        private readonly IDialogService _dialogService;
         private static readonly object _userLock = new object();
 
         /// <summary>
@@ -117,6 +119,7 @@ namespace Neutron
         /// <param name="inventoryRepository"></param>
         /// <param name="inventoryUnitOfWork"></param>
         /// <param name="contextFactory"></param>
+        /// <param name="dialogService"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
@@ -127,9 +130,11 @@ namespace Neutron
             , IAreaRepository areaRepository
             , ILocationsRepository locationsRepository
             , IInventoryRepository inventoryRepository
-            , IInventoryUnitOfWork inventoryUnitOfWork, Func<NeutronDb> contextFactory)
+            , IInventoryUnitOfWork inventoryUnitOfWork, Func<NeutronDb> contextFactory
+            , IDialogService dialogService)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _dialogService = dialogService;
             _jsonData = jsonData ?? throw new ArgumentNullException(nameof(jsonData));
             _akaRepository = akaRepository ?? throw new ArgumentNullException(nameof(akaRepository));
             _securityProcessor = securityProcessor ?? throw new ArgumentNullException(nameof(securityProcessor));
@@ -220,7 +225,7 @@ namespace Neutron
 
         private void UpdateClientConnected(bool state)
         {
-            _logger.Log("Client connection state updated: " + state);
+            _logger.LogDetailAsync("Client connection state updated: " + state).SafeFireAndForget();
             if (InvokeRequired)
             {
                 Invoke(new Action<bool>(UpdateClientConnected), state);
@@ -268,7 +273,7 @@ namespace Neutron
         private void LogGeneralError(string message)
         {
             _logger.LogDetailAsync($"General Error: {message}").SafeFireAndForget();
-            MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"Alert: {message}", "Error Alert", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             {
@@ -279,7 +284,7 @@ namespace Neutron
         private void DisplayMessage(string message)
         {
             //_logger.LogDetailAsync($"Display Message: {message}").SafeFireAndForget();
-            MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"{message}", "Information",MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             {
@@ -555,7 +560,7 @@ namespace Neutron
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12D() && GlobalVar.Hanel == null)
                                     {
                                         _logger.LogDetailAsync("FrmMain building Mp12D Controller.").SafeFireAndForget();
-                                        GlobalVar.Hanel = new Mp12D(this, _workstationView);
+                                        GlobalVar.Hanel = new Mp12D(this, _workstationView, _neutronVariables.LogLevel, _dialogService);
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
                                     }
@@ -572,7 +577,7 @@ namespace Neutron
                                     if (_neutronVariables.DeviceDriver == DeviceDriverName.Mp12N() && GlobalVar.Hanel == null)
                                     {
                                         _logger.LogDetailAsync("MP12N Controller.").SafeFireAndForget();
-                                        GlobalVar.Hanel = new Mp12N(this, _workstationView);
+                                        GlobalVar.Hanel = new Mp12N(this, _workstationView, _dialogService);
                                         GlobalVar.Hanel.InitStatus();
                                         var result = GlobalVar.Hanel != null;
                                     }
@@ -586,8 +591,7 @@ namespace Neutron
                             {
                                 _logger.LogDetailAsync($"This is a ProLite Device").SafeFireAndForget();
                                 _workstationView.HardwareDevices.Add(device);
-                                //var proLite = new ProLite(device.Id, device.Name, device.DeviceNumber, device.Enabled);
-                                // if the GlobalVar.ProLiteManager is null, create a new ProLiteManager
+
                                 if (_workstationView.ProLiteManager == null)
                                 {
                                     _workstationView.ProLiteManager = new ProLiteManager(device.SerialConfiguration.PortName
