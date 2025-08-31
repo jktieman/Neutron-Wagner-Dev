@@ -35,5 +35,12 @@ namespace NeutronData.Interfaces
 
         int TotalLocationViewsExact(int areaId, int sizeCodeId,
             int velocityCodeId, int heightCodeId, int inUse);
+
+        Location GetBestLocationForPutaway(int areaId, int itemDefinitionSizeCodeId
+            , int itemDefinitionVelocityCodeId, int itemDefinitionHeightCodeId, int inUse);
+
+        Location CreateLocation(string slot, int areaId);
+        Location FindLocationBySlot(string slot = "");
+
     }
 }
