@@ -32,8 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncAwaitBestPractices, Version=7.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
-      <HintPath>..\packages\AsyncAwaitBestPractices.7.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
+    <Reference Include="AsyncAwaitBestPractices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncAwaitBestPractices.9.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
     </Reference>
     <Reference Include="EthernetTransmitter">
       <HintPath>..\EthernetTransmitter\bin\Debug\EthernetTransmitter.dll</HintPath>

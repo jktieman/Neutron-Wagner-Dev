@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AsyncAwaitBestPractices, Version=8.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
-      <HintPath>..\packages\AsyncAwaitBestPractices.8.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
+    <Reference Include="AsyncAwaitBestPractices, Version=9.0.0.0, Culture=neutral, PublicKeyToken=532360cfd341384d, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncAwaitBestPractices.9.0.0\lib\netstandard2.0\AsyncAwaitBestPractices.dll</HintPath>
     </Reference>
     <Reference Include="Hart_DC">
       <HintPath>Hart Controller 2019-03-28 local auth tokens\Hart_DC.dll</HintPath>
