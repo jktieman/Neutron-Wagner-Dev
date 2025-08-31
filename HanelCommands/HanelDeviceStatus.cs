@@ -20,6 +20,7 @@ namespace HanelCommands
         bool newInMotion = false,
         bool newInAlignment = false,
         string newStatusMessage = "not initialized",
+        bool commandSent = false,    
         bool commandAccepted = false,
         bool commandExecuted = false
         )
@@ -35,6 +36,7 @@ namespace HanelCommands
             InAlignment = newInAlignment;
             StatusMessage = newStatusMessage;
             ActiveErrorCount = 0;
+            CommandSent = commandSent;
             CommandAccepted = commandAccepted;
             CommandExecuted = commandExecuted;
             LastHanelCommand = new HanelCommand();
@@ -80,6 +82,7 @@ namespace HanelCommands
         public bool InAlignment { get; set; }
         public string StatusMessage { get; set; }
         public int ActiveErrorCount { get; set; }
+        public bool CommandSent { get; set; }
         public bool CommandAccepted { get; set; }
         public bool CommandExecuted { get; set; }
     }
