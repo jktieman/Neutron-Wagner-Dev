@@ -1627,7 +1627,7 @@ namespace NeutronData.Repositories
                     parameters.Add(param);
                     param = new SqlParameter(parameterName: "@SERIALPICKING", value: serialPicking);
                     parameters.Add(param);
-                    _ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreenWithRoute. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
+                    //_ = _logger.LogDetailAsync($"Get Available Orders Views usp_GetAvailableOrdersForInductionScreenWithRoute. AreaId: {areaId} SearchField: {searchField} SerialPicking: {serialPicking} ");
 
                     recs = context.Database.SqlQuery<AvailableOrdersView>("usp_GetAvailableOrdersForInductionScreenWithRoute @AREAID, @SEARCHFIELD, @SERIALPICKING", parameters.ToArray()).ToList();
 
