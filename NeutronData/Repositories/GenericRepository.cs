@@ -24,20 +24,24 @@ namespace NeutronData.Repositories
         private readonly Func<NeutronDb> _contextFactory;
         private readonly IMemoryCache _memoryCache;
         private readonly IOptions<MemoryCacheOptions> _cacheOptions;
+        private DbContext _context;
 
         public GenericRepository(Func<NeutronDb> contextFactory)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
-            _dbSet = _contextFactory().Set<TEntity>();
+            _context = _contextFactory();
+            
+            _dbSet = _context.Set<TEntity>();
             SetupLogger();
         }
 
         public GenericRepository(Func<NeutronDb> contextFactory, IMemoryCache memoryCache, IOptions<MemoryCacheOptions> cacheOptions)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _context = _contextFactory();
             _memoryCache = memoryCache;
             _cacheOptions = cacheOptions;
-            _dbSet = _contextFactory().Set<TEntity>();
+            _dbSet = _context.Set<TEntity>();
            // SetupLogger();
         }
 
@@ -152,21 +156,22 @@ namespace NeutronData.Repositories
         }
         public void Insert(TEntity entity)
         {
-
             if (entity == null) throw new ArgumentNullException(nameof(entity));
+
             try
             {
-                using (var context = _contextFactory())
-                {
-                    var dbSet = context.Set<TEntity>();
-                    DetachLocalEntityIfExists(context, entity.Id);
-                    dbSet.Add(entity);
-                    context.SaveChanges();
-                }
+                //using (var context = _contextFactory())
+                //{
+                    var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f == entity);
+                    if (local != null) _context.Entry(local).State = EntityState.Detached;
+
+                    _dbSet.Add(entity);
+                    _context.SaveChanges();
+               // }
             }
             catch (Exception ex)
             {
-                _ = LogErrorAsync(ex, "INSERT");
+                LogError(ex, "INSERT");
             }
         }
 
@@ -175,17 +180,21 @@ namespace NeutronData.Repositories
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             try
             {
-                using (var context = _contextFactory())
-                {
-                    var dbSet = context.Set<TEntity>();
-                    DetachLocalEntityIfExists(context, entity.Id);
-                    dbSet.Add(entity);
-                    await context.SaveChangesAsync();
-                }
+                //using (var context = _contextFactory())
+                //{
+                    var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                    if (local != null)
+                    {
+                        _context.Entry(local).State = EntityState.Detached;
+                    }
+                    _context.Entry(entity).State = EntityState.Added;
+                _dbSet.Add(entity);
+                    await _context.SaveChangesAsync();
+               // }
             }
             catch (Exception ex)
             {
-                await LogErrorAsync(ex, "INSERT ASYNC");
+                LogError(ex, "INSERT ASYNC");
             }
         }
         private void DetachLocalEntityIfExists(DbContext context, int entityId)
@@ -196,7 +205,7 @@ namespace NeutronData.Repositories
                 context.Entry(localEntity).State = EntityState.Detached;
             }
         }
-        private async Task LogErrorAsync(Exception exception, string operation)
+        private void LogError(Exception exception, string operation)
         {
             var errorMessage = $"Operation: {operation} Error: {exception.Message}{Environment.NewLine}{exception.InnerException}";
            // await _logger.LogDetailAsync(errorMessage).ConfigureAwait(false);
@@ -206,17 +215,24 @@ namespace NeutronData.Repositories
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             try
             {
-                using (var context = _contextFactory())
-                {
-                    var dbSet = context.Set<TEntity>();
-                    DetachLocalEntityIfExists(context, entity.Id);
-                    dbSet.AddOrUpdate(entity);
-                    context.SaveChanges();
-                }
+                //using (var context = _contextFactory())
+                //{
+                    var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                    if (local != null)
+                    {
+                        _context.Entry(local).State = EntityState.Detached;
+                    }
+                    _context.Set<TEntity>().AddOrUpdate(entity);
+                    _context.SaveChanges();
+                    //var dbSet = context.Set<TEntity>();
+                    //DetachLocalEntityIfExists(context, entity.Id);
+                    //dbSet.AddOrUpdate(entity);
+                    //context.SaveChanges();
+               // }
             }
             catch (Exception ex)
             {
-               _ = LogErrorAsync(ex, "UPDATE");
+               LogError(ex, "UPDATE");
             }
         }
 
@@ -225,17 +241,25 @@ namespace NeutronData.Repositories
             if (entity == null) throw new ArgumentNullException(nameof(entity));
             try
             {
-                using (var context = _contextFactory())
-                {
-                    var dbSet = context.Set<TEntity>();
-                    DetachLocalEntityIfExists(context, entity.Id);
-                    dbSet.AddOrUpdate(entity);
-                    await context.SaveChangesAsync();
-                }
+                //using (var context = _contextFactory())
+                //{
+                    var local = _context.Set<TEntity>().Local.FirstOrDefault(f => f.Id == entity.Id);
+                    if (local != null)
+                    {
+                        _context.Entry(local).State = EntityState.Detached;
+                    }
+                    _context.Set<TEntity>().AddOrUpdate(entity);
+                    await _context.SaveChangesAsync();
+
+                    //var dbSet = context.Set<TEntity>();
+                    //DetachLocalEntityIfExists(context, entity.Id);
+                    //dbSet.AddOrUpdate(entity);
+                    //await context.SaveChangesAsync();
+                //}
             }
             catch (Exception ex)
             {
-                LogErrorAsync(ex, "UPDATE ASYNC").SafeFireAndForget();
+                LogError(ex, "UPDATE ASYNC");
             }
         }
 
@@ -259,7 +283,7 @@ namespace NeutronData.Repositories
         //    }
         //    catch (Exception ex)
         //    {
-        //        LogErrorAsync(ex, "DELETE").SafeFireAndForget();
+        //        LogError(ex, "DELETE").SafeFireAndForget();
         //    }
         //}
 
@@ -285,7 +309,7 @@ namespace NeutronData.Repositories
                     catch (Exception ex)
                     {
                         transaction.Rollback();
-                        LogErrorAsync(ex, "DELETE").SafeFireAndForget();
+                        LogError(ex, "DELETE");
                         throw;
                     }
                 }
@@ -313,11 +337,11 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                LogErrorAsync(ex, "DELETE ASYNC").SafeFireAndForget();
+                LogError(ex, "DELETE ASYNC");
             }
         }
 
-        public async Task<bool> DeleteWithReturnAsync(int id)
+        public bool DeleteWithReturn(int id)
         {
 
             try
@@ -327,13 +351,13 @@ namespace NeutronData.Repositories
                     // Detach any existing tracked entity with the same key
                     DetachLocalEntity(context, id);
                     // Find the entity by its key
-                    var entity = await context.Set<TEntity>().FindAsync(id);
+                    var entity = context.Set<TEntity>().Find(id);
                     if (entity == null) return false;
                     context.Set<TEntity>().Attach(entity);
                     // Remove the entity
                     context.Set<TEntity>().Remove(entity);
                     // Save changes asynchronously
-                    return await context.SaveChangesAsync() > 0;
+                    return context.SaveChanges() > 0;
                 }
 
 
@@ -357,7 +381,7 @@ namespace NeutronData.Repositories
             }
             catch (Exception ex)
             {
-                LogErrorAsync(ex, "DELETE ASYNC").SafeFireAndForget();
+                LogError(ex, "DELETE ASYNC");
             }
             return false;
         }
