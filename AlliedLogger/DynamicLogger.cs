@@ -42,7 +42,7 @@ namespace AlliedLogger
             FolderName = folderName;
 
 
-            //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : logFileDir;
+            //_baseFolder = string.IsNullOrEmpty(logFileDir) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRONTEST\LOGS\") : logFileDir;
             //_baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             // _folderName = folderName.EndsWith(@"\") ? folderName : folderName + @"\";
             LogActivity = logActivity;
@@ -91,7 +91,7 @@ namespace AlliedLogger
             get => _baseFolder;
             set
             {
-                _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRON\LOGS\") : value;
+                _baseFolder = string.IsNullOrEmpty(value) ? Environment.ExpandEnvironmentVariables(name: @"%SystemDrive%\NEUTRONTEST\LOGS\") : value;
                 _baseFolder = _baseFolder.EndsWith(@"\") ? _baseFolder : _baseFolder + @"\";
             }
         }
@@ -297,7 +297,7 @@ namespace AlliedLogger
             try
             {
                 var message =
-                $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] {Environment.NewLine}{msg}";
+                $"[{Path.GetFileName(filePath)} > {origin}() > Line: {lineNumber}] => {msg}";
 
                 _bcMessages.Add(message);
             }
