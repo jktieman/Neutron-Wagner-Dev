@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hanel_DC.HanelUtilities;
+using HanelCommands;
 
 namespace Hanel_DC.Hanel_DeviceControllers
 {
@@ -20,7 +21,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
         private readonly string _ObjectID;
         private readonly int _PB_False;
 
-        public HanelMp12NDeviceController()
+        public HanelMp12NDeviceController( )
         {
             this._ObjectID = HanelUtil.GetUniqueObjectIdentifier();
         }
@@ -33,6 +34,11 @@ namespace Hanel_DC.Hanel_DeviceControllers
         public string Get_LastErrorMessage()
         {
             return this._xErrorMsg;
+        }
+
+        public bool DriveDevice(IHanelCommand hanelCommand, ref string cError)
+        {
+            throw new NotImplementedException();
         }
 
         public string Get_ObjectID()
@@ -169,5 +175,9 @@ namespace Hanel_DC.Hanel_DeviceControllers
             this._hMachine = 0U;
         }
 
+        public void Stop()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
