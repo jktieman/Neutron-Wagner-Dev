@@ -30,7 +30,17 @@ namespace HanelCommands
         public string CommandBufferEmpty => $"{AST}BE${CR}{LF}";
         public virtual string CommandExecuted => $"{AST}G{Lift}{AccessPoint}$P XA$A12$E00${CR}{LF}";
         public virtual string Lift => CommandString.Substring(2, 2);
-        public virtual int Device => int.Parse(Lift);
+        public virtual int Device
+        {
+            get
+            {
+                if (int.TryParse(Lift, out var device))
+                {
+                    return device;
+                }
+                throw new InvalidOperationException("Invalid Lift value.");
+            }
+        }
         public virtual string AccessPoint => CommandString.Substring(4, 1);
 
         public virtual string Tray
