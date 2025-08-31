@@ -31,7 +31,9 @@ namespace NeutronCore
 
         static LoaderSettings()
         {
+
             _rootDirectory = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\NeutronTest\");
+
 
             if (!Directory.Exists(_rootDirectory))
             {
