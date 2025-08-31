@@ -19,6 +19,10 @@ namespace HanelCommands
             Text = text;
         }
 
+        public DisplayLine()
+        {
+        }
+
         public override string ToString()
         {
             return $"{Line}{Column}{Text}";
