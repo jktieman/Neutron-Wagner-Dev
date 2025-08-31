@@ -2,12 +2,12 @@
 
 namespace Hanel_DC.HanelStatics
 {
-    internal class HanelDcStatics
+    public class HanelDcStatics
     {
-        public static IReadOnlyCollection<string> Valid_Controller_Types() => new List<string>()
+        public static IReadOnlyCollection<string> Valid_Controller_Types() => new List<string>
         {
-            HanelDcStatics.Controller_Type_Hanel_Mp12D(),
-            HanelDcStatics.Controller_Type_Hanel_Mp12N(),
+            Controller_Type_Hanel_Mp12D(),
+            Controller_Type_Hanel_Mp12N(),
 
         }.AsReadOnly();
 
