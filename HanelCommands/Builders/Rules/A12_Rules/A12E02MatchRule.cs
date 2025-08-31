@@ -31,6 +31,9 @@ namespace HanelCommands.Builders.Rules.A12_Rules
                         {
                             device.CurrentTray = 0;
                             device.StatusMessage = "XA A12 E03 Unknown Shelf in Access Point";
+                            device.CommandSent = false;
+                            device.CommandAccepted = false;
+                            device.CommandExecuted = true;
                         }
                     }
                 }
