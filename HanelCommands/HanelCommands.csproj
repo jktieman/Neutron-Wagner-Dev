@@ -66,6 +66,7 @@
     <Compile Include="Builders\Rules\A12_Rules\A12E01MatchRule.cs" />
     <Compile Include="Builders\Rules\A12_Rules\A12E02MatchRule.cs" />
     <Compile Include="Builders\Rules\A12_Rules\A12MatchRule.cs" />
+    <Compile Include="Builders\Rules\A20_Rules\A20E95MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E96MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E00MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\A20E01MatchRule.cs" />
@@ -80,6 +81,8 @@
     <Compile Include="Builders\Rules\A24_Rules\A24E01MatchRule.cs" />
     <Compile Include="Builders\Rules\A24_Rules\A24E02MatchRule.cs" />
     <Compile Include="Builders\Rules\A20_Rules\P_XA_ResponseRule.cs" />
+    <Compile Include="Builders\Rules\E_Rules\E95MatchRule.cs" />
+    <Compile Include="Builders\Rules\E_Rules\E98MatchRule.cs" />
     <Compile Include="Builders\Rules\E_Rules\E99MatchRule.cs" />
     <Compile Include="Builders\Rules\E_Rules\E97MatchRule.cs" />
     <Compile Include="Builders\Rules\E_Rules\E00MatchRule.cs" />
