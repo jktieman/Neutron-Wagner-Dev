@@ -57,7 +57,9 @@ namespace Neutron.Models
             {
                 var loc1 = location.Loc1;
                 var loc2 = location.Loc2;
-                var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+                var loc3 = location.Loc3;
+                var loc4 = location.Loc4;
+                var response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4));
                 if (response.Result != DeviceResponse.Success)
                 {
                     MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Response Move Next"
@@ -68,7 +70,9 @@ namespace Neutron.Models
             {
                 var loc1 = location.Loc1;
                 var loc2 = location.Loc2;
-                var response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2));
+                var loc3 = location.Loc3;
+                var loc4 = location.Loc4;
+                var response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4));
                 if (response.Result != DeviceResponse.Success)
                 {
                     MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: "Device Response Move Next"
@@ -89,7 +93,9 @@ namespace Neutron.Models
                         {
                             int loc1 = kvp.Value.Loc1;
                             int loc2 = kvp.Value.Loc2;
-                            Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2));
+                            var loc3 = kvp.Value.Loc3;
+                            var loc4 = kvp.Value.Loc4;
+                            Task<DeviceResponse> response = Task.Run(() => GlobalVar.Shuttle.PositionDevice(loc1, loc2, loc3, loc4));
                             if (response.Result != DeviceResponse.Success)
                             {
                                 MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: @"Device Response Reset"
@@ -100,7 +106,9 @@ namespace Neutron.Models
                         {
                             int loc1 = kvp.Value.Loc1;
                             int loc2 = kvp.Value.Loc2;
-                            Task<DeviceResponse> response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2));
+                            var loc3 = kvp.Value.Loc3;
+                            var loc4 = kvp.Value.Loc4;
+                            Task<DeviceResponse> response = Task.Run(() => GlobalVar.Hanel.PositionDevice(loc1, loc2, loc3, loc4));
                             if (response.Result != DeviceResponse.Success)
                             {
                                 MessageBox.Show(response.Result.AsString(EnumFormat.Description), caption: @"Device Response Reset"
