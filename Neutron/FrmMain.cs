@@ -22,7 +22,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using NeutronEvents;
 using NeutronLoader;
-using SlotNameFactory;  
+using SlotNameFactory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,6 +75,7 @@ namespace Neutron
         private readonly IDynamicLogger _logger;
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
+        private readonly Mediator _mediator;
 
         //  private TcpIptiCommandCenter _tcpIptiCommandCenter;
         private CompressService _compressService;
@@ -120,6 +121,7 @@ namespace Neutron
         /// <param name="inventoryUnitOfWork"></param>
         /// <param name="contextFactory"></param>
         /// <param name="dialogService"></param>
+        /// <param name="mediator"></param>
         public FrmMain(IJsonData jsonData, IAkaRepository akaRepository
             , ISecurityProcessor securityProcessor, ILacProcessor lacProcessor
             , IImageManager imageManager, IWorkstationRepository workstationRepository
@@ -131,7 +133,7 @@ namespace Neutron
             , ILocationsRepository locationsRepository
             , IInventoryRepository inventoryRepository
             , IInventoryUnitOfWork inventoryUnitOfWork, Func<NeutronDb> contextFactory
-            , IDialogService dialogService)
+            , IDialogService dialogService, Mediator mediator)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _dialogService = dialogService;
@@ -152,7 +154,7 @@ namespace Neutron
             _locationsRepository = locationsRepository ?? throw new ArgumentNullException(nameof(locationsRepository));
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _inventoryUnitOfWork = inventoryUnitOfWork ?? throw new ArgumentNullException(nameof(inventoryUnitOfWork));
-
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -176,10 +178,20 @@ namespace Neutron
 
             Mediator.GetInstance().LoaderError += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().GeneralError += (s, e) => LogGeneralError(e.Message);
-            Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
+            //Mediator.GetInstance().DisplayMessage += (s, e) => DisplayMessage(e.Message);
             Mediator.GetInstance().SendEmailMessage += (s, e) => EmailLoaderError(e.Message);
             Mediator.GetInstance().IsClientConnected += FrmMain_IsClientConnected;
-
+            Mediator.GetInstance().DisplayMessage += (s, e) =>
+            {
+                if (this.InvokeRequired)
+                {
+                    this.BeginInvoke((Action)(() => DisplayMessage(e.Message)));
+                }
+                else
+                {
+                    DisplayMessage(e.Message);
+                }
+            };
             _ = ShowLoadingMessageAsync();
 
         }
@@ -190,7 +202,7 @@ namespace Neutron
             {
                 //Log on to Neutron
                 await LogOn().ConfigureAwait(false);
-                
+
                 var result = await Init();
 
                 _logger.LogDetailAsync($"After Task.Run INIT result: {result}")
@@ -284,7 +296,7 @@ namespace Neutron
         private void DisplayMessage(string message)
         {
             //_logger.LogDetailAsync($"Display Message: {message}").SafeFireAndForget();
-            MessageBox.Show($"{message}", "Information",MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            MessageBox.Show($"{message}", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
             if (_sendEmail != null && _neutronVariables.EnableEmailNotification)
             {
@@ -993,7 +1005,7 @@ namespace Neutron
                     MtLogOff.Text = _resourceManager.GetString($"LogOn");
                 }));
             }
-            
+
             MtLogOff.Text = _resourceManager.GetString($"LogOn");
             mlUserInfo.Text = string.Empty;
 
@@ -1373,59 +1385,209 @@ namespace Neutron
         //    }
         //}
 
-        private void MtPick_Click(object sender, EventArgs e)
+        private async void MtPick_Click(object sender, EventArgs e)
         {
             if (!HasSecurityAccess())
             {
                 return;
             }
             Hide();
-            if (!WaitForWorkstationData())
+            try
             {
-                MessageBox.Show($"Unable to load workstation data.");
-                return;
+                if (!await WaitForWorkstationData())
+                {
+                    MessageBox.Show($"Unable to load workstation data.");
+                    return;
+                }
+                await ShowPickForm();
             }
-            ShowPickForm();
-            Show();
+            finally
+            {
+                Show();
+            }
+
         }
         private bool HasSecurityAccess()
         {
             return _securityProcessor.SecurityProfile[(int)NeutronSecurity.PickItemsandOrders];
         }
-        private bool WaitForWorkstationData()
+        private async Task<bool> WaitForWorkstationData()
         {
             var counter = 0;
-            while (_workstationView == null && counter <= 20)
+            while (_workstationView == null)
             {
-                Thread.Sleep(100);
+                await Task.Delay(100);
                 counter++;
+                if (counter > 20)
+                {
+                    return false;
+                }
             }
-            return _workstationView != null;
+            return true;
         }
-        private void ShowPickForm()
+        //-------------------------------------------------
+        private async Task ShowPickForm()
+        {
+            ValidateDependencies();
+            var areas = new[] { 1, 2, 3, 4 };
+            if (!areas.Contains(_workstationView.AreaId))
+            {
+                await ShowPickFormWithoutIpti();
+            }
+            else
+            {
+                await ShowPickFormWithIpti();
+            }
+        }
+        private void ValidateDependencies()
+        {
+            var areas = new[] { 1, 2, 3, 4 };
+            if (_neutronVariables == null || _neutronLicense == null || _workstationView == null || _historyManager == null)
+            {
+                var errorMessage = "Required dependencies are not initialized to open Pick Form.";
+                _mediator.OnDisplayMessage(this, errorMessage);
+                _logger.LogDetailAsync(errorMessage).Wait();
+                throw new InvalidOperationException(errorMessage);
+            }
+            if (_iptiDisplayFunctions == null && areas.Contains(_workstationView.AreaId) && _neutronVariables.IptiDisplays)
+            {
+                var errorMessage = "Required IPTI dependency is not initialized to open Pick Form.";
+                _mediator.OnDisplayMessage(this, errorMessage);
+                _logger.LogDetailAsync(errorMessage).Wait();
+                throw new InvalidOperationException(errorMessage);
+            }
+        }
+        private async Task ShowPickFormWithoutIpti()
         {
             try
             {
-                using (var frm = DI.Create<FrmPick>(
-                                      _neutronVariables,
-                                      _neutronLicense,
-                                      _workstationView,
-                                      _historyManager,
-                                      _iptiDisplayFunctions))
-                {
-                    frm.ShowDialog();
-                    if (_neutronVariables.AutoLogOff)
-                    {
-                        SetMtLogOffText();
-                    }
-                }
+                var pickForm = DI.Create<FrmPick>(
+                    _neutronVariables,
+                    _neutronLicense,
+                    _workstationView,
+                    _historyManager,
+                    null);
+                pickForm.ShowDialog();
+                HandleAutoLogOff();
             }
             catch (Exception ex)
             {
-                Mediator.GetInstance().OnDisplayMessage(this, $"Error loading Pick Form. {ex.Message}");
+                await HandlePickFormException(ex, "Error loading Pick Form.");
             }
-
         }
+        private async Task ShowPickFormWithIpti()
+        {
+            try
+            {
+                var pickForm = DI.Create<FrmPick>(
+                    _neutronVariables,
+                    _neutronLicense,
+                    _workstationView,
+                    _historyManager,
+                    _iptiDisplayFunctions);
+                pickForm.ShowDialog();
+                HandleAutoLogOff();
+            }
+            catch (Exception ex)
+            {
+                await HandlePickFormException(ex, "Error loading Pick Form.");
+            }
+        }
+        private void HandleAutoLogOff()
+        {
+            if (_neutronVariables.AutoLogOff)
+            {
+                // Logic for handling auto-logoff
+            }
+        }
+        private async Task HandlePickFormException(Exception ex, string userMessage)
+        {
+            var errorMessage = $"{userMessage} {ex.Message}";
+            _mediator.OnDisplayMessage(this, errorMessage);
+            await _logger.LogDetailAsync($"Exception: {ex}");
+            throw new InvalidOperationException("An error occurred while showing the Pick Form.", ex);
+        }
+
+
+
+
+
+        //-------------------------------------------------
+
+        //private async Task ShowPickForm()
+        //{
+        //    var areas = new[] { 1, 2, 3, 4 };
+        //    if (_neutronVariables == null || _neutronLicense == null || _workstationView == null ||
+        //        _historyManager == null)
+        //    {
+        //        var errorMessage = "Required dependencies are not initialized to open Pick Form.";
+        //        _mediator.OnDisplayMessage(this, errorMessage);
+        //        await _logger.LogDetailAsync(errorMessage);
+        //        throw new InvalidOperationException(errorMessage);
+        //    }
+
+        //    try
+        //    {
+        //        if (!areas.Contains(_workstationView.AreaId))
+        //        {
+        //            var pickForm = DI.Create<FrmPick>(
+        //                _neutronVariables,
+        //                _neutronLicense,
+        //                _workstationView,
+        //                _historyManager);
+        //            pickForm.ShowDialog();
+        //            // If auto-logoff is enabled, set the logoff text
+        //            if (_neutronVariables.AutoLogOff)
+        //            {
+        //                SetMtLogOffText();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errorMessage = $"Error loading Pick Form. {ex.Message}";
+        //        Mediator.GetInstance().OnDisplayMessage(this, errorMessage);
+        //        await _logger.LogDetailAsync($"Exception: {ex}");
+        //        throw new InvalidOperationException("An error occurred while showing the Pick Form.", ex);
+        //    }
+
+
+        //    if (areas.Contains(_workstationView.AreaId))
+        //    {
+        //        if (_iptiDisplayFunctions == null)
+        //        {
+        //            var errorMessage = "Required IPTI dependency is not initialized to open Pick Form.";
+        //            _mediator.OnDisplayMessage(this, errorMessage);
+        //            await _logger.LogDetailAsync(errorMessage);
+        //            throw new InvalidOperationException(errorMessage);
+        //        }
+        //    }
+        //    try
+        //    {
+        //        if (areas.Contains(_workstationView.AreaId))
+        //        {
+        //            var pickForm = DI.Create<FrmPick>(
+        //                _neutronVariables,
+        //                _neutronLicense,
+        //                _workstationView,
+        //                _historyManager,
+        //                _iptiDisplayFunctions);
+        //            pickForm.ShowDialog();
+        //            // If auto-logoff is enabled, set the logoff text
+        //            if (_neutronVariables.AutoLogOff)
+        //            {
+        //                SetMtLogOffText();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errorMessage = $"Error loading Pick Form. {ex.Message}";
+        //        Mediator.GetInstance().OnDisplayMessage(this, errorMessage);
+        //        await _logger.LogDetailAsync($"Exception: {ex}");
+        //        throw new InvalidOperationException("An error occurred while showing the Pick Form.", ex);
+        //    }
+        //}
 
         private void MtUtilities_Click(object sender, EventArgs e)
         {
@@ -1632,6 +1794,8 @@ namespace Neutron
             {
                 _iptiDisplayFunctions?.DisposeServer();
             }
+
+            _workstationView.ProLiteManager?.StopProcessingCommands();
 
             Close();
         }
