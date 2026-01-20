@@ -575,17 +575,7 @@ namespace Neutron.Forms
             if (_logger == null)
                 throw new InvalidOperationException("Logger is not initialized.");
             _logger.LogDetailAsync($"Lift:{inPositionInfo.Lift}  Tray: {inPositionInfo.Tray}").SafeFireAndForget();
-            void UpdateLabelText(Control label, string text)
-            {
-                if (label.InvokeRequired)
-                {
-                    label.Invoke(new Action(() => label.Text = text));
-                }
-                else
-                {
-                    label.Text = text;
-                }
-            }
+
             switch (inPositionInfo.Lift)
             {
                 case 1:
@@ -602,7 +592,22 @@ namespace Neutron.Forms
             }
         }
 
-
+        public void UpdateLabelText(Control label, string text)
+        {
+            if (label == null)
+                throw new ArgumentNullException(nameof(label), "Label cannot be null.");
+            if (label.InvokeRequired)
+            {
+                label.Invoke((MethodInvoker)delegate
+                {
+                    label.Text = text;
+                });
+            }
+            else
+            {
+                label.Text = text;
+            }
+        }
 
         //private void UpdateTrayInPosition(InPositionInfo inPositionInfo)
         //{
@@ -815,25 +820,37 @@ namespace Neutron.Forms
             {
                 if (Controls.Count > 0)
                 {
-                    var c = Controls.Find("Pos" + pos + "Display", true).First();
+                    var c = Controls.Find("Pos" + pos + "Display", true).FirstOrDefault();
                     if (c != null)
                     {
                         var panel = ((Panel)c);
-                        // how do I Invoke panel
-                        panel.Invoke((MethodInvoker)delegate
+
+                        if (panel.InvokeRequired)
                         {
-                            panel.BackColor = Color.Green;
-                            panel.Visible = true;
-                            panel.Refresh();
-                        });
+                            panel.Invoke((MethodInvoker)delegate
+                            {
+                                UpdatePanel(panel);
+                            });
+                        }
+                        else
+                        {
+                            UpdatePanel(panel);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Mediator.GetInstance().OnDisplayMessage(this, $"Control not Found {Environment.NewLine}{ex.Message}");
+                var errorMessage = $"Error in ShowOrderComplete: {ex.Message}{Environment.NewLine}{ex.StackTrace}";
+                Mediator.GetInstance().OnDisplayMessage(this, errorMessage);
             }
             bp.OrderComplete = true;
+        }
+        private void UpdatePanel(Panel panel)
+        {
+            panel.BackColor = Color.Green;
+            panel.Visible = true;
+            panel.Refresh();
         }
 
         /// <summary>
@@ -1247,24 +1264,44 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBRunLoader_Click(object sender, EventArgs e)
+        private async void MBRunLoader_Click(object sender, EventArgs e)
         {
-            RunLoaderOnce();
+            try
+            {
+                MBRunLoader.Enabled = false;
+                await RunLoaderOnceAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error: {ex.Message}").SafeFireAndForget();
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                MBRunLoader.Enabled = true;
+            }
         }
 
-        private void RunLoaderOnce()
+        private async Task RunLoaderOnceAsync()
         {
             if (GlobalVar.LoaderRunning)
             {
                 MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                return;
             }
-            else
+
+            GlobalVar.LoaderRunning = true;
+            try
             {
-                GlobalVar.LoaderRunning = true;
-                Mediator.GetInstance().OnRunLoaderOnce(this);
+                await Mediator.GetInstance().OnRunLoaderOnceAsync(this);
+            }
+            finally
+            {
                 GlobalVar.LoaderRunning = false;
             }
+
         }
 
         private void MBRunUploadOnce_Click(object sender, EventArgs e)
@@ -3420,7 +3457,7 @@ namespace Neutron.Forms
 
         private void Go()
         {
-            _spinner.Visible = true;
+            // _spinner.Visible = true;
             Console.WriteLine("Go Batch START");
             // start a stopwatch and time this function
             var stopwatch = new Stopwatch();
@@ -3440,7 +3477,7 @@ namespace Neutron.Forms
             if (GlobalVar.Hanel != null)
             {
                 _logger.LogDetailAsync($"[{DateTime.Now}]  GetTraysInWindow").SafeFireAndForget();
-                GlobalVar.Hanel.GetTraysInWindow();
+                // GlobalVar.Hanel.GetTraysInWindow();
             }
 
 
@@ -3517,7 +3554,8 @@ namespace Neutron.Forms
             stopwatch.Stop();
             Console.WriteLine($"Go Batch Elapsed time: {stopwatch.ElapsedMilliseconds} ms");
             // ---         Task.Run(() => _logger.LogDetailAsync($"Go Batch START Complete"));
-            _spinner.Visible = false;
+            //
+            //_spinner.Visible = false;
         }
 
         private TextBox GetTextBoxPosWithFocus()
@@ -8284,9 +8322,9 @@ namespace Neutron.Forms
                     }
 
 
-                        //sb.AppendLine($"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
-                        //              $"{Environment.NewLine}" +
-                        //              $"                      Item: {item} " );
+                    //sb.AppendLine($"Are you sure you want to DELETE the selected Inventory Item? {Environment.NewLine}" +
+                    //              $"{Environment.NewLine}" +
+                    //              $"                      Item: {item} " );
 
                     //foreach (var locationId in locationIds)
                     //{
