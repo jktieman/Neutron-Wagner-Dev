@@ -288,7 +288,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         //break;
@@ -347,7 +347,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         break;
@@ -405,7 +405,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         break;
@@ -462,7 +462,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         break;
@@ -520,7 +520,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         //break;
@@ -578,7 +578,7 @@ namespace Neutron.Forms
                 item.Checked = false;  // turn it off first 
                 foreach (var car in carriers)
                 {
-                    if (((Carrier)item.Tag).CarrierId == car.CarrierId)
+                    if (((Carrier)item.Tag).Id == car.Id)
                     {
                         item.Checked = true;
                         //break;
@@ -715,7 +715,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == item.CarrierId).FirstOrDefault();
+                    && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -734,9 +734,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
@@ -753,7 +753,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == item.CarrierId).FirstOrDefault();
+                    && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -771,9 +771,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
@@ -790,7 +790,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == item.CarrierId).FirstOrDefault();
+                    && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -808,9 +808,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
@@ -827,7 +827,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == item.CarrierId).FirstOrDefault();
+                    && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -845,9 +845,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
@@ -864,7 +864,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                                                                && g.CarrierId == item.CarrierId).FirstOrDefault();
+                                                                && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -882,9 +882,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                                                                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                                                                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
@@ -901,7 +901,7 @@ namespace Neutron.Forms
             foreach (var item in carriers)
             {
                 RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                                                                && g.CarrierId == item.CarrierId).FirstOrDefault();
+                                                                && g.CarrierId == item.Id).FirstOrDefault();
                 if (rc != null)
                 {
                     _context.RoleCarrier.Remove(rc);
@@ -919,9 +919,9 @@ namespace Neutron.Forms
                 if (item.Checked)
                 {
                     var carrier = item.Tag as Carrier;
-                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.CarrierId };
+                    var roleCarrier = new RoleCarrier { RoleId = role.RoleId, CarrierId = carrier.Id };
                     RoleCarrier rc = _context.RoleCarrier.Where(g => g.RoleId == role.RoleId
-                                                                    && g.CarrierId == carrier.CarrierId).FirstOrDefault();
+                                                                    && g.CarrierId == carrier.Id).FirstOrDefault();
                     if (rc == null)
                     {
                         _context.RoleCarrier.Add(roleCarrier);
