@@ -15,6 +15,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
     internal class HanelMp12DDeviceController : IHanelDeviceController
     {
         private IDynamicLogger _logger;
+        private int _logLevel = 2;
         private readonly bool _testing;
         private string _xErrorMsg = "";
         private readonly bool _Serial_Type = true;
@@ -48,7 +49,7 @@ namespace Hanel_DC.Hanel_DeviceControllers
             _serialPortMonitor?.Stop();
         }
 
-        public HanelMp12DSerialPortMonitor SerialPortMonitor => _serialPortMonitor;
+       // public HanelMp12DSerialPortMonitor SerialPortMonitor => _serialPortMonitor;
 
         public int Get_LastErrorCode()
         {
@@ -80,8 +81,8 @@ namespace Hanel_DC.Hanel_DeviceControllers
         }
 
 
-        public bool OpenChannel(int nCommPort, int nBaudRate
-            , int nDataBits, string cParity, int nStopBits, ref string cError
+        public async Task<bool> OpenChannel(int nCommPort, int nBaudRate
+            , int nDataBits, string cParity, int nStopBits, string cError
             , bool simulationMode, int logLevel, List<HanelDeviceStatus> currentHanelDeviceStatusList, string logPath = "")
         {
             var parity = GetParity(cParity);
@@ -97,8 +98,8 @@ namespace Hanel_DC.Hanel_DeviceControllers
             {
                 try
                 {
-                    _serialPortMonitor = new HanelMp12DSerialPortMonitor(comPort
-                        , nBaudRate, nDataBits, parity, stopBits, ref cError, ref currentHanelDeviceStatusList
+                    _serialPortMonitor = await HanelMp12DSerialPortMonitor.CreateAsync(comPort
+                        , nBaudRate, nDataBits, parity, stopBits, cError, currentHanelDeviceStatusList
                         , logLevel);
                 }
                 catch (Exception ex)
