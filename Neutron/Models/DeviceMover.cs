@@ -30,7 +30,7 @@ namespace Neutron.Models
                // _logger.LogDetailAsync($"MoveNext 4");
                 Position += 1;
                // _logger.LogDetailAsync($"MoveNext 5");
-            }
+             }
            // _logger.LogDetailAsync($"MoveNext 6");
             return result;
         }
