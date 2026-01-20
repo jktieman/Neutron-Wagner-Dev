@@ -1,5 +1,15 @@
-﻿using Neutron.Controllers;
+﻿using AlliedLogger;
+using Hanel_DC.Extensions;
+using HanelCommands;
+using HanelCommands.Builders;
+using JsonManager;
+using Neutron.Controllers;
+using Neutron.Global;
+using Neutron.Interfaces;
+using NeutronCore.Global;
+using NeutronCore.Models;
 using NeutronData.ModelViews;
+using NeutronEvents;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,16 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JsonManager;
-using Neutron.Global;
-using Neutron.Interfaces;
-using NeutronCore.Global;
-using AlliedLogger;
-using Hanel_DC.Extensions;
 using System.Windows.Markup;
-using HanelCommands;
-using HanelCommands.Builders;
-using NeutronCore.Models;
 using ByteExtensions = NeutronCore.Extensions.ByteExtensions;
 
 namespace Neutron.Forms
@@ -41,7 +42,7 @@ namespace Neutron.Forms
         public FrmMp12DTest(IJsonData jsonData, NeutronVariables neutronVariables, WorkstationView workstationView, IDialogService dialogService)
         {
             InitializeComponent();
-
+            Mediator.GetInstance().DisplayMessage += OnDisplayMessageReceived;
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _workstationView = workstationView;
@@ -95,6 +96,11 @@ namespace Neutron.Forms
             }
 
             return result;
+        }
+        private void OnDisplayMessageReceived(object sender, DisplayMessageEventArgs e)
+        {
+            // Assuming ListBoxInformation is a ListBox control
+            AddItemToListBox(e.Message);
         }
 
         private void ButtonInitController_Click(object sender, EventArgs e)
@@ -332,6 +338,7 @@ namespace Neutron.Forms
 
         private void ButtonGetCurrentTrays_Click(object sender, EventArgs e)
         {
+            
             _mp12D.GetTraysInWindow();
         }
 
