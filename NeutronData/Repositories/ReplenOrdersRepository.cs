@@ -8,8 +8,10 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using NeutronCore.Enums;
 using NeutronCore.Extensions;
 using NeutronData.Interfaces;
@@ -1251,9 +1253,37 @@ namespace NeutronData.Repositories
             return result;
         }
 
+        public async Task<List<AvailableReplenOrdersView>> GetAvailableReplenOrdersForInductionScreenAsync(int areaId, string searchField)
+        {
+            _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}").SafeFireAndForget();
+            var availableOrders = new List<AvailableReplenOrdersView>();
+
+            try
+            {
+                object[] parameters = [
+                    new SqlParameter("@AREAID", areaId),
+                    new SqlParameter("@SEARCHFIELD", searchField)
+                ];
+
+
+                using var context = new NeutronDb();
+                availableOrders = await context.Database
+                    .SqlQuery<AvailableReplenOrdersView>(
+                        "usp_GetAvailableReplenOrdersForInductionScreen @AREAID, @SEARCHFIELD",
+                        parameters)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error in GetAvailableReplenOrdersForInductionScreen: {ex.Message} {ex.InnerException}").SafeFireAndForget();
+            }
+
+            return availableOrders;
+        }
+
         public List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField)
         {
-            _ = _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}");
+            _logger.LogDetailAsync($"GetAvailableReplenOrdersForInductionScreen  AREAID: {areaId}  SEARCH: {searchField}").SafeFireAndForget();
             var recs = new List<AvailableReplenOrdersView>();
 
             try
