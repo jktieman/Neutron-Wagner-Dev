@@ -22,29 +22,34 @@ public class PrintJobRepository : IPrintJobRepository
     public PrintJobRepository(Func<NeutronDb> contextFactory, IMemoryCache memoryCache, IOptions<MemoryCacheOptions> cacheOptions)
     {
         _contextFactory = contextFactory;
-        _memoryCache = memoryCache;
+        _memoryCache = new MemoryCache(cacheOptions.Value);
         _cacheOptions = cacheOptions.Value;
         PreloadCache();
     }
 
     public void PreloadCache()
     {
-
-        using (var context = _contextFactory())
+        try
         {
-            var printJobs = context.PrintJobs.ToList();
+            using (var context = _contextFactory())
+            {
+                var printJobs = context.PrintJobs.ToList();
 
-            // Cache entry options
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60),
-                SlidingExpiration = TimeSpan.FromMinutes(10)
-            };
-            foreach (var printJob in printJobs)
-            {
-                _memoryCache.Set(printJob.Id, printJob, cacheEntryOptions);
+                // Cache entry options
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60),
+                    SlidingExpiration = TimeSpan.FromMinutes(10)
+                };
+
+                // Cache the entire list of PrintJobs
+                _memoryCache.Set("PrintJobs", printJobs, cacheEntryOptions);
             }
-
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (use a logging framework like Serilog, NLog, etc.)
+            Console.WriteLine($@"Error in PreloadCache: {ex.Message}");
         }
     }
 
