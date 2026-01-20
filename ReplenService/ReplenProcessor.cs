@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using AlliedLogger;
+using AsyncAwaitBestPractices;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
 using NeutronData.Interfaces;
@@ -73,7 +76,8 @@ namespace ReplenService
 
                 // Get all replenishments
                 var replenishments = await _replenRepository.GetReplenishments();
-                result = replenishments.Select(ProcessReplenishment).Where(rec => rec != null).ToList();
+                
+                result = (await Task.WhenAll(replenishments.Select(ProcessReplenishment))).Where(rec => rec != null).ToList();
 
             }
             catch (Exception ex)
@@ -96,7 +100,7 @@ namespace ReplenService
         /// If the existing replenishment pick is complete, the method checks for an open replenishment store order.
         /// If there is no existing replenishment pick, the method checks for a store order that has not been picked.
         /// </remarks>
-        public Replenishment ProcessReplenishment(Replenishment replenishment)
+        public async Task<Replenishment> ProcessReplenishment(Replenishment replenishment)
         {
             ReplenOrder replenStoreOrder;
             // Quantity must be greater than zero to be considered for replenishment
@@ -104,6 +108,8 @@ namespace ReplenService
             //if (replenishment.QuantityNeeded < 0) return null;
             // now we have a valid replenishment
             // is it already in the replenishment orders
+
+            
             var existingReplenishmentPick = GetExistingReplenishmentPick(replenishment.Item);
             // if there is an existing pick and it is not complete
             // either delete, adjust quantity or leave it alone
@@ -114,9 +120,10 @@ namespace ReplenService
                     // Replenishment already exists
                     // If the quantityNeeded is zero or a negative number
                     // Remove the order
-                    if (replenishment.QuantityNeeded <= 0)
+                    if (replenishment.QuantityNeeded <= 0) //|| replenishment.QuantityInEight == 0
                     {
-                        RemoveExistingReplenishmentPick(existingReplenishmentPick);
+                       await RemoveExistingReplenishmentPick(existingReplenishmentPick);
+                       _logger.LogDetailAsync($@"Removing replen order for: {existingReplenishmentPick.Ord1}").SafeFireAndForget();
                     }
                     else
                     {
@@ -178,7 +185,7 @@ namespace ReplenService
 
         }
 
-        private void RemoveExistingReplenishmentPick(Order existingReplenishment)
+        private async Task RemoveExistingReplenishmentPick(Order existingReplenishment)
         {
             try
             {
@@ -187,13 +194,12 @@ namespace ReplenService
                 var orderDetail = _repoOrderDetail.FindBy(o => o.OrderId == existingReplenishment.Id).FirstOrDefault();
                 if (orderDetail != null)
                 {
-                    // _repoOrderDetail.Delete(orderDetail.Id);
+                   await _replenRepository.DeleteReplenishment(orderDetail);
                 }
-                // _repoOrder.Delete(existingReplenishment.Id);
             }
             catch (Exception ex)
             {
-               _logger.LogDetail($"Error {ex.Message}");
+               await _logger.LogDetailAsync($"Error {ex.Message}");
                 throw;
             }
         }
