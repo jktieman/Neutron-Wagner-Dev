@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using AlliedLogger;
+﻿using AlliedLogger;
 using AsyncAwaitBestPractices;
 using JsonManager;
 using NeutronCore.Global;
@@ -10,6 +8,9 @@ using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 using NeutronEvents;
 using SAPServer;
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NeutronLoader
 {
@@ -43,7 +44,7 @@ namespace NeutronLoader
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += async (s, e) => await StartStopLoaderAction(e.StartStop);
-            Mediator.GetInstance().RunLoaderOnce += async (s, e) => await RunLoaderOnce();
+           // Mediator.GetInstance().RunLoaderOnce += async (s, e) => await RunLoaderOnce();
 
         }
 
@@ -81,6 +82,7 @@ namespace NeutronLoader
                     {
                         _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
                         _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _ordersRepository, _contextFactory);
+                        Mediator.GetInstance().RunLoaderOnceAsync += async (s, e) => await _interfaceProcessor.RunLoaderOnce();
                         break;
                     }
                 default:
