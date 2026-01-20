@@ -30,7 +30,7 @@ namespace HanelCommands.Builders.Rules.A21_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "XA A20 E02 Lift is Full";
+                            device.StatusMessage = $"Status Message -XA A20 E02 Lift is Full  Lift: {lift}";
                         }
                     }
                 }

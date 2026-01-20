@@ -30,7 +30,7 @@ namespace HanelCommands.Builders.Rules.A21_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "XA A21 E00 Command was Executed";
+                            device.StatusMessage = $"Status Message -XA A21 E00 Command was Executed  Lift: {lift}";
                         }
                     }
                 }

@@ -41,7 +41,7 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                                     Lift = lift.ParseInt(),
                                     Tray = device.TargetTray
                                 });
-                            device.StatusMessage = "XA A20 E00 Command was Executed";
+                            device.StatusMessage = $"Status Message -XA A20 E00 Command was Executed  Lift: {lift}";
                             device.CommandSent = false;
                             device.CommandAccepted = false;
                             device.CommandExecuted = false;

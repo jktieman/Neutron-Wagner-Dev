@@ -30,7 +30,7 @@ namespace HanelCommands.Builders.Rules.A20_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "XA A20 E01 No Shelf in Access Point";
+                            device.StatusMessage = $"Status Message -XA A20 E01 No Shelf in Access Point  Lift: {lift}";
                             device.CommandSent = false;
                             device.CommandAccepted = false;
                             device.CommandExecuted = true;

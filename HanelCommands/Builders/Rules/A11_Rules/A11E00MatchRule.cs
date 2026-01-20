@@ -32,7 +32,7 @@ namespace HanelCommands.Builders.Rules.A11_Rules
                             device.CommandSent = false;
                             device.CommandAccepted = false;
                             device.CurrentTray = device.TargetTray;
-                            device.StatusMessage = "XA A11 E00 Command was Executed";
+                            device.StatusMessage = $"Status Message -XA A11 E00 Command was Executed  Lift: {lift}";
                         }
                     }
                 }

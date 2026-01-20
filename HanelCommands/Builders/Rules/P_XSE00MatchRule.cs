@@ -33,7 +33,7 @@ namespace HanelCommands.Builders.Rules
                         {
                             device.CommandAccepted = true;
                             device.InMotion = true;
-                            device.StatusMessage = "Command Accepted";
+                            device.StatusMessage = $"Status Message -Command Accepted  Lift: {lift}";
                         }
                     }
                 }

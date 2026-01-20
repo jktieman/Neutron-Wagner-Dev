@@ -30,7 +30,7 @@ namespace HanelCommands.Builders.Rules.A12_Rules
                         if (device != null)
                         {
                             device.CurrentTray = 0;
-                            device.StatusMessage = "XA A12 E03 Unknown Shelf in Access Point";
+                            device.StatusMessage = $"Status Message -XA A12 E03 Unknown Shelf in Access Point  Lift: {lift}";
                             device.CommandSent = false;
                             device.CommandAccepted = false;
                             device.CommandExecuted = true;

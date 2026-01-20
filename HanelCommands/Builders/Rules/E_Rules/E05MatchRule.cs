@@ -31,7 +31,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "E05 Command is NOT possible";
+                            device.StatusMessage = $"Status Message -E05 Command is NOT possible  Lift: {lift}";
                         }
                     }
                 }

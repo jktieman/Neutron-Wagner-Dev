@@ -33,8 +33,8 @@ namespace HanelCommands.Builders.Rules
                         var device = hanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
                         if (device != null)
                         {
-                            device.CommandAccepted = false;
-                            device.CommandExecuted = false;
+                            //device.CommandAccepted = false;
+                            //device.CommandExecuted = false;
                             device.SwitchedOn = true;
                             device.StatusMessage = CreateStatusMessage(lift, commandSegments);
                             Mediator.GetInstance().OnDisplayMessage(this, device.StatusMessage);

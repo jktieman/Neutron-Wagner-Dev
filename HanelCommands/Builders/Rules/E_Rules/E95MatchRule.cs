@@ -30,7 +30,6 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = " E95 Contents of Data Field is not permitted.";
                             device.StatusMessage = CreateStatusMessage(lift, commandSegments);
                             Mediator.GetInstance().OnDisplayMessage(this, device.StatusMessage);
                         }
@@ -49,7 +48,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                 sb.AppendLine($"TOWER {lift}");
                 sb.AppendLine();
                 sb.AppendLine("Lift run was interrupted due to contents of the data field are not permitted.");
-                sb.AppendLine();
+                sb.AppendLine(" E95 Contents of Data Field is not permitted.");
                 sb.AppendLine("Press the Down Arrow/Get Tray to retrieve tray manually.");
 
                 sb.AppendLine(message);

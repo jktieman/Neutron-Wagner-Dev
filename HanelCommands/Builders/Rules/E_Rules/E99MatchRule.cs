@@ -31,7 +31,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = " E99 Input was Canceled";
+                            device.StatusMessage = $"Status Message -E99 Input was Canceled  Lift: {lift}";
                         }
                     }
                 }

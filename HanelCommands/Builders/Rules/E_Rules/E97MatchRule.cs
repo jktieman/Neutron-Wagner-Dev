@@ -31,7 +31,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = " E97 Data Field is Missing";
+                            device.StatusMessage = $"Status Message -E97 Data Field is Missing  Lift: {lift}";
                         }
                     }
                 }

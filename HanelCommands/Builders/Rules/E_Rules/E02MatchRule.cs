@@ -31,7 +31,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "E02 Command is NOT accepted";
+                            device.StatusMessage = $"Status Message -E02 Command is NOT accepted  Lift: {lift}";
                         }
                     }
                 }

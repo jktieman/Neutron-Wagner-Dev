@@ -37,7 +37,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                             //device.InMotion = true;
                             device.CommandAccepted = true;
                             //device.CurrentTray = 0;
-                            device.StatusMessage = $"E00 Command Accepted  Input: {input}";
+                            device.StatusMessage = $"Status Message -E00 Command Accepted  Lift: {lift}";
                         }
                     }
                 }

@@ -32,7 +32,7 @@ namespace HanelCommands.Builders.Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = "Command is NOT accepted";
+                            device.StatusMessage = $"Status Message -Command is NOT accepted  Lift: {lift}";
                         }
                     } 
                 }

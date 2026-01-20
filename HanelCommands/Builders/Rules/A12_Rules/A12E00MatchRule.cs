@@ -49,7 +49,7 @@ namespace HanelCommands.Builders.Rules.A12_Rules
                                         Lift = lift.ParseInt(),
                                         Tray = tray
                                     });
-                                device.StatusMessage = $"XA A12 E00 Command was Executed, Tray: {tray}";
+                                device.StatusMessage = $"Status Message -XA A12 E00 Command was Executed, Lift: {lift}";
                                 device.CommandSent = false;
                                 device.CommandAccepted = false;
                                 device.CommandExecuted = false;

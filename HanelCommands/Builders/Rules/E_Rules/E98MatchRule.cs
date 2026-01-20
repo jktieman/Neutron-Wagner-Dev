@@ -30,7 +30,6 @@ namespace HanelCommands.Builders.Rules.E_Rules
                         if (device != null)
                         {
                             device.CommandAccepted = false;
-                            device.StatusMessage = " E98 Command is not possible.";
                             device.StatusMessage = CreateStatusMessage(lift, commandSegments);
                             Mediator.GetInstance().OnDisplayMessage(this, device.StatusMessage);
                         }
@@ -47,7 +46,7 @@ namespace HanelCommands.Builders.Rules.E_Rules
                 var message = segments.FirstOrDefault(r => r.StartsWith("S"));
                 if (message == null) return string.Empty;
                 sb.AppendLine($"TOWER {lift}");
-                sb.AppendLine();
+                sb.AppendLine(" E98 Command is not possible.");
                 sb.AppendLine("Lift run error: Command is not possible.");
                 sb.AppendLine(message);
                 var x = segments.Where(s => s.StartsWith("X")).ToList();
