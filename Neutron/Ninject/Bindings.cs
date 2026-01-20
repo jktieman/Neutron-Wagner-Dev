@@ -1,32 +1,33 @@
-﻿using System.Data.Entity;
-using AlliedLogger;
+﻿using AlliedLogger;
 using IPTI.Models;
-using Ninject.Modules;
 using JsonManager;
-using Neutron.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Neutron.Classes;
 using Neutron.Forms;
 using Neutron.Global;
+using Neutron.Interfaces;
 using Neutron.Models;
+using NeutronCore.Models;
 using NeutronData.DataContexts;
 using NeutronData.General;
 using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronData.UnitOfWorks;
+using NeutronEvents;
 using NeutronLoader;
 using NeutronMaintenance;
-using SqlSchemaManager;
-using ProliteController;
-using IDisplayController = IPTI.Models.IDisplayController;
-using System.Data.Common;
-using System.Data.SqlClient;
 using Ninject;
+using Ninject.Modules;
+using ProliteController;
+using SqlSchemaManager;
 using System;
-using Microsoft.Extensions.Caching.Memory;
+using System.Data.Common;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using static System.Windows.Forms.Design.AxImporter;
-using Microsoft.Extensions.Options;
-using NeutronCore.Models;
+using IDisplayController = IPTI.Models.IDisplayController;
 
 
 namespace Neutron.Ninject
@@ -58,6 +59,7 @@ namespace Neutron.Ninject
             Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
             // Bind<FrmMain>().To<FrmMain>().InSingletonScope();
+            Bind<Mediator>().ToSelf().InSingletonScope();
             Bind<FrmMain>().ToSelf();
            Bind<FrmSystem>().To<FrmSystem>()
                 
