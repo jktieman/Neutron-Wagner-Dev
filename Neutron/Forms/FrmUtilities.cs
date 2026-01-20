@@ -852,6 +852,7 @@ namespace Neutron.Forms
                 _neutronVariables.DisplaysEnabled = CheckBoxDisplaysEnabled.Checked;
                 _neutronVariables.EnableDocumentPrinter = CheckBoxEnableDocumentPrinter.Checked;
                 _neutronVariables.EnableLabelPrinter = CheckBoxEnableLabelPrinter.Checked;
+                _neutronVariables.EnableStoreLabelPrinter = CheckBoxEnableStoreLabelPrinter.Checked;
                 _neutronVariables.PinLoginOnly = CheckBoxPinLoginOnly.Checked;
                 _neutronVariables.PickBatchSize = ComboBoxPickBatchSize.SelectedItem.ToString().ParseInt();
                 _neutronVariables.StoreBatchSize = ComboBoxStoreBatchSize.SelectedItem.ToString().ParseInt();
@@ -939,6 +940,7 @@ namespace Neutron.Forms
             CheckBoxDisplaysEnabled.Checked = _neutronVariables.DisplaysEnabled;
             CheckBoxEnableDocumentPrinter.Checked = _neutronVariables.EnableDocumentPrinter;
             CheckBoxEnableLabelPrinter.Checked = _neutronVariables.EnableLabelPrinter;
+            CheckBoxEnableStoreLabelPrinter.Checked = _neutronVariables.EnableStoreLabelPrinter;
             CheckBoxPinLoginOnly.Checked = _neutronVariables.PinLoginOnly;
             ComboBoxPickBatchSize.SelectedIndex =
                 ComboBoxPickBatchSize.FindStringExact(_neutronVariables.PickBatchSize.ToString());
