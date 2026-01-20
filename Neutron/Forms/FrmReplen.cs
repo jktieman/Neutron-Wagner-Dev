@@ -1989,7 +1989,7 @@ namespace Neutron.Forms
             DataGridViewAvailableOrders.ClearSelection();
         }
 
-        private void ShowAvailableOrders(int recId = 0, string searchField = "")
+        private async Task ShowAvailableOrders(int recId = 0, string searchField = "")
         {
             if (_logLevel == 8) _logger.LogDetailAsync("ShowAvailableOrders START").SafeFireAndForget();
 
@@ -2000,7 +2000,10 @@ namespace Neutron.Forms
 
             try
             {
-                var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_workstationView.AreaId, searchField);
+                //var views = _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreen(_workstationView.AreaId, searchField);
+                var views = await _replenOrdersRepository.GetAvailableReplenOrdersForInductionScreenAsync(_workstationView.AreaId, searchField);
+                
+                
                 _bindingListViewAvailableOrdersViews = new BindingListView<AvailableReplenOrdersView>(views.ToList());
                 _bindingSourceAvailableOrders.DataSource = _bindingListViewAvailableOrdersViews;
             }
@@ -3172,8 +3175,8 @@ namespace Neutron.Forms
 
                             var additionInventoryLocations = GetNewInventoryLocations(itemDefinition, neededLocations);
                             exactInventorySequence.AddRange(additionInventoryLocations);
-                        }
-                    }
+                                   }
+                    }    
 
 
                     if (exactInventorySequence.Count > 0)
@@ -3301,6 +3304,7 @@ namespace Neutron.Forms
 
         private List<Inventory> GetDefaultInventory(int itemDefinitionId, int areaId)
         {
+            _logger.LogDetailAsync($"Get Default Inventory. Item Definition: {itemDefinitionId}  AreaId: {areaId}").SafeFireAndForget();
             var inventoryList = new List<Inventory>();
             var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionId);
             if (itemDefinition == null) return inventoryList;
@@ -4899,7 +4903,7 @@ namespace Neutron.Forms
                     .ThenBy(p => p.CurrentInventoryLocation.Location.Loc3)
                     .ThenBy(p => p.CurrentInventoryLocation.Location.Loc4)
                     .ToList();
-                newCarList.Add(carList);
+                 newCarList.Add(carList);
             }
             var seq = 1;
             var totalPickStops = pickStops.Count;
@@ -5407,7 +5411,7 @@ namespace Neutron.Forms
             _workstationView.ProLiteManager?.ClearAllProlites();
 
 
-            foreach (var pickView in _currentPickStop.PickViews)
+            foreach (var pickView in  _currentPickStop.PickViews)
             {
                 var pos = pickView.PickPosition;
 
@@ -5731,7 +5735,7 @@ namespace Neutron.Forms
                         StorageTypeId = (int)NeutronCore.Enums.StorageType.Release,
                         RFID = string.Empty
                     };
-
+                    _logger.LogDetailAsync($"Insert Inventory Record. AreaId:{newInventoryRecord.AreaId} Item: {newInventoryRecord.ItemDefinitionId} LocationId: {newInventoryRecord.LocationId}").SafeFireAndForget();
                     _repoInventory.Insert(newInventoryRecord);
 
                     var fullInventoryRecord = _repoInventory.FindBy(r => r.ItemDefinitionId == newInventoryRecord.ItemDefinitionId
@@ -5846,7 +5850,7 @@ namespace Neutron.Forms
 
                 UpdatePickScreenLabelsAndPickedSoFar();
                 // UpdateCurrentDeviceIndicator();
-                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
                 UpdatePickPosition();
                 UpdateGroupBoxLocation(_currentPickStop.CurrentInventoryLocation);
                 // UpdateTowerDisplay();
@@ -6311,6 +6315,8 @@ namespace Neutron.Forms
                                     StorageTypeId = 2,  //   pickLocation.Inventory.StorageTypeId,
                                     RFID = string.Empty
                                 };
+                                _logger.LogDetailAsync($"Insert Inventory Record. AreaId:{inv.AreaId} Item: {inv.ItemDefinitionId} LocationId: {inv.LocationId}").SafeFireAndForget();
+
                                 _repoInventory.Insert(inv);
                                 pickLocation.Inventory.Id = inv.Id;
                             }
@@ -6479,7 +6485,7 @@ namespace Neutron.Forms
         //private void PrintTote(int positionNumber, ReplenOrder order)
         //{
         //    _logger.LogDetailAsync($"Printing Tote Label. {order.Ord1}"));
-        //    if (_neutronVariables.EnableLabelPrinter)
+        //    if (_neutronVariables.EnableStoreLabelPrinter)
         //    {
         //        ToteToPrint.Print(positionNumber, order, _labelPrinter));
         //    }
@@ -6639,7 +6645,7 @@ namespace Neutron.Forms
             _logger.LogDetailAsync($"world PositionDevice : {loc1}-{loc2}-{loc3}-{loc4}").SafeFireAndForget();
             PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
             // UpdateCurrentDeviceIndicator();
-            // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
+            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(_currentPickStop.CurrentInventoryLocation.Location.Loc1);
         }
 
         private void MBPriority_Click(object sender, EventArgs e)
@@ -6943,41 +6949,133 @@ namespace Neutron.Forms
 
         private void MBMainAvailableOrders_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            _previousTab = null;
-            _ordersToPick = InitOrdersToPick(_neutronVariables.StoreBatchSize);
-            AvailableOrdersScreen();
-            Cursor.Current = Cursors.Default;
-        }
-
-        public void AvailableOrdersScreen()
-        {
             try
             {
-                _logger.LogDetailAsync("Available Orders Screen START").SafeFireAndForget();
-                ShowAvailableOrders();
-                Cursor.Current = Cursors.WaitCursor;
-                MBCompress.Visible = false;
-                LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
-                LabelFormTitle.BackColor = Color.Green;
-                // ClearBatchPositions(_currentBatchPositions);
-                // ClearOrderPositions();
-                tabControl1.TabPages["AvailableOrders"].BringToFront();
-                tabControl1.SelectedTab = AvailableOrders;
-                // NextButtonEnabled();
-                Cursor.Current = Cursors.Default;
-                _logger.LogDetailAsync("Available Orders Screen END").SafeFireAndForget();
-            }
-            catch (Exception ex)
-            {
-                // Handle or log the exception as needed
-                _logger.LogDetailAsync($"Exception in AvailableOrdersScreen: {ex.Message}").SafeFireAndForget();
+                SetCursorToWait();
+                ResetPreviousTab();
+                InitializeOrdersToPick();
+                AvailableOrdersScreen();
             }
             finally
             {
-                Cursor.Current = Cursors.Default;
+                ResetCursorToDefault();
             }
         }
+        private void SetCursorToWait()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+        }
+        private void ResetPreviousTab()
+        {
+            _previousTab = null;
+        }
+        private void InitializeOrdersToPick()
+        {
+            _ordersToPick = InitOrdersToPick(_neutronVariables.StoreBatchSize);
+        }
+
+        //private void MBMainAvailableOrders_Click(object sender, EventArgs e)
+        //{
+        //    Cursor.Current = Cursors.WaitCursor;
+        //    _previousTab = null;
+        //    _ordersToPick = InitOrdersToPick(_neutronVariables.StoreBatchSize);
+        //    AvailableOrdersScreen();
+        //    Cursor.Current = Cursors.Default;
+        //}
+
+        public async void AvailableOrdersScreen()
+        {
+            _logger.LogDetailAsync("Available Orders Screen START").SafeFireAndForget();
+            try
+            {
+                PrepareAvailableOrdersScreen();
+                await ShowAvailableOrders();
+            }
+            catch (Exception ex)
+            {
+                HandleAvailableOrdersScreenException(ex);
+            }
+            finally
+            {
+                ResetCursorToDefault();
+                _logger.LogDetailAsync("Available Orders Screen END").SafeFireAndForget();
+            }
+        }
+
+        private void PrepareAvailableOrdersScreen()
+        {
+            HideCompressButton();
+            UpdateAvailableOrdersTab();
+            UpdateFormTitleForAvailableJobs();
+        }
+        private void HideCompressButton()
+        {
+            MBCompress.Visible = false;
+        }
+        private void UpdateAvailableOrdersTab()
+        {
+            tabControl1.TabPages["AvailableOrders"].BringToFront();
+            tabControl1.SelectedTab = AvailableOrders;
+        }
+        private void UpdateFormTitleForAvailableJobs()
+        {
+            UpdateFormTitle("AvailableJobs", Color.Green);
+        }
+
+
+        //private void PrepareAvailableOrdersScreen()
+        //{
+        //   // Cursor.Current = Cursors.WaitCursor;
+        //    MBCompress.Visible = false;
+        //    UpdateFormTitle("AvailableJobs", Color.Green);
+        //    tabControl1.TabPages["AvailableOrders"].BringToFront();
+        //    tabControl1.SelectedTab = AvailableOrders;
+        //  //  Cursor.Current = Cursors.Default;
+        //}
+        private void UpdateFormTitle(string resourceKey, Color backgroundColor)
+        {
+            LabelFormTitle.Text = _resourceManager.GetString(resourceKey);
+            LabelFormTitle.BackColor = backgroundColor;
+        }
+        private void HandleAvailableOrdersScreenException(Exception ex)
+        {
+            _logger.LogDetailAsync($"Exception in AvailableOrdersScreen: {ex.Message}").SafeFireAndForget();
+        }
+        private void ResetCursorToDefault()
+        {
+            Cursor.Current = Cursors.Default;
+        }
+
+
+
+        //public void AvailableOrdersScreen()
+        //{
+        //    try
+        //    {
+        //        _logger.LogDetailAsync("Available Orders Screen START").SafeFireAndForget();
+        //        ShowAvailableOrders() ;
+        //        Cursor.Current = Cursors.WaitCursor;
+        //        MBCompress.Visible = false;
+        //        LabelFormTitle.Text = _resourceManager.GetString($"AvailableJobs");
+        //        LabelFormTitle.BackColor = Color.Green;
+        //        // ClearBatchPositions(_currentBatchPositions);
+        //        // ClearOrderPositions();
+        //        tabControl1.TabPages["AvailableOrders"].BringToFront();
+        //        tabControl1.SelectedTab = AvailableOrders;
+        //        // NextButtonEnabled();
+        //        Cursor.Current = Cursors.Default;
+        //        _logger.LogDetailAsync("Available Orders Screen END").SafeFireAndForget();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle or log the exception as needed
+        //        _logger.LogDetailAsync($"Exception in AvailableOrdersScreen: {ex.Message}").SafeFireAndForget();
+        //    }
+        //    finally
+        //    {
+        //        Cursor.Current = Cursors.Default;
+        //    }
+        //}
 
         private void ShowAvailableRackScreen()
         {
@@ -8229,8 +8327,9 @@ namespace Neutron.Forms
 
         private void PrintLabels(ReplenPickStop currentPickStop, int reqFunc = 1, int pos = 0)
         {
-            if (_logLevel == 8) _logger.LogDetailAsync("Print Labels").SafeFireAndForget();
-            if (_neutronVariables.EnableLabelPrinter == false) return;
+            if (_neutronVariables.EnableStoreLabelPrinter == false) return;
+            
+            if (_logLevel == 8) _logger.LogDetailAsync("Print Store Labels").SafeFireAndForget();
 
             foreach (var pickView in currentPickStop.PickViews)
             {
@@ -8315,7 +8414,7 @@ namespace Neutron.Forms
                 var quantity = pickView.QuantityToBePicked.ToString();
                 var desc = pickView.Description.Trim();
                 var division = orderDetail[1];
-                LogLabelDetails(pickView.Ord1, pickView.Ord2, pickView.PickPosition, upc, desc, item, quantity);
+                if (_logLevel == 8) LogLabelDetails(pickView.Ord1, pickView.Ord2, pickView.PickPosition, upc, desc, item, quantity);
                 PrintLabel(loftwarePrinterPreferences, upc, item, quantity, desc, division);
             }
             catch (Exception ex)
@@ -9823,7 +9922,7 @@ namespace Neutron.Forms
 
         private void CompleteSpecialPick()
         {
-            _logger.LogDetailAsync("Clear Active Device Indicator - Pick Accept").SafeFireAndForget();
+            _logger.LogDetailAsync("Clear Active Device Indicator - Complete Special Pick").SafeFireAndForget();
 
             _deviceIndicatorManager?.ClearAllDeviceIndicators();
 
@@ -10387,6 +10486,16 @@ namespace Neutron.Forms
             //    e.SuppressKeyPress = true;
             //    if (sender is TextBox textBox) HandleKeyboardInput(textBox);
             //}
+        }
+
+        private void MBMainReplenishments_Click(object sender, EventArgs e)
+        {
+            Hide();
+            using (Form frm = new FrmReplenishments())
+            {
+                frm.ShowDialog();
+                Show();
+            }
         }
     }
 }
