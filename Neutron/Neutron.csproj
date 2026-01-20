@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>694</ApplicationRevision>
+    <ApplicationRevision>705</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -265,6 +265,12 @@
     </Compile>
     <Compile Include="Forms\FrmQuantity.Designer.cs">
       <DependentUpon>FrmQuantity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmReplenishments.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReplenishments.Designer.cs">
+      <DependentUpon>FrmReplenishments.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmReplenPickViewAdjustment.cs">
       <SubType>Form</SubType>
@@ -646,6 +652,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmQuantity.resx">
       <DependentUpon>FrmQuantity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmReplenishments.resx">
+      <DependentUpon>FrmReplenishments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmReplenPickViewAdjustment.resx">
       <DependentUpon>FrmReplenPickViewAdjustment.cs</DependentUpon>
