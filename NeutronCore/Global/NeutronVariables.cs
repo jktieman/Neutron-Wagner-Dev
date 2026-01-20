@@ -22,6 +22,7 @@
         public bool DisplaysEnabled = true;
         public bool EnableDocumentPrinter = false;
         public bool EnableLabelPrinter = false;
+        public bool EnableStoreLabelPrinter = false;
         public bool PinLoginOnly = true;
         public int PickBatchSize = 8;
         public int StoreBatchSize = 8;
