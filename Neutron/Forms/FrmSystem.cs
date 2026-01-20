@@ -1,9 +1,16 @@
-﻿using JsonManager;
+﻿using AlliedLogger;
+using AlliedPostOffice;
+using AlliedPostOffice.Concrete;
+using AsyncAwaitBestPractices;
+using JsonManager;
 using MetroFramework.Forms;
 using Neutron.Global;
+using Neutron.Models;
 using NeutronCore;
 using NeutronCore.Global;
 using NeutronCore.Models;
+using NeutronEvents;
+using SqlSchemaManager;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,13 +20,8 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using AlliedLogger;
-using AlliedPostOffice;
-using AlliedPostOffice.Concrete;
-using Neutron.Models;
-using NeutronEvents;
-using SqlSchemaManager;
 //using Syncfusion.Windows.Forms;
 
 namespace Neutron.Forms
@@ -104,7 +106,7 @@ namespace Neutron.Forms
             if (GlobalVar.LoaderRunning)
             {
                 // Stop the Loader
-                MBStartLoader.Text = _resourceManager.GetString($"StopLoader"); 
+                MBStartLoader.Text = _resourceManager.GetString($"StopLoader");
                 MBRunLoaderOnce.Enabled = false;
             }
             else
@@ -191,27 +193,45 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBRunLoaderOnce_Click(object sender, EventArgs e)
+        private async void MBRunLoaderOnce_Click(object sender, EventArgs e)
         {
-            MBRunLoaderOnce.Enabled = false;
-            RunLoaderOnce();
-            MBRunLoaderOnce.Enabled = true;
-            MessageBox.Show("Load Complete");
+            try
+            {
+                MBRunLoaderOnce.Enabled = false;
+                await RunLoaderOnceAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Error: {ex.Message}").SafeFireAndForget();
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                MBRunLoaderOnce.Enabled = true;
+                MessageBox.Show("Load Complete");
+            }
         }
 
-        private void RunLoaderOnce()
+        private async Task RunLoaderOnceAsync()
         {
             if (GlobalVar.LoaderRunning)
             {
                 MessageBox.Show("Loader is already running.", "Loader Information", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                return;
             }
-            else
+
+            GlobalVar.LoaderRunning = true;
+            try
             {
-                GlobalVar.LoaderRunning = true;
-                Mediator.GetInstance().OnRunLoaderOnce(this);
+                await Mediator.GetInstance().OnRunLoaderOnceAsync(this);
+            }
+            finally
+            {
                 GlobalVar.LoaderRunning = false;
             }
+
         }
 
 
@@ -241,7 +261,7 @@ namespace Neutron.Forms
         private void MBMainClose_Click(object sender, EventArgs e)
         {
             CloseButtonPressed = true;
-            if(_standAlone) Close();
+            if (_standAlone) Close();
         }
 
         private void HideTabControlTabs()
@@ -389,33 +409,33 @@ namespace Neutron.Forms
             }
             catch (ConfigurationErrorsException ex)
             {
-             _ = _logger.LogDetailAsync($"Get Connection String Configuration Error {Environment.NewLine} {ex.Message}");
+                _ = _logger.LogDetailAsync($"Get Connection String Configuration Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                 _ = _logger.LogDetailAsync($"Get Connection String Configuration Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync($"Get Connection String Configuration Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (KeyNotFoundException ex)
             {
-             _ = _logger.LogDetailAsync($"Get Connection String Key Not Found {Environment.NewLine} {ex.Message}");
+                _ = _logger.LogDetailAsync($"Get Connection String Key Not Found {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                 _ = _logger.LogDetailAsync($"Get Connection String Key Not Found - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync($"Get Connection String Key Not Found - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (FormatException ex)
             {
-             _ = _logger.LogDetailAsync($"Get Connection String Format Error {Environment.NewLine} {ex.Message}");
+                _ = _logger.LogDetailAsync($"Get Connection String Format Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                 _ = _logger.LogDetailAsync($"Get Connection String Format Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync($"Get Connection String Format Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (ArgumentException ex)
             {
-             _ = _logger.LogDetailAsync($"Get Connection String Argument Error {Environment.NewLine} {ex.Message}");
+                _ = _logger.LogDetailAsync($"Get Connection String Argument Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                 _ = _logger.LogDetailAsync($"Get Connection String Argument Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync($"Get Connection String Argument Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Get Connection String Unknown Error {Environment.NewLine} {ex.Message}");
+                _ = _logger.LogDetailAsync($"Get Connection String Unknown Error {Environment.NewLine} {ex.Message}");
                 if (ex.InnerException != null)
-                 _ = _logger.LogDetailAsync($"Get Connection String Unknown Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync($"Get Connection String Unknown Error - Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
             }
 
             return builder;
@@ -480,11 +500,11 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Connection Test Error {Environment.NewLine}{ex.Message}");
+                _ = _logger.LogDetailAsync($"Connection Test Error {Environment.NewLine}{ex.Message}");
                 if (ex.InnerException != null)
                 {
-                 _ = _logger.LogDetailAsync(
-                        $"Connection Test Error Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync(
+                           $"Connection Test Error Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
                 }
 
                 MessageBox.Show($"Connection Test Error {Environment.NewLine}{ex.Message}");
@@ -501,11 +521,11 @@ namespace Neutron.Forms
             }
             catch (Exception ex)
             {
-             _ = _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
+                _ = _logger.LogDetailAsync($"Connection Test Failed {Environment.NewLine}{ex.Message}");
                 if (ex.InnerException != null)
                 {
-                 _ = _logger.LogDetailAsync(
-                        $"Connection Test Failed Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
+                    _ = _logger.LogDetailAsync(
+                           $"Connection Test Failed Inner Exception {Environment.NewLine}{ex.InnerException.Message}");
                 }
 
                 MessageBox.Show($"Connection Test Failed {Environment.NewLine}{ex.Message}");
@@ -602,7 +622,7 @@ namespace Neutron.Forms
             }
         }
 
-       private void ButtonFindImagesDirectory_Click(object sender, EventArgs e)
+        private void ButtonFindImagesDirectory_Click(object sender, EventArgs e)
         {
             var result = folderBrowserDialog1.ShowDialog();
             if (result == DialogResult.OK)
