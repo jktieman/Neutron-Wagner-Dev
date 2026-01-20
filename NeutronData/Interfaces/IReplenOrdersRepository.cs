@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Neutron.Models;
 using NeutronData.Models;
 using NeutronData.Models.Lookups;
@@ -13,6 +14,7 @@ namespace NeutronData.Interfaces
         IEnumerable<VelocityCode> GetVelocityCodesByArea(int areaId);
         IEnumerable<HeightCode> GetHeightCodesByArea(int areaId);
         List<AvailableReplenOrdersView> GetAvailableReplenOrdersForInductionScreen(int areaId, string searchField);
+        Task<List<AvailableReplenOrdersView>> GetAvailableReplenOrdersForInductionScreenAsync(int areaId, string searchField);
         IEnumerable<ReplenOrderView> GetReplenOrderViews(string orderStatus, string searchField);
         IEnumerable<ReplenOrderView> GetOrderView();
         List<AvailableReplenOrdersView> GetAvailableOrders(WorkstationView station);
