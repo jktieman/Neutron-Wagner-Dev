@@ -15,6 +15,7 @@ namespace ProliteController
         void ClearProlite(int deviceNumber);
         Task ClearAllProlites();
         Task StartProcessingCommands();
+        Task StopProcessingCommands();
         bool IsProliteManagerEnabled();
         List<Prolite> GetProlites();
     }

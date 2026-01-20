@@ -53,11 +53,13 @@ namespace ProliteController
         private SerialPort _serialPort;
         public IList<Prolite> Prolites { get; private set; }
         private string _lastCommand = string.Empty;
-        public bool ProliteManagerEnabled = true;
         private bool _proliteBusy = false;
 
         private readonly BlockingCollection<string> _proliteCommandQueue = new BlockingCollection<string>();
-        private static BackgroundWorker _proliteCommandQueueProcessor;
+        // private static BackgroundWorker _proliteCommandQueueProcessor;
+        private CancellationTokenSource _commandQueueCts;
+        private Task _commandQueueTask;
+
         private bool _proliteBusyClearing;
         private string _currentCommand;
 
@@ -107,84 +109,72 @@ namespace ProliteController
         public ProLiteManager(string portName, int baudRate, Parity parity, int dataBits, int stopBits,
             NeutronVariables neutronVariables, WorkstationView workstationView)
         {
+            if (string.IsNullOrWhiteSpace(portName))
+                throw new ArgumentException("Port name cannot be null or empty.", nameof(portName));
             _portName = portName;
             _baudRate = baudRate;
             _parity = parity;
             _dataBits = dataBits;
             _stopBits = stopBits;
-
-            _neutronVariables = neutronVariables;
-            _workstationView = workstationView;
+            _neutronVariables = neutronVariables ?? throw new ArgumentNullException(nameof(neutronVariables));
+            _workstationView = workstationView ?? throw new ArgumentNullException(nameof(workstationView));
             Prolites = new List<Prolite>();
+
             _logger = NeutronCore.Global.Logger.SetupLogger("ProLiteManager");
-
+            _ = InitializeAsync();
         }
+        public bool ProliteManagerEnabled { get; set; } = true;
 
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                await InitSerialPort();
+                _logger?.LogDetailAsync("Serial port initialized successfully.").SafeFireAndForget();
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogDetailAsync($"Failed to initialize the serial port.{Environment.NewLine}{ex.Message}");
+                throw;
+            }
+        }
         public async Task StartProcessingCommands()
         {
-            await InitSerialPort();
-            InitBackgroundWorker();
-            _proliteCommandQueueProcessor.RunWorkerAsync();
+            _commandQueueCts = new CancellationTokenSource();
+            _commandQueueTask = Task.Run(() => ProliteCommandQueueProcessorAsync(_commandQueueCts.Token));
+            await Task.CompletedTask;
         }
 
-        private void StopProcessingCommands()
+        public async Task StopProcessingCommands()
         {
-            StopBackgroundWorker();
+            _commandQueueCts?.Cancel();
+            if (_commandQueueTask != null)
+                await _commandQueueTask;
         }
 
-        private void StopBackgroundWorker()
+        private async Task ProliteCommandQueueProcessorAsync(CancellationToken token)
         {
-            _proliteCommandQueueProcessor.CancelAsync();
-        }
-
-        private void InitBackgroundWorker()
-        {
-            _proliteCommandQueueProcessor = new BackgroundWorker
+            _logger.LogDetailAsync($"Command Queue Processing").SafeFireAndForget();
+            try
             {
-                WorkerReportsProgress = false,
-                WorkerSupportsCancellation = true
-            };
-            _proliteCommandQueueProcessor.DoWork += ProliteCommandQueueProcessorDoWork;
-            _proliteCommandQueueProcessor.RunWorkerCompleted += ProliteCommandQueueProcessorRunWorkerCompleted;
-        }
-
-        private async void ProliteCommandQueueProcessorDoWork(object sender, DoWorkEventArgs e)
-        {
-            _logger.LogDetailAsync($"Command Queue Processing DoWork").SafeFireAndForget();
-            if (_proliteCommandQueueProcessor.CancellationPending)
-            {
-                e.Cancel = true;
-            }
-
-            while (!_proliteCommandQueueProcessor.CancellationPending)
-            {
-
-                Thread.Sleep(millisecondsTimeout: 100);
-                foreach (var command in _proliteCommandQueue.GetConsumingEnumerable())
+                while (!token.IsCancellationRequested)
                 {
-                    _currentCommand = command;
-                    _proliteBusy = true;
-                   await SerialPortWrite(command);
-
-                    _logger.LogDetailAsync($"Command Queue Processing: {command} ProliteBusy = {_proliteBusy}").SafeFireAndForget();
+                    foreach (var command in _proliteCommandQueue.GetConsumingEnumerable(token))
+                    {
+                        _currentCommand = command;
+                        _proliteBusy = true;
+                        await SerialPortWrite(command);
+                        await Task.Delay(500, token);
+                        await _logger.LogDetailAsync($"Command Queue Processing: {command} ProliteBusy = {_proliteBusy}");
+                    }
+                    await Task.Delay(100, token);
                 }
             }
-
-        }
-
-        private void ProliteCommandQueueProcessorRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Cancelled)
+            catch (OperationCanceledException)
             {
-
-            }
-            else
-            {
-                var result = e.Result;
+                // Graceful shutdown
             }
         }
-
-
 
         private async Task InitSerialPort()
         {
@@ -198,7 +188,7 @@ namespace ProliteController
             };
 
             if (_serialPort == null) return;
-           
+
             await TryOpenSerialPort();
             if (!IsPortOpen)
             {
@@ -210,9 +200,8 @@ namespace ProliteController
         }
         private async Task TryOpenSerialPort()
         {
-            const int maxAttempts = 60;
+            const int maxAttempts = 5;
             const int delayMs = 500;
-            var portOpened = false;
 
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
@@ -225,7 +214,6 @@ namespace ProliteController
                     _serialPort.DataReceived += SerialPortOnDataReceived;
                     if (_serialPort != null && _serialPort.IsOpen)
                     {
-                        portOpened = true;
                         _logger.LogDetailAsync("Startup Success").SafeFireAndForget();
                         ProliteManagerEnabled = true;
                         break;
@@ -234,7 +222,7 @@ namespace ProliteController
                 catch (Exception ex)
                 {
                     await HandleSerialPortExceptionAsync(attempt, ex);
-                    await Task.Delay(500);
+                    await Task.Delay(delayMs);
                 }
             }
         }
@@ -327,16 +315,25 @@ namespace ProliteController
 
             var hexCmd = BitConverter.ToString(Encoding.UTF8.GetBytes(cmd));
             _logger.LogDetailAsync($"Serial Port Write HEX => [ {hexCmd} ]").SafeFireAndForget();
-            // CHECK TO SEE IF SERIALPORT IS OPEN
-            if (!_serialPort.IsOpen)
+            // CHECK TO SEE IF SERIALPORT IS null or not open
+            if (_serialPort == null || !_serialPort.IsOpen)
             {
-                await InitSerialPort();
-                var message = $"Serial Port is NOT Open. Cannot write command: {cmd}";
-                _logger.LogDetailAsync(message).SafeFireAndForget();
-                Mediator.GetInstance().OnGeneralError(this, message);
+                await HandleClosedSerialPort(cmd);
                 return;
             }
+            // Attempt to write the command to the serial port
+            await WriteToSerialPort(cmd);
+        }
 
+        private async Task HandleClosedSerialPort(string cmd)
+        {
+            await InitSerialPort();
+            var message = $"Serial Port is NOT Open. Cannot write command: {cmd}";
+            _logger.LogDetailAsync(message).SafeFireAndForget();
+            Mediator.GetInstance().OnGeneralError(this, message);
+        }
+        private async Task WriteToSerialPort(string cmd)
+        {
             try
             {
                 _serialPort.Write(cmd);
@@ -347,9 +344,8 @@ namespace ProliteController
                 _logger.LogDetailAsync(errorMessage).SafeFireAndForget();
                 Mediator.GetInstance().OnGeneralError(this, errorMessage);
             }
-
-            //_logger.LogDetailAsync($"End: {cmd}").SafeFireAndForget();
         }
+
         public void TurnOn(int deviceNumber, int level, int part, int quantity)
         {
             _logger.LogDetailAsync($"Turn ON Prolite Device: {deviceNumber} Level: {level}  Part: {part}  Quantity: {quantity} ProliteBusyClearing: {_proliteBusyClearing}").SafeFireAndForget();
@@ -637,6 +633,7 @@ namespace ProliteController
             }
             var error = $"SerialPort Open Exception Number {i}: {ex.Message}";
             await _logger.LogDetailAsync($"Startup Fail Number {i}: {Environment.NewLine} {error}");
+           // Mediator.GetInstance().OnDisplayMessage(this, error);
         }
 
 
