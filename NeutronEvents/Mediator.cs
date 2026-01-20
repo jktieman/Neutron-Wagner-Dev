@@ -1,8 +1,9 @@
-﻿using System;
+﻿using NeutronData.Models;
+using NeutronData.ModelViews;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
-using NeutronData.Models;
-using NeutronData.ModelViews;
+using System.Threading.Tasks;
 
 
 namespace NeutronEvents
@@ -12,9 +13,7 @@ namespace NeutronEvents
         //static members
         private static readonly Mediator Instance = new Mediator();
 
-        private Mediator()
-        {
-        }
+        public Mediator() { }
 
         public static Mediator GetInstance()
         {
@@ -172,6 +171,22 @@ namespace NeutronEvents
             RunLoaderOnce?.Invoke(sender, EventArgs.Empty);
         }
 
+        public event Func<object, EventArgs, Task> RunLoaderOnceAsync;
+        
+        // Add this new async method
+        public async Task OnRunLoaderOnceAsync(object sender)
+        {
+            var handlers = RunLoaderOnceAsync?.GetInvocationList();
+            if (handlers != null)
+            {
+                foreach (var @delegate in handlers)
+                {
+                    var handler = (Func<object, EventArgs, Task>)@delegate;
+                    await handler(sender, EventArgs.Empty);
+                }
+            }
+        }
+
         public event EventHandler<EventArgs> RunUploadOnce;
 
         public void OnRunUploadOnce(object sender)
@@ -203,7 +218,30 @@ namespace NeutronEvents
 
         public void OnDisplayMessage(object sender, string message)
         {
-            DisplayMessage?.Invoke(this, new DisplayMessageEventArgs() { Message = message });
+            //DisplayMessage?.Invoke(this, new DisplayMessageEventArgs() { Message = message });
+            if (DisplayMessage != null)
+            {
+                var listeners = DisplayMessage.GetInvocationList();
+                foreach (var t in listeners)
+                {
+                    var method = (EventHandler<DisplayMessageEventArgs>)t;
+                    try
+                    {
+                        method.BeginInvoke(this, new DisplayMessageEventArgs { Message = message }, EndAsyncDisplayMessage, null);
+                    }
+                    catch { }
+                }
+            }
+        }
+        private void EndAsyncDisplayMessage(IAsyncResult iar)
+        {
+            try
+            {
+                var ar = (AsyncResult)iar;
+                var invoked = (EventHandler<DisplayMessageEventArgs>)ar.AsyncDelegate;
+                invoked.EndInvoke(iar);
+            }
+            catch { /* swallow/log */ }
         }
 
         public event EventHandler<ProLiteMessageEventArgs> ProLiteMessage;
