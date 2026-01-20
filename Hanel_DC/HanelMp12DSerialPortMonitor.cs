@@ -40,7 +40,7 @@ namespace Hanel_DC
         public static char LF = Convert.ToChar(10);
         public static char AST = Convert.ToChar(42);
 
-
+        private readonly object _serialPortLock = new object();
         private SerialPortStream _serialPort;
 
         private byte[] _dataIn = new byte[] { };
@@ -49,20 +49,21 @@ namespace Hanel_DC
         public event EventHandler<byte[]> RaiseSerialDataEvent;
         private byte[] _lastMessageSent;
         private volatile bool _cancelPolling = false;
+        private readonly object _cancelPollingLock = new object();
         private HanelCommandService _hanelCommandService;
         private volatile bool _pollingActive;
-        private int _loglevel;
+        private HanelCommandProcessor _hanelCommandProcessor;
 
         public event EventHandler<SerialPortInfoEventArgs> SerialPortInfoHandler;
         public event EventHandler<HanelDeviceStatusEventArgs> HanelDeviceStatusHandler;
 
-        public HanelMp12DSerialPortMonitor(string comPort
+        private HanelMp12DSerialPortMonitor(string comPort
             , int baudRate
             , int dataBits
             , Parity parity
             , StopBits stopBits
-            , ref string cError
-            , ref List<HanelDeviceStatus> currentHanelDeviceStatusList
+            , string cError
+            , List<HanelDeviceStatus> currentHanelDeviceStatusList
             , int logLevel)
         {
             _comPort = comPort;
@@ -75,28 +76,37 @@ namespace Hanel_DC
             _logLevel = logLevel;
             _lastMessageSent = new byte[] { };
 
-            Init();
+            //Init();
         }
 
-        private void Init()
+        public static async Task<HanelMp12DSerialPortMonitor> CreateAsync(string comPort
+            , int baudRate
+            , int dataBits
+            , Parity parity
+            , StopBits stopBits
+            , string cError
+            , List<HanelDeviceStatus> currentHanelDeviceStatusList
+            , int logLevel)
+        {
+            var monitor = new HanelMp12DSerialPortMonitor(comPort, baudRate, dataBits, parity, stopBits, cError, currentHanelDeviceStatusList, logLevel);
+            await monitor.Init();
+            return monitor;
+        }
+
+        private async Task Init()
         {
             //_logger = NeutronCore.Global.Logger.SetupLogger("SerialPortData");
             _logger = NeutronCore.Global.Logger.SetupLogger("HanelLog");
             _logger.LogDetailAsync("Hanel MP12D Serial Port Monitor Startup").SafeFireAndForget();
-            InitSerialPort();
-
+            await InitSerialPort();
             _hanelCommandService = new HanelCommandService(_currentHanelDeviceStatusList.Count, _currentHanelDeviceStatusList);
+            _hanelCommandProcessor = new HanelCommandProcessor();
             Task.Run(StartPollingAsync);
         }
-
-
-
-
         protected virtual void OnSerialPortInfo(SerialPortInfoEventArgs e)
         {
             var handler = SerialPortInfoHandler;
             handler?.Invoke(this, e);
-
         }
 
         protected virtual void OnHanelDeviceStatus(HanelDeviceStatusEventArgs e)
@@ -105,57 +115,125 @@ namespace Hanel_DC
             handler?.Invoke(this, e);
         }
 
-        private void InitSerialPort()
+        private async Task InitSerialPort()
         {
             const int maxAttempts = 60;
             const int delayMs = 500;
             var portOpened = false;
 
-            _serialPort = new SerialPortStream(_comPort, _baudRate, _dataBits, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One)
+            lock (_serialPortLock)
             {
-                WriteTimeout = 200
-            };
-
+                _serialPort = new SerialPortStream(_comPort, _baudRate, _dataBits, RJCP.IO.Ports.Parity.None,
+                    RJCP.IO.Ports.StopBits.One)
+                {
+                    WriteTimeout = 200
+                };
+            }
+            if (RaiseSerialDataEvent == null)
+            {
+                RaiseSerialDataEvent += async (sender, data) => await ProcessMp12DData(sender, data);
+            }
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
                 try
                 {
-                    if (_serialPort == null) continue;
-                    _serialPort.Open();
-                    if (!_serialPort.IsOpen) continue;
-                    
-                    _logger.LogDetailAsync($"Serial port opened successfully on attempt {attempt}.").SafeFireAndForget();
-                    
-                    _readMp12DThread = new Thread(ReadMp12D);
-                    RaiseSerialDataEvent += async (sender, data) => await ProcessMp12DData(sender, data);
-                    portOpened = true;
-                    break;
+                    lock (_serialPortLock)
+                    {
+                        _serialPort?.Open();
+
+
+                        if (_serialPort?.IsOpen == true)
+                        {
+                            _logger.LogDetailAsync($"Serial port opened successfully on attempt {attempt}.").SafeFireAndForget();
+                            _readMp12DThread = new Thread(ReadMp12D);
+                            portOpened = true;
+                            break;
+                        }
+                    }
                 }
-                catch (Exception ex)
+                catch (IOException ex)
                 {
-                    _logger.LogDetailAsync($"Attempt {attempt}: Failed to open serial port: {ex.Message}").SafeFireAndForget();
-                    try
-                    {
-                        _serialPort?.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogDetailAsync($"Close Exception: {e.Message}").SafeFireAndForget();
-                    }
-                    Thread.Sleep(delayMs);
-
-                    _cError = $"TRY: {attempt}  :SerialPort Open Exception: {ex.Message}";
-                    _logger.LogDetailAsync($"Startup Fail: {Environment.NewLine} {_cError}").SafeFireAndForget();
+                    _logger.LogDetailAsync($"Attempt {attempt}: IO Exception: {ex.Message}").SafeFireAndForget();
                 }
+                catch (UnauthorizedAccessException ex)
+                {
+                    _logger.LogDetailAsync($"Attempt {attempt}: Unauthorized Access: {ex.Message}").SafeFireAndForget();
+                }
+                //finally
+                //{
+                //    lock (_serialPortLock)
+                //    {
+                //        _serialPort?.Close();
+                //    }
+                //}
+                await Task.Delay(delayMs);
             }
-
             if (!portOpened)
             {
                 _logger.LogDetailAsync("All attempts to open the serial port failed.").SafeFireAndForget();
                 _cancelPolling = true;
-                MessageBox.Show("Port is NOT Open after multiple attempts.", "Port Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                if (Application.OpenForms.Count > 0)
+                {
+                    Application.OpenForms[0].Invoke((MethodInvoker)(() =>
+                    {
+                        MessageBox.Show("Port is NOT Open after multiple attempts.", "Port Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
             }
         }
+
+
+        //private void InitSerialPort()
+        //{
+        //    const int maxAttempts = 60;
+        //    const int delayMs = 500;
+        //    var portOpened = false;
+
+        //    _serialPort = new SerialPortStream(_comPort, _baudRate, _dataBits, RJCP.IO.Ports.Parity.None, RJCP.IO.Ports.StopBits.One)
+        //    {
+        //        WriteTimeout = 200
+        //    };
+
+        //    for (int attempt = 1; attempt <= maxAttempts; attempt++)
+        //    {
+        //        try
+        //        {
+        //            if (_serialPort == null) continue;
+        //            _serialPort.Open();
+        //            if (!_serialPort.IsOpen) continue;
+
+        //            _logger.LogDetailAsync($"Serial port opened successfully on attempt {attempt}.").SafeFireAndForget();
+
+        //            _readMp12DThread = new Thread(ReadMp12D);
+        //            RaiseSerialDataEvent += async (sender, data) => await ProcessMp12DData(sender, data);
+        //            portOpened = true;
+        //            break;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            _logger.LogDetailAsync($"Attempt {attempt}: Failed to open serial port: {ex.Message}").SafeFireAndForget();
+        //            try
+        //            {
+        //                _serialPort?.Close();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                _logger.LogDetailAsync($"Close Exception: {e.Message}").SafeFireAndForget();
+        //            }
+        //            Thread.Sleep(delayMs);
+
+        //            _cError = $"TRY: {attempt}  :SerialPort Open Exception: {ex.Message}";
+        //            _logger.LogDetailAsync($"Startup Fail: {Environment.NewLine} {_cError}").SafeFireAndForget();
+        //        }
+        //    }
+
+        //    if (!portOpened)
+        //    {
+        //        _logger.LogDetailAsync("All attempts to open the serial port failed.").SafeFireAndForget();
+        //        _cancelPolling = true;
+        //        MessageBox.Show("Port is NOT Open after multiple attempts.", "Port Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+        //    }
+        //}
 
         public bool IsPortOpen => _serialPort?.IsOpen ?? false;
 
@@ -353,9 +431,80 @@ namespace Hanel_DC
         //        //     $"Accumulating Incoming Command:{Environment.NewLine}{_dataIn.ToArray().ByteArrayToString()}{Environment.NewLine}");
         //    }
         //}
-
+        public void CancelPolling()
+        {
+            lock (_cancelPollingLock)
+            {
+                _cancelPolling = true;
+            }
+        }
+        private bool IsPollingCancelled()
+        {
+            lock (_cancelPollingLock)
+            {
+                return _cancelPolling;
+            }
+        }
+        //--------------------------------------
         public void ReadMp12D()
         {
+            var localSerialPort = _serialPort; // Local copy for thread safety
+            try
+            {
+                byte[] buffer = new byte[4096];
+                while (!_cancelPolling)
+                {
+                    if (localSerialPort == null || !localSerialPort.IsOpen)
+                    {
+                        if (_logLevel == 8)
+                            _logger.LogDetailAsync("Serial port is not open. Skipping read.").SafeFireAndForget();
+                        Thread.Sleep(100); // Add a delay to avoid tight looping
+                        continue;
+                    }
+                    localSerialPort.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                    {
+                        try
+                        {
+                            int actualLength = localSerialPort.EndRead(ar);
+                            byte[] received = new byte[actualLength];
+                            Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
+                            RaiseSerialDataEvent?.Invoke(this, received);
+                        }
+                        catch (IOException ex)
+                        {
+                            _logger.LogDetailAsync($"Error ReadMp12D: {ex.Message}").SafeFireAndForget();
+                            // Handle IOException (e.g., close the port or notify the user)
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogDetailAsync($"Unexpected error in ReadMp12D: {ex.Message}").SafeFireAndForget();
+                        }
+                    }, null);
+                    Thread.Sleep(5000); // Add a small delay to prevent excessive CPU usage
+                }
+            }
+            catch (ThreadAbortException ex)
+            {
+                _logger.LogDetailAsync($"Error Thread is aborted and the code is {ex.ExceptionState}").SafeFireAndForget();
+                Thread.ResetAbort(); // Allow the thread to terminate properly
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogDetailAsync($"Error Invalid Operation Exception: {ex.Message}").SafeFireAndForget();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDetailAsync($"Unexpected error in ReadMp12D: {ex.Message}").SafeFireAndForget();
+            }
+        }
+
+
+        //--------------------------------------
+
+
+        public void ReadMp12D_Back()
+        {
+            var localSerialPort = _serialPort; // Local copy for thread safety
             try
             {
                 byte[] buffer = new byte[4096];
@@ -363,43 +512,49 @@ namespace Hanel_DC
                 //kickoffReadMp12D = delegate
                 void StartReading()
                 {
-                    if (_serialPort == null || !_serialPort.IsOpen)
+                    while (!_cancelPolling)
                     {
-                        _logger.LogDetailAsync("Serial port is not open. Skipping read.").SafeFireAndForget();
-                        return;
+                        if (localSerialPort == null || !localSerialPort.IsOpen)
+                        {
+                            if (_logLevel == 8)
+                                _logger.LogDetailAsync("Serial port is not open. Skipping read.").SafeFireAndForget();
+                            return;
+                        }
+
+                        localSerialPort.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                        {
+                            try
+                            {
+                                int actualLength = _serialPort.EndRead(ar);
+                                byte[] received = new byte[actualLength];
+                                Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
+                                RaiseSerialDataEvent?.Invoke(this, received);
+                            }
+                            catch (IOException ex)
+                            {
+                                _logger.LogDetailAsync($"Error ReadMp12D:  {ex.Message}").SafeFireAndForget();
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogDetailAsync($"Unexpected error in ReadMp12D: {ex.Message}").SafeFireAndForget();
+                            }
+                            finally
+                            {
+                                // Ensure the read operation is restarted
+                                if (!_cancelPolling)
+                                {
+                                    //kickoffReadMp12D();
+                                    StartReading();
+                                }
+                            }
+                        }, null);
                     }
 
-                    _serialPort.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
-                    {
-                        try
-                        {
-                            int actualLength = _serialPort.EndRead(ar);
-                            byte[] received = new byte[actualLength];
-                            Buffer.BlockCopy(buffer, 0, received, 0, actualLength);
-                            RaiseSerialDataEvent?.Invoke(this, received);
-                        }
-                        catch (IOException ex)
-                        {
-                            _logger.LogDetailAsync($"Error ReadMp12D:  {ex.Message}").SafeFireAndForget();
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogDetailAsync($"Unexpected error in ReadMp12D: {ex.Message}").SafeFireAndForget();
-                        }
-                        finally
-                        {
-                            // Ensure the read operation is restarted
-                            if (!_cancelPolling)
-                            {
-                                //kickoffReadMp12D();
-                                StartReading();
-                            }
-                        }
-                    }, null);
+
                 }
-                ;
+                
                 //kickoffReadMp12D();
-                StartReading();
+                //StartReading();
             }
             catch (ThreadAbortException ex)
             {
@@ -433,24 +588,29 @@ namespace Hanel_DC
 
         public bool SendData(byte[] message)
         {
-            var commandString = $"{Encoding.UTF8.GetString(message)}";
-            var deviceNumber = commandString.Substring(3, 1).ParseInt();
-            var targetTray = commandString.Substring(3, 1).ParseInt();
-            var status = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
-            if (status != null)
-            {
-                status.CommandSent = true;
-                status.CommandAccepted = false;
-                status.CommandExecuted = false;
-                var command = new HanelCommand()
-                {
-                    Command = message
-                };
-                status.LastHanelCommand = command;
-                status.TargetTray = targetTray;
-            }
-            _logger.LogDetailAsync($"Device Status-Sent:{status.CommandSent}").SafeFireAndForget();
             var result = false;
+            var commandString = $"{Encoding.UTF8.GetString(message)}";
+            if (message.Length > 3)
+            {
+
+                var deviceNumber = commandString.Substring(3, 1).ParseInt();
+                var targetTray = commandString.Substring(3, 1).ParseInt();
+                var status = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == deviceNumber);
+                if (status != null)
+                {
+                    status.CommandSent = true;
+                    status.CommandAccepted = false;
+                    status.CommandExecuted = false;
+                    var command = new HanelCommand()
+                    {
+                        Command = message
+                    };
+                    status.LastHanelCommand = command;
+                    status.TargetTray = targetTray;
+                }
+                if (_logLevel == 8)
+                    _logger.LogDetailAsync($"Device Status-Sent:{status.CommandSent}").SafeFireAndForget();
+            }
             try
             {
                 //if (_lastMessageSent.Length == 0)
@@ -460,13 +620,13 @@ namespace Hanel_DC
                 //ShowData(message.ByteArrayToString());
                 if (IsPortOpen)
                 {
-                    _logger.LogDetailAsync($"SEND TO HANEL: {commandString}").SafeFireAndForget();
+                    if (_logLevel == 8) _logger.LogDetailAsync($"SEND TO HANEL: {commandString}").SafeFireAndForget();
                     _serialPort.Write(message, 0, message.Length);
                     result = true;
                 }
                 else
                 {
-                    _logger.LogDetailAsync($"Had to InitSerialPort First");
+                    if (_logLevel == 8) _logger.LogDetailAsync($"Had to InitSerialPort First");
                     InitSerialPort();
                     if (IsPortOpen)
                     {
@@ -529,9 +689,8 @@ namespace Hanel_DC
         /// <returns>Returns a string response to the MP12D</returns>
         private async Task ProcessDataIn(byte[] dataIn)
         {
-            
             var commandString = Encoding.UTF8.GetString(dataIn);
-            _logger.LogDetailAsync($"PROCESS DATA IN: {commandString}").SafeFireAndForget();
+            if (_logLevel == 8) _logger.LogDetailAsync($"PROCESS DATA IN: {commandString}").SafeFireAndForget();
 
 
             //if (dataIn.Length > 6)
@@ -540,7 +699,7 @@ namespace Hanel_DC
             //}
             //else
             //{
-                
+
             //}
 
 
@@ -565,8 +724,8 @@ namespace Hanel_DC
             }
 
             // There are more than 2 commandSegments
-            
-            var lift = commandSegments[0].Substring(2, 2); 
+
+            var lift = commandSegments[0].Substring(2, 2);
             if (!int.TryParse(lift, out var liftNumber))
             {
                 throw new InvalidOperationException($"Invalid lift number: {lift}");
@@ -580,13 +739,15 @@ namespace Hanel_DC
             var deviceStatus = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == liftNumber);
 
 
-           await DumpStatusAsync("Before Command Processing", deviceStatus);
+            await DumpStatusAsync("Before Command Processing", deviceStatus);
 
-            var hanelCommandProcessor = new HanelCommandProcessor();
+            //var hanelCommandProcessor = new HanelCommandProcessor();
 
-            hanelCommandProcessor.Process(dataIn, ref _currentHanelDeviceStatusList);
+            _hanelCommandProcessor.Process(dataIn, ref _currentHanelDeviceStatusList);
 
-            await DumpStatusAsync("After Command Processing", deviceStatus);
+            _logger.LogDetailAsync($"Command: {commandString}  Status Message: {deviceStatus.StatusMessage}").SafeFireAndForget();
+
+            if (_logLevel == 8) await DumpStatusAsync("After Command Processing", deviceStatus);
 
             // _logger.LogDetailAsync($"DataIn to Process: {commandString}").SafeFireAndForget();
 
@@ -617,7 +778,7 @@ namespace Hanel_DC
             sb.AppendLine(title);
             AppendDeviceStatus(sb, deviceStatus);
             sb.AppendLine("--------------------------------------------------");
-            await _logger.LogDetailAsync(sb.ToString());
+            if (_logLevel == 8) await _logger.LogDetailAsync(sb.ToString());
             //}
         }
         private void AppendDeviceStatus(StringBuilder sb, HanelDeviceStatus deviceStatus)
@@ -638,7 +799,6 @@ namespace Hanel_DC
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  CommandExecuted = {deviceStatus.CommandExecuted}");
             sb.AppendLine($"Device #{deviceStatus.DeviceNumber}  Switched On = {deviceStatus.SwitchedOn}");
         }
-
         private void UpdateCurrentTray(string lift, string accessPoint, string tray)
         {
             if (int.TryParse(lift, out var lft))
@@ -655,16 +815,17 @@ namespace Hanel_DC
                 }
             }
         }
-
         private string GetSegmentValue(string[] commandSegments, string segmentType)
         {
             var result = commandSegments.FirstOrDefault(r => r.StartsWith(segmentType));
             return result == null || result.Length == 1 ? "0" : result.Substring(1);
         }
-
         public async Task StartPollingAsync()
         {
-            _logger.LogDetailAsync("Start Polling").SafeFireAndForget();
+
+            _logger.LogDetailAsync("Start Polling NOT enabled").SafeFireAndForget();
+
+            return;
 
             var activePoll = false;
             _pollingActive = true;
@@ -691,16 +852,16 @@ namespace Hanel_DC
                     if (activePoll)
                     {
                         _logger.LogDetailAsync("ACTIVE Polling Started").SafeFireAndForget();
-                       // var response = $"{AST}{CR}{LF}";
-                       
-                       Mediator.GetInstance().OnSendPollCommand(this, true);
-                      
+                        // var response = $"{AST}{CR}{LF}";
+
+                        Mediator.GetInstance().OnSendPollCommand(this, true);
+
                         //  SendData(response.StringToByteArray());
 
-                      //  _logger.LogDetailAsync($"Mediator Sent Poll Command").SafeFireAndForget();
+                        //  _logger.LogDetailAsync($"Mediator Sent Poll Command").SafeFireAndForget();
                     }
-                    await Task.Delay(500).ConfigureAwait(false);
-                   // _logger.LogDetailAsync($"Active Polling Wait 500 milliseconds ActivePoll : {activePoll}").SafeFireAndForget();
+                    await Task.Delay(1000).ConfigureAwait(false);
+                    // _logger.LogDetailAsync($"Active Polling Wait 500 milliseconds ActivePoll : {activePoll}").SafeFireAndForget();
                 }
             }
             catch (Exception ex)
@@ -713,7 +874,6 @@ namespace Hanel_DC
             }
             _logger.LogDetailAsync("Stop Polling").SafeFireAndForget();
         }
-
         private void UpdateCurrentTrayInWindow(List<HanelDeviceStatus> statusList)
         {
             _logger.LogDetailAsync("9");
@@ -751,7 +911,6 @@ namespace Hanel_DC
             }
             _logger.LogDetailAsync("Current Tray Processing Complete...").ConfigureAwait(false);
         }
-
 
         //public async Task StartPollingAsync()
         //{
