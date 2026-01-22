@@ -24,9 +24,8 @@ using ProliteController;
 using SqlSchemaManager;
 using System;
 using System.Data.Common;
-using System.Data.Entity;
 using System.Data.SqlClient;
-using static System.Windows.Forms.Design.AxImporter;
+using ReplenService;
 using IDisplayController = IPTI.Models.IDisplayController;
 
 
@@ -55,10 +54,12 @@ namespace Neutron.Ninject
             Bind<IImageManager>().To<ImageManager>().InSingletonScope();
             Bind<IOrdersRepository>().To<OrdersRepository>().WithConstructorArgument("workstation");
             Bind<IReplenOrdersRepository>().To<ReplenOrdersRepository>().InSingletonScope();
+            Bind<IReplenRepository>().To<ReplenRepository>().InSingletonScope();
             Bind<IInventoryManager>().To<InventoryManager>().InSingletonScope();
             Bind<IInventoryRepository>().To<InventoryRepository>().InSingletonScope();
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
-            // Bind<FrmMain>().To<FrmMain>().InSingletonScope();
+
+            
             Bind<Mediator>().ToSelf().InSingletonScope();
             Bind<FrmMain>().ToSelf();
            Bind<FrmSystem>().To<FrmSystem>()

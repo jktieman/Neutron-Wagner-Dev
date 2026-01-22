@@ -321,7 +321,7 @@ namespace Neutron
             // 
             // PictureBoxLogo
             // 
-            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.Neutron_Logo;
+            this.PictureBoxLogo.Image = global::Neutron.Properties.Resources.TEST;
             resources.ApplyResources(this.PictureBoxLogo, "PictureBoxLogo");
             this.PictureBoxLogo.Name = "PictureBoxLogo";
             this.PictureBoxLogo.TabStop = false;

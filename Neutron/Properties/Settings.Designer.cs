@@ -23,15 +23,6 @@ namespace Neutron.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Neutron\\Configuration\\ConfigFile.Csv")]
-        public string ConfigFilePath {
-            get {
-                return ((string)(this["ConfigFilePath"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:\\NeutronTest\\")]
@@ -41,6 +32,15 @@ namespace Neutron.Properties {
             }
             set {
                 this["RootDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\NeutronTest\\Configuration\\ConfigFile.Csv")]
+        public string ConfigFilePath {
+            get {
+                return ((string)(this["ConfigFilePath"]));
             }
         }
     }

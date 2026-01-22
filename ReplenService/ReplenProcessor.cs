@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using AlliedLogger;
 using AsyncAwaitBestPractices;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
-using NeutronData.Interfaces;
 using NeutronData.Models;
 using NeutronData.Repositories;
 using NeutronEvents;
@@ -24,13 +22,14 @@ namespace ReplenService
         private readonly GenericRepository<ReplenOrderDetail> _repoReplenOrderDetail;
         private readonly GenericRepository<ItemDefinition> _repoItemDefinitions;
 
-        private ReplenRepository _replenRepository;
+        private readonly IReplenRepository _replenRepository;
         private IDynamicLogger _logger;
 
-        public ReplenProcessor(Func<NeutronDb> contextFactory)
+        public ReplenProcessor(Func<NeutronDb> contextFactory, IReplenRepository replenRepository)
         {
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
-           
+            _replenRepository = replenRepository ?? throw new ArgumentNullException(nameof(replenRepository));
+            
             _repoOrder = new GenericRepository<Order>(contextFactory);
             _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
             _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
@@ -41,7 +40,6 @@ namespace ReplenService
         }
         private void Init()
         {
-            _replenRepository = new ReplenRepository();
             _logger = NeutronCore.Global.Logger.SetupLogger("ReplenProcessor");
             Mediator.GetInstance().OrderComplete += (s, e) => CheckForReplenOrder(e.Order);
         }
@@ -102,6 +100,7 @@ namespace ReplenService
         /// </remarks>
         public async Task<Replenishment> ProcessReplenishment(Replenishment replenishment)
         {
+            Debug.WriteLine($"Item: {replenishment.Item} ");
             ReplenOrder replenStoreOrder;
             // Quantity must be greater than zero to be considered for replenishment
             // if not, return null value

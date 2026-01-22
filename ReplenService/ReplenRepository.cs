@@ -4,42 +4,47 @@ using NeutronData.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Logger = NeutronCore.Global.Logger;
 
 namespace ReplenService
 {
-    public class ReplenRepository
+    public class ReplenRepository : IReplenRepository
     {
         // get Replenishments from database
         private List<Replenishment> _replenishments;
         private readonly DynamicLogger _logger;
+        private readonly NeutronDb _context;
         private const int AreaEight = 8;
-        public ReplenRepository()
+
+        public ReplenRepository(NeutronDb context)
         {
-            _logger = (DynamicLogger)Logger.SetupLogger("ReplenRepository");
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context), @"The database context cannot be null.");
+            }
+            _logger = Logger.SetupLogger("ReplenRepository") as DynamicLogger;
+            if (_logger == null)
+            {
+                throw new InvalidOperationException("Logger.SetupLogger did not return a DynamicLogger instance.");
+            }
+            _context = context;
         }
-
-
 
         public async Task<List<Replenishment>> GetReplenishments()
         {
-
             _replenishments = new List<Replenishment>();
 
             try
             {
-                List<Replenishment> newReplenishments;
-                using (var context = new NeutronDb())
-                {
-                    _replenishments = await context.Database.SqlQuery<Replenishment>("usp_CreateReplenishments").ToListAsync();
+                _replenishments = await _context.Database.SqlQuery<Replenishment>("usp_CreateReplenishments")
+                        .ToListAsync();
 
-                    newReplenishments = await context.Database.SqlQuery<Replenishment>("usp_NewItemsWithoutInventory").ToListAsync();
-                }
+                var newReplenishments = await _context.Database.SqlQuery<Replenishment>("usp_NewItemsWithoutInventory")
+                    .ToListAsync();
+
                 // append newReplenishments to _replenishments
                 _replenishments.AddRange(newReplenishments);
             }
@@ -47,44 +52,116 @@ namespace ReplenService
             {
                 if (_logger != null)
                 {
-                    await _logger.LogDetailAsync($"Get Replenishments Error. {Environment.NewLine} {ex.Message}  {Environment.NewLine}{ex.InnerException} ");
+                    await _logger.LogDetailAsync(
+                        $"Get Replenishments Error. {Environment.NewLine} {ex.Message}  {Environment.NewLine}{ex.InnerException} ");
                 }
             }
+
             return _replenishments;
+        }
+
+        private async Task<List<ReplenDelete>> GetReplens()
+        {
+            var replens = await _context.Database.SqlQuery<ReplenDelete>("usp_GetReplenishments").ToListAsync();
+
+            return replens;
+        }
+
+        private async Task<List<Inventory>> GetInventory(int itemDefinitionId)
+        {
+            var inventory = await _context.Inventory
+                .Where(inv => inv.ItemDefinitionId == itemDefinitionId)
+                .ToListAsync();
+
+            return inventory;
+        }
+        private async Task<ItemDefinition> GetItemDefinition(string partNumber)
+        {
+            if (string.IsNullOrWhiteSpace(partNumber))
+            {
+                throw new ArgumentException(@"Part number cannot be null or empty.", nameof(partNumber));
+            }
+            if (_context == null)
+            {
+                throw new InvalidOperationException("Database context is not initialized.");
+            }
+            try
+            {
+                var itemDefinition = await _context.ItemDefinitions
+                    .FirstOrDefaultAsync(r => r.Item.ToUpper() == partNumber.ToUpper() && r.AreaId != AreaEight);
+                return itemDefinition;
+            }
+            catch (Exception ex)
+            {
+                await _logger.LogDetailAsync($"Error in GetItemDefinition: {ex.Message}");
+                throw;
+            }
+        }
+
+        private async Task<ItemDefinition> GetItemDefinitionInEight(string partNumber)
+        {
+            var itemDefinition = await _context.ItemDefinitions.FirstOrDefaultAsync(r => r.Item == partNumber && r.AreaId == AreaEight);
+
+            return itemDefinition;
+        }
+
+        private async Task<List<OrderDetail>> GetOrderDetails(List<int> orderDetailIds)
+        {
+            var orderDetails = await _context.OrderDetails
+                    .Where(od => orderDetailIds.Contains(od.Id))
+                    .ToListAsync();
+
+            return orderDetails;
         }
 
         public async Task DeleteReplenishmentsAboveSystemMin()
         {
+            List<Inventory> inventoryInEight;
+            List<Inventory> inventory; 
+            int totalInventory = 0;
+            int totalInventoryInEight = 0;
             try
             {
-                using (var context = new NeutronDb())
-                using (var transaction = context.Database.BeginTransaction())
-                {
-                    var replens = await context.Database.SqlQuery<ReplenDelete>("usp_GetReplenishments").ToListAsync();
-                    if (replens == null || replens.Count == 0) return;
-                    var orderDetailIds = replens.Select(r => r.OrderDetailId).ToList();
-                    var orderDetails = await context.OrderDetails
-                        .Where(od => orderDetailIds.Contains(od.Id))
-                        .ToListAsync();
-                    foreach (var replen in replens)
-                    {
-                        var orderDetail = orderDetails.FirstOrDefault(od => od.Id == replen.OrderDetailId);
-                        if (orderDetail == null) continue;
-                        var partNumber = orderDetail.PartNum;
-                        var itemDefinition = await context.ItemDefinitions.FirstOrDefaultAsync(r => r.Item == partNumber && r.AreaId != AreaEight);
-                        if (itemDefinition == null) continue;
+                var replens = await GetReplens();
+                if (replens == null || replens.Count == 0) return;
+               
+                
+                var orderDetailIds = replens.Select(r => r.OrderDetailId).ToList();
+                var orderDetails = await GetOrderDetails(orderDetailIds);
 
-                        var inventory = await context.Inventory
-                            .Where(inv => inv.ItemDefinitionId == itemDefinition.Id)
-                            .ToListAsync();
-                        var totalQuantityInInventory = inventory.Sum(inv => inv.Quantity);
-                        if (totalQuantityInInventory > itemDefinition.SystemMin)
-                        {
-                            await DeleteReplenishment(orderDetail);
-                        }
+                foreach (var replen in replens)
+                {
+                    if (replen.OrderId == 547236)
+                    {
+                        Debug.WriteLine($"Hello {replen.OrderDetailId}");
                     }
-                    await context.SaveChangesAsync();
-                    transaction.Commit();
+                    var orderDetail = orderDetails.FirstOrDefault(od => od.Id == replen.OrderDetailId);
+                    if (orderDetail == null) continue;
+
+                    var partNumber = orderDetail.PartNum;
+
+                    var itemDefinition = await GetItemDefinition(partNumber);
+                    if (itemDefinition == null) continue;
+
+                    var itemDefinitionInEight = await GetItemDefinitionInEight(partNumber);
+                    if (itemDefinitionInEight != null)
+                    {
+                         inventoryInEight = await GetInventory(itemDefinitionInEight.Id);
+                         totalInventoryInEight = inventoryInEight.Sum(inv => inv.Quantity);
+                    }
+                    else
+                    {
+                       totalInventoryInEight = 0;
+                    }
+
+                    
+                    inventory = await GetInventory(itemDefinition.Id);
+
+                    var totalQuantityInInventory = inventory.Sum(inv => inv.Quantity);
+                    if (totalQuantityInInventory > itemDefinition.SystemMin || totalInventoryInEight <= 0)
+                    {
+                        await DeleteReplenishment(orderDetail);
+                    }
                 }
             }
             catch (Exception ex)
@@ -98,109 +175,47 @@ namespace ReplenService
         {
             try
             {
-                using (var context = new NeutronDb())
-                using (var transaction = context.Database.BeginTransaction())
+
+                using (var transaction = _context.Database.BeginTransaction())
                 {
                     if (orderDetail != null)
                     {
                         // Load the entity within this context before deleting
-                        var trackedOrderDetail = await context.OrderDetails
+                        var trackedOrderDetail = await _context.OrderDetails
                             .FirstOrDefaultAsync(od => od.Id == orderDetail.Id);
 
                         if (trackedOrderDetail != null)
                         {
-                            context.OrderDetails.Remove(trackedOrderDetail);
+                            _context.OrderDetails.Remove(trackedOrderDetail);
 
-                            var otherOrderDetails = await context.OrderDetails
+                            var otherOrderDetails = await _context.OrderDetails
                                 .Where(od => od.OrderId == trackedOrderDetail.OrderId && od.Id != trackedOrderDetail.Id)
                                 .ToListAsync();
 
                             if (!otherOrderDetails.Any())
                             {
-                                var order = await context.Orders.FirstOrDefaultAsync(o => o.Id == trackedOrderDetail.OrderId);
+                                var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == trackedOrderDetail.OrderId);
                                 if (order != null)
                                 {
-                                    context.Orders.Remove(order);
+                                    _context.Orders.Remove(order);
                                 }
                             }
 
-                            await context.SaveChangesAsync();
+                            await _context.SaveChangesAsync();
                             transaction.Commit();
                         }
                     }
-                    //if (orderDetail != null)
-                    //{
-                    //    context.OrderDetails.Remove(orderDetail);
-                    //    var otherOrderDetails = await context.OrderDetails
-                    //    .Where(od => od.OrderId == orderDetail.OrderId && od.Id != orderDetail.Id)
-                    //    .ToListAsync();
-                    //    if (!otherOrderDetails.Any())
-                    //    {
-                    //        var order = await context.Orders.FirstOrDefaultAsync(o => o.Id == orderDetail.OrderId);
-                    //        if (order != null)
-                    //        {
-                    //            context.Orders.Remove(order);
-                    //        }
-                    //    }
-                    //}
-
-                    //await context.SaveChangesAsync();
-                    //transaction.Commit();
                 }
             }
             catch (Exception ex)
             {
-                await _logger.LogDetailAsync($"Error in {nameof(DeleteReplenishmentsAboveSystemMin)}: {ex.Message}", origin: nameof(DeleteReplenishmentsAboveSystemMin));
+                await _logger.LogDetailAsync($"Error in {nameof(DeleteReplenishment)}: {ex.Message}", origin: nameof(DeleteReplenishment));
                 throw;
             }
         }
-        //public async Task DeleteReplenishmentsAboveSystemMin()
-        //{
-        //    try
-        //    {
-        //        using (var context = new NeutronDb())
-        //        {
-        //            var replens = await context.Database.SqlQuery<ReplenDelete>("usp_GetReplenishments").ToListAsync();
-        //            if (replens == null || replens.Count == 0) return;
 
-        //            foreach (var replen in replens)
-        //            {
-        //                var orderDetail =
-        //                    await context.OrderDetails.FirstOrDefaultAsync(r => r.Id == replen.OrderDetailId);
-        //                if (orderDetail != null)
-        //                {
-        //                    var itemDefinition = await context.ItemDefinitions.FirstOrDefaultAsync(r => r.Id == orderDetail.ItemDefinitionId);
-        //                    if (itemDefinition == null) continue;
-        //                    var systemMin = itemDefinition.SystemMin;
-        //                    var inventory = await context.Inventory.Where(r => r.ItemDefinitionId == itemDefinition.Id).ToListAsync();
-        //                    var totalQuantityInInventory = inventory.Sum(r => r.Quantity);
-        //                    if (totalQuantityInInventory > systemMin)
-        //                    {
-        //                        context.OrderDetails.Remove(orderDetail);
-        //                        await context.SaveChangesAsync();
-        //                        //check if there are any other order details for this order
-        //                        var otherOrderDetails = await context.OrderDetails.Where(r => r.OrderId == replen.OrderId).ToListAsync();
-        //                        if (otherOrderDetails.Count > 0) continue;
-        //                        //if none, delete the order
-        //                        var order = await context.Orders.FirstOrDefaultAsync(r => r.Id == replen.OrderId);
-        //                        if (order != null)
-        //                        {
-        //                            context.Orders.Remove(order);
-        //                            await context.SaveChangesAsync();
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            await context.SaveChangesAsync();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await _logger.LogDetailAsync($"Delete Replenishments Error. {Environment.NewLine} {ex.Message}  {Environment.NewLine}{ex.InnerException} ");
-        //    }
-        //}
 
-        private class ReplenDelete
+        internal class ReplenDelete
         {
             public int OrderId { get; set; }
             public int OrderDetailId { get; set; }

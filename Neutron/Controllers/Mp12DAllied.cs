@@ -477,19 +477,19 @@ namespace Neutron.Controllers
             return deviceResponse;
         }
 
-        private void AbortNotification()
-        {
-            if (!_hanel.Init_Success)
-            {
-                _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
-                return;
-            }
-            cError = "";
-            if (_hanel.Notification_DeRegister(_myNotificationHandle, ref cError))
-                _logger.LogDetailAsync($"Notification aborted successfully...").SafeFireAndForget();
-            else
-                _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
-        }
+        //private void AbortNotification()
+        //{
+        //    if (!_hanel.Init_Success)
+        //    {
+        //        _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
+        //        return;
+        //    }
+        //    cError = "";
+        //    if (_hanel.Notification_DeRegister(_myNotificationHandle, ref cError))
+        //        _logger.LogDetailAsync($"Notification aborted successfully...").SafeFireAndForget();
+        //    else
+        //        _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
+        //}
 
         public DeviceResponse Park()
         {

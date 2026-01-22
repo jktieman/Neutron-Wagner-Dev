@@ -93,6 +93,7 @@ namespace Neutron.Forms
         private readonly ILocationsRepository _locationsRepository;
         private readonly IAreaRepository _areaRepository;
         private readonly IPrintJobRepository _printJobRepository;
+        private readonly IReplenRepository _replenRepository;
 
         private BindingListView<AvailableOrdersView> _bindingListViewAvailableOrdersViews;
 
@@ -224,7 +225,8 @@ namespace Neutron.Forms
             , ILocationsRepository locationsRepository, IOrderDetailsRepository orderDetailsRepository
             , IAreaRepository areaRepository, IInventoryRepository inventoryRepository, IInventoryUnitOfWork inventoryUnitOfWork
             , IIptiDisplayFunctions iptiDisplayFunctions
-            , IDialogService dialogService, IPrintJobRepository printJobRepository, Func<NeutronDb> contextFactory)
+            , IDialogService dialogService, IPrintJobRepository printJobRepository
+            , IReplenRepository replenRepository , Func<NeutronDb> contextFactory)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
 
@@ -298,6 +300,7 @@ namespace Neutron.Forms
             _iptiDisplayFunctions = iptiDisplayFunctions;
             _dialogService = dialogService;
             _printJobRepository = printJobRepository;
+            _replenRepository = replenRepository;
             _iptiConfig = _jsonData.LoadFile<IptiConfig>();
             _selectedRowIndices = new List<int>();
             InitForm();
@@ -315,7 +318,7 @@ namespace Neutron.Forms
             _synchronizationContext = SynchronizationContext.Current;
             InitGrids();
 
-            _replenProcessor = new ReplenProcessor(_contextFactory);
+            _replenProcessor = new ReplenProcessor(_contextFactory, _replenRepository);
 
             _useCostCenter = _neutronVariables.UseCostCenter;
             SetupPickPositions(_neutronVariables.PickBatchSize, _neutronVariables.PickBatchRows);

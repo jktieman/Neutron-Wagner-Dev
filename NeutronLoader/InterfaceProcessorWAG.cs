@@ -51,13 +51,15 @@ namespace NeutronLoader
         private Timer _timer;
         private bool _loadOrdersBusy;
         private readonly ISapService _sapService;
+        private readonly IReplenRepository _replenRepository;
         private readonly IOrdersRepository _ordersRepository;
         private DocumentToPrint _documentToPrint;
         private DocumentPrinterPreferences _documentPrinter;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly Func<NeutronDb> _contextFactory;
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView, ISapService sapService, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
+            IJsonData jsonData, WorkstationView workstationView, ISapService sapService
+            , IReplenRepository replenRepository, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
             
@@ -67,6 +69,7 @@ namespace NeutronLoader
             _jsonData = jsonData;
             _workstationView = workstationView;
             _sapService = sapService;
+            _replenRepository = replenRepository;
             _repoOrder = new GenericRepository<Order>(contextFactory);
             _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
             _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
@@ -83,7 +86,7 @@ namespace NeutronLoader
         private void Init()
         {
             _logger = NeutronCore.Global.Logger.SetupLogger("NeutronLoader");
-            _replenProcessor = new ReplenProcessor(_contextFactory);
+            _replenProcessor = new ReplenProcessor(_contextFactory, _replenRepository);
             _documentToPrint = new DocumentToPrint();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             _itemDefinitionProcessor = new ItemDefinitionProcessor(_jsonData, _contextFactory);

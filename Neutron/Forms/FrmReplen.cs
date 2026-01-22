@@ -53,6 +53,7 @@ using NeutronCore.StaticClasses;
 using NeutronData.UnitOfWorks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using Microsoft.Extensions.Logging;
+using ReplenService;
 
 
 namespace Neutron.Forms
@@ -156,6 +157,7 @@ namespace Neutron.Forms
         private IIptiDisplayFunctions _iptiDisplayFunctions;
         private readonly IptiConfig _iptiConfig;
         private readonly IDialogService _dialogService;
+        private readonly IReplenRepository _replenRepository;
 
         private List<HardwareDevice> _blastzones;
         private bool _blastzone;
@@ -201,7 +203,8 @@ namespace Neutron.Forms
             , IAreaRepository areaRepository, IInventoryRepository inventoryRepository, IInventoryUnitOfWork inventoryUnitOfWork
             , IIptiDisplayFunctions iptiDisplayFunctions
             , IptiConfig iptiConfig
-            , IDialogService dialogService, Func<NeutronDb> contextFactory)
+            , IDialogService dialogService
+            , IReplenRepository replenRepository, Func<NeutronDb> contextFactory)
         {
 
             InitializeComponent();
@@ -229,7 +232,7 @@ namespace Neutron.Forms
             _iptiDisplayFunctions = iptiDisplayFunctions;
             _iptiConfig = iptiConfig;
             _dialogService = dialogService;
-
+            _replenRepository = replenRepository;
 
 
             _repoReplenOrder = new GenericRepository<ReplenOrder>(contextFactory);
@@ -10491,7 +10494,7 @@ namespace Neutron.Forms
         private void MBMainReplenishments_Click(object sender, EventArgs e)
         {
             Hide();
-            using (Form frm = new FrmReplenishments())
+            using (Form frm = new FrmReplenishments(_replenRepository))
             {
                 frm.ShowDialog();
                 Show();

@@ -95,19 +95,9 @@ namespace Neutron.Controllers
             _dialogService = dialogService;
             // FrmMain passed in
             _currentForm = frm;
-
+            _testing = true;
             Init();
         }
-        //private void Init()
-        //{
-        //    _logger.LogDetailAsync($"Mp12D Constructor - {_currentForm.Name}").SafeFireAndForget();
-        //    _callBackHandlerInit = MyInitProgressDelegate;
-        //    _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D());
-        //    _logger.LogDetailAsync(@"Hanel Device Controller has been created: ").SafeFireAndForget();
-
-        //    Init2();
-        //}
-
         private void Init()
         {
             LogInitializationStart();
@@ -127,7 +117,16 @@ namespace Neutron.Controllers
         }
         private void CreateHanelDeviceController()
         {
-            _hanel = _testing ? new Hanel_DeviceController(HanelDcStatics.Controller_Type_Hanel_Mp12D(), _dialogService, _logger, true) : new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D(), _dialogService);
+            if (_testing == true)
+            {
+                _hanel = new Hanel_DeviceController(HanelDcStatics.Controller_Type_Hanel_Mp12D(), _dialogService,
+                    _logger, true);
+            }
+            else
+            {
+               _hanel = new Hanel_DeviceController(Hanel_DeviceController.Controller_Type_Hanel_Mp12D(), _dialogService);
+            }
+                 
         }
         private void LogDeviceControllerCreation()
         {
@@ -618,19 +617,19 @@ namespace Neutron.Controllers
 
 
 
-        private void AbortNotification()
-        {
-            if (!_hanel.Init_Success)
-            {
-                _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
-                return;
-            }
-            cError = "";
-            if (_hanel.Notification_DeRegister(_myNotificationHandle, ref cError))
-                _logger.LogDetailAsync($"Notification aborted successfully...").SafeFireAndForget();
-            else
-                _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
-        }
+        //private void AbortNotification()
+        //{
+        //    if (!_hanel.Init_Success)
+        //    {
+        //        _logger.LogDetailAsync($"Not Initialized.  Code is: {_hanel.LastStatus_Code.ToString()}  Message is: {_hanel.LastStatus_Message}").SafeFireAndForget();
+        //        return;
+        //    }
+        //    cError = "";
+        //    if (_hanel.Notification_DeRegister(_myNotificationHandle, ref cError))
+        //        _logger.LogDetailAsync($"Notification aborted successfully...").SafeFireAndForget();
+        //    else
+        //        _logger.LogDetailAsync($"De-registration Error...  {cError}").SafeFireAndForget();
+        //}
         
         public DeviceResponse Park()
         {
@@ -720,6 +719,7 @@ namespace Neutron.Controllers
 
             }
             _logger.LogDetailAsync(msg).SafeFireAndForget();
+           // MessageBox.Show ($"{msg}","Device Status", MessageBoxButtons.OK,MessageBoxIcon.Information);
 
             return deviceStatus;
         }

@@ -12,7 +12,8 @@ namespace Neutron.Forms
 {
     public partial class FrmReplenishments : Form
     {
-        private readonly ReplenRepository _replenRepository;
+        private readonly IReplenRepository _replenRepository;
+
         private BindingListView<Replenishment> _bindingListView;
         private BindingSource _bindingSource;
 
@@ -24,10 +25,10 @@ namespace Neutron.Forms
         private Button _buttonRefresh;
         private Label _labelRecordCount;
         private ComboBox _comboBoxFilterColumn;
-        public FrmReplenishments()
+        public FrmReplenishments(IReplenRepository replenRepository)
         {
             InitializeComponent();
-            _replenRepository = new ReplenRepository();
+            _replenRepository = replenRepository;
             _bindingSource = new BindingSource();
             InitializeControls();
         }
@@ -98,7 +99,7 @@ namespace Neutron.Forms
             _dataGridViewReplenishments = new DataGridView
             {
                 Location = new Point(12, 50),
-                Size = new Size(850, 400),
+                Size = new Size(900, 570),
                 AutoGenerateColumns = false,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 AllowUserToAddRows = false,

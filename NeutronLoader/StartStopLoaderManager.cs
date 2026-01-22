@@ -11,6 +11,7 @@ using SAPServer;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ReplenService;
 
 namespace NeutronLoader
 {
@@ -22,18 +23,21 @@ namespace NeutronLoader
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
         private readonly WorkstationView _workstationView;
+        private readonly IReplenRepository _replenRepository;
         private readonly IOrdersRepository _ordersRepository;
         private ISapService _sapService;
         private readonly Func<NeutronDb> _contextFactory;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
-            NeutronLicense neutronLicense, WorkstationView workstationView, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
+            NeutronLicense neutronLicense, WorkstationView workstationView
+            , IReplenRepository replenRepository, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _jsonData = jsonData;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
             _workstationView = workstationView;
+            _replenRepository = replenRepository;
             _ordersRepository = ordersRepository;
             Init();
         }
@@ -81,7 +85,7 @@ namespace NeutronLoader
                 case "WAG":
                     {
                         _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
-                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _ordersRepository, _contextFactory);
+                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _replenRepository, _ordersRepository,  _contextFactory);
                         Mediator.GetInstance().RunLoaderOnceAsync += async (s, e) => await _interfaceProcessor.RunLoaderOnce();
                         break;
                     }
