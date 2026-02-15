@@ -215,7 +215,7 @@ namespace Neutron.Forms
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
+                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
                 InitialSearch(_item);
                 LabelStationName.Text = _workstationView.ToString();
                 LabelStationName2.Text = _workstationView.ToString();
@@ -332,7 +332,7 @@ namespace Neutron.Forms
                 CloseButtonPressed = false;
                 _imagesDirectory = LoaderSettings.GetImagesDirectory();
                 FillComboBoxes();
-                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
+                _inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
                 InitialSearch(_item);
                 LabelStationName.Text = _workstationView.ToString();
                 LabelStationName2.Text = _workstationView.ToString();
@@ -2552,8 +2552,8 @@ namespace Neutron.Forms
                             {
                                 _historyManager.SaveHistory(actionCode, inv, pickQty);
                             }
-                            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-                            var canDelete = inventoryManager.QuickReleaseCheck(inv);
+                            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
+                            var canDelete = await inventoryManager.QuickReleaseCheck(inv);
                             if (canDelete)
                             {
                                 var sb = new StringBuilder();
@@ -2570,7 +2570,7 @@ namespace Neutron.Forms
                                 if (result == DialogResult.Yes)
                                 {
                                     _logger.LogDetailAsync($"{sb.ToString()}").SafeFireAndForget();
-                                    var deleted = inventoryManager.ReleaseCheck(inv);
+                                    var deleted = await inventoryManager.ReleaseCheck(inv);
                                 }
                             }
                         }
