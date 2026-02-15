@@ -24,7 +24,8 @@ namespace NeutronData.Repositories
         Task<TEntity> FindByFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
         Task InsertAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
-        Task DeleteAsync(int id);
+        //Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
         bool DeleteWithReturn(int id);
         Task<List<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
 

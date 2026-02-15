@@ -95,11 +95,11 @@
             this.tabPage1.Controls.Add(this.MBSaveHistory);
             this.tabPage1.Controls.Add(this.MButtonRun);
             this.tabPage1.Controls.Add(this.DataGridView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1227, 639);
+            this.tabPage1.Size = new System.Drawing.Size(1227, 636);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Listing";
             // 
@@ -138,9 +138,9 @@
             this.CheckedListBoxActionCodes.CheckOnClick = true;
             this.CheckedListBoxActionCodes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CheckedListBoxActionCodes.FormattingEnabled = true;
-            this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(3, 16);
+            this.CheckedListBoxActionCodes.Location = new System.Drawing.Point(3, 18);
             this.CheckedListBoxActionCodes.Name = "CheckedListBoxActionCodes";
-            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 481);
+            this.CheckedListBoxActionCodes.Size = new System.Drawing.Size(188, 479);
             this.CheckedListBoxActionCodes.TabIndex = 0;
             this.CheckedListBoxActionCodes.ThreeDCheckBoxes = true;
             // 
@@ -176,7 +176,7 @@
             this.DateTimePickerTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.DateTimePickerTo.Location = new System.Drawing.Point(310, 46);
             this.DateTimePickerTo.Name = "DateTimePickerTo";
-            this.DateTimePickerTo.Size = new System.Drawing.Size(147, 21);
+            this.DateTimePickerTo.Size = new System.Drawing.Size(147, 24);
             this.DateTimePickerTo.TabIndex = 5;
             this.DateTimePickerTo.Enter += new System.EventHandler(this.DateTimePickerTo_Enter);
             // 
@@ -196,7 +196,7 @@
             this.DateTimePickerFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.DateTimePickerFrom.Location = new System.Drawing.Point(310, 14);
             this.DateTimePickerFrom.Name = "DateTimePickerFrom";
-            this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 21);
+            this.DateTimePickerFrom.Size = new System.Drawing.Size(147, 24);
             this.DateTimePickerFrom.TabIndex = 4;
             this.DateTimePickerFrom.Value = new System.DateTime(2018, 1, 1, 5, 20, 0, 0);
             this.DateTimePickerFrom.Enter += new System.EventHandler(this.DateTimePickerFrom_Enter);
@@ -259,7 +259,7 @@
             this.TextBoxFind.Location = new System.Drawing.Point(704, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(220, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(220, 34);
             this.TextBoxFind.TabIndex = 5;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxFind_KeyPress);
@@ -376,6 +376,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmHistory";
             this.Load += new System.EventHandler(this.FrmHistory_Load);
+            this.Shown += new System.EventHandler(this.FrmHistory_Shown);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

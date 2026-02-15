@@ -144,14 +144,18 @@ namespace NeutronData.Repositories
         }
         public async Task<TEntity> FindByKeyAsync(int? id)
         {
-            await _semaphore.WaitAsync();
+            if (id == null)
+            {
+                throw new ArgumentNullException(nameof(id), @"The id parameter cannot be null.");
+            }
             try
             {
-                return await _dbSet.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id);
+                return await _dbSet.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id.Value);
             }
-            finally
+            catch (Exception ex)
             {
-                _semaphore.Release();
+                // Log the exception (e.g., using a logger)
+                throw new InvalidOperationException("An error occurred while retrieving the entity.", ex);
             }
         }
         public void Insert(TEntity entity)
@@ -316,30 +320,56 @@ namespace NeutronData.Repositories
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-
+            using var context = _contextFactory();
+            using var transaction = context.Database.BeginTransaction();
             try
             {
-                using (var context = _contextFactory())
+                DetachLocalEntity(context, id);
+                var entity = await context.Set<TEntity>().FindAsync(id);
+                if (entity == null)
                 {
-                    DetachLocalEntity(context, id);
-                    var entity = context.Set<TEntity>().Find(id);
-                    if (entity == null)
-                    {
-                       // _logger.LogDetailAsync($"Delete Error. Entity with ID {id} not found.").SafeFireAndForget();
-                        return;
-                    }
-                    context.Set<TEntity>().Attach(entity);
-                    context.Set<TEntity>().Remove(entity);
-                    await context.SaveChangesAsync();
+                    return false;
                 }
+                context.Set<TEntity>().Attach(entity);
+                context.Set<TEntity>().Remove(entity);
+                await context.SaveChangesAsync();
+                transaction.Commit();
+                return true;
             }
             catch (Exception ex)
             {
+                transaction.Rollback();
                 LogError(ex, "DELETE ASYNC");
+                return false; // Or rethrow if you prefer exceptions
             }
         }
+
+        //public async Task DeleteAsync(int id)
+        //{
+
+        //    try
+        //    {
+        //        using (var context = _contextFactory())
+        //        {
+        //            DetachLocalEntity(context, id);
+        //            var entity = context.Set<TEntity>().Find(id);
+        //            if (entity == null)
+        //            {
+        //               // _logger.LogDetailAsync($"Delete Error. Entity with ID {id} not found.").SafeFireAndForget();
+        //                return;
+        //            }
+        //            context.Set<TEntity>().Attach(entity);
+        //            context.Set<TEntity>().Remove(entity);
+        //            await context.SaveChangesAsync();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogError(ex, "DELETE ASYNC");
+        //    }
+        //}
 
         public bool DeleteWithReturn(int id)
         {

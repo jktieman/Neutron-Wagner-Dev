@@ -1,37 +1,38 @@
+using AlliedLogger;
 using Equin.ApplicationFramework;
+using ExcelManager;
+using JsonManager;
 using MetroFramework.Forms;
+using Neutron.Classes;
+using Neutron.Extensions;
 using Neutron.Global;
+using Neutron.Interfaces;
+using NeutronCore;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
 using NeutronData.DataContexts;
+using NeutronData.Interfaces;
 using NeutronData.Models;
+using NeutronData.Models.Lookups;
+using NeutronData.ModelViews;
 using NeutronData.Repositories;
+using NeutronEvents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
+using System.Data.Entity.Infrastructure;
 using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using NeutronData.ModelViews;
-using NeutronData.Models.Lookups;
-using Neutron.Classes;
-using JsonManager;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Resources;
 using System.Threading;
-using AlliedLogger;
-using Neutron.Interfaces;
-using NeutronCore.Extensions;
-using NeutronCore;
-using NeutronCore.Enums;
-using NeutronData.Interfaces;
-using StorageType = NeutronData.Models.Lookups.StorageType;
-using ExcelManager;
-using System.Data;
-using System.Reflection;
 using System.Threading.Tasks;
-using Neutron.Extensions;
-using NeutronEvents;
+using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using StorageType = NeutronData.Models.Lookups.StorageType;
 
 namespace Neutron.Forms
 {
@@ -55,6 +56,7 @@ namespace Neutron.Forms
         private readonly GenericRepository<UnitOfIssue> _repoUnitOfIssue;
         private readonly GenericRepository<Inventory> _repoInventory;
         private readonly GenericRepository<OrderDetail> _repoOrderDetails;
+
         private IDynamicLogger _logger;
         readonly IJsonData _jsonData;
         private readonly WorkstationView _workstation;
@@ -64,19 +66,22 @@ namespace Neutron.Forms
         private readonly IHistoryManager _historyManager;
         private List<ItemDefinitionView> _currentList;
         private readonly IWorkstationRepository _workstationRepository;
-
+        private readonly GenericRepository<Order> _repoOrders;
         public bool CloseButtonPressed { get; set; }
         private BackgroundWorker _dgvColumnWidthSizer;
         private bool _startup = true;
 
         private readonly Func<NeutronDb> _contextFactory;
         // private readonly List<Workstation> _pickStations;
+        private readonly DeleteHelper _deleteHelper;
+
 
         public FrmItemDefinitions(IWorkstationRepository workstationRepository, IJsonData jsonData, WorkstationView workstation
             , IAkaRepository akaRepository, IImageManager imageManager
-            , IAreaRepository areaRepository, IHistoryManager historyManager, Func<NeutronDb> contextFactory)
+            , IAreaRepository areaRepository, IHistoryManager historyManager, Func<NeutronDb> contextFactory, DeleteHelper deleteHelper)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+            _deleteHelper = deleteHelper;
             InitializeComponent();
             _workstationRepository = workstationRepository;
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -104,6 +109,7 @@ namespace Neutron.Forms
             _repoUnitOfIssue = new GenericRepository<UnitOfIssue>(contextFactory);
             _repoInventory = new GenericRepository<Inventory>(contextFactory);
             _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory);
+            _repoOrders = new GenericRepository<Order>(contextFactory);
 
             _akaRepository = akaRepository;
             _imageManager = imageManager;
@@ -1111,23 +1117,57 @@ namespace Neutron.Forms
         #endregion
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
+            await DeleteItemDefinition();
+        }
+
+        private async Task DeleteItemDefinition()
+        {
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
-            var itemDefinition = _repoItemDefinition.FindByKey(itemDefinitionView.Id);
+            var itemDefinition = await _repoItemDefinition.FindByKeyAsync(itemDefinitionView.Id);
             if (itemDefinition is null) return;
 
-            if (CheckForInventory(itemDefinition.Id)) return;
-            var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result != DialogResult.Yes) return;
+            var res = await _deleteHelper.DeleteWithCheckAsync<ItemDefinition>(itemDefinition.Id, "ItemDefinitions", "Id");
+
+            // Check res for value
+            if (!res.Success)
+            {
+                MessageBox.Show($"{res.Message}", "Delete Blocked", MessageBoxButtons.OK);
+                return;
+            }
+            //delete was successful, remove any replen orders for this item definition
+            await DeleteReplenOrdersForItemDefinition(itemDefinition);
+
 
             await _historyManager.SaveHistoryAsync(ActionCode.ItemDelete, itemDefinition);
-            await _repoItemDefinition.DeleteAsync(itemDefinition.Id);
-
             TextBoxFind.Text = string.Empty;
             RefreshData();
             TextBoxFind.Focus();
             tabControl1.SelectedTab = Listing;
         }
+
+        private async Task DeleteReplenOrdersForItemDefinition(ItemDefinition itemDefinition)
+        {
+            var areaEightItemDefinition = _repoItemDefinition.FindBy(r => r.Item == itemDefinition.Item && r.AreaId == 8).FirstOrDefault();
+            if (areaEightItemDefinition == null) return;
+
+            var itemDefinitionId = areaEightItemDefinition.Id;
+
+            var orderDetails =  _repoOrderDetails.FindByInclude(r => r.ItemDefinitionId == itemDefinitionId, r => r.Order).ToList();
+            if (!orderDetails.Any()) return;
+
+            foreach (var orderDetail in orderDetails)
+            {
+                var order = await _repoOrders.FindByKeyAsync(orderDetail.OrderId);
+                if (order != null)
+                {
+                    await _historyManager.SaveHistoryAsync(ActionCode.OrderDelete, order);
+                    await _repoOrders.DeleteAsync(order.Id);
+                }
+                await _historyManager.SaveHistoryAsync(ActionCode.OrderDetailDelete, orderDetail);
+                await _repoOrderDetails.DeleteAsync(orderDetail.Id);
+            }
+        }
+
         private bool CheckForInventory(int id)
         {
             var recs = _repoInventory.FindBy(r => r.ItemDefinitionId == id).ToList();

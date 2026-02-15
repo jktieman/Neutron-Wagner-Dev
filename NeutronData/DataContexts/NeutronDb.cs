@@ -70,7 +70,7 @@ namespace NeutronData.DataContexts
         public DbSet<NOVA_OH> NOVA_OH { get; set; }
         public DbSet<NOVA_OUTPUT> NOVA_OUTPUT { get; set; }
         public DbSet<PriorityRecord> PriorityRecords { get; set; }
-
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OrderDetail>()
@@ -79,8 +79,9 @@ namespace NeutronData.DataContexts
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.OrderDetails)
                 .WithRequired(od => od.Order)
-                .HasForeignKey(od => od.OrderId); ;
+                .HasForeignKey(od => od.OrderId);
 
+           
             //modelBuilder.Entity<User>()
             //    .HasMany(u => u.Groups)
             //    .WithMany(r => r.Users)

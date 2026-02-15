@@ -300,6 +300,7 @@
     <Compile Include="PrintModels\Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AkaRepository.cs" />
+    <Compile Include="Repositories\DeleteHelper.cs" />
     <Compile Include="Repositories\GenericRepository.cs" />
     <Compile Include="Interfaces\ILocationsRepository.cs" />
     <Compile Include="Repositories\HistoryRepository.cs" />

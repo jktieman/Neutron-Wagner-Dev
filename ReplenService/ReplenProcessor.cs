@@ -100,7 +100,7 @@ namespace ReplenService
         /// </remarks>
         public async Task<Replenishment> ProcessReplenishment(Replenishment replenishment)
         {
-            Debug.WriteLine($"Item: {replenishment.Item} ");
+            Debug.WriteLine($"Process Replenishment Item: {replenishment.Item} ");
             ReplenOrder replenStoreOrder;
             // Quantity must be greater than zero to be considered for replenishment
             // if not, return null value

@@ -1,11 +1,12 @@
-﻿using NeutronData.Models;
+﻿using System.Threading.Tasks;
+using NeutronData.Models;
 
 namespace Neutron.Interfaces
 { 
     public interface IInventoryManager
     {
-        bool DeleteInventoryRecord(int invId, bool releaseOnly = false);
-        bool ReleaseCheck(Inventory inventory);
-        bool QuickReleaseCheck(Inventory inventory);
+        Task<bool> DeleteInventoryRecord(int invId, bool releaseOnly = false);
+        Task<bool> ReleaseCheck(Inventory inventory);
+        Task<bool> QuickReleaseCheck(Inventory inventory);
     }
 }

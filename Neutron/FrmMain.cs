@@ -76,6 +76,7 @@ namespace Neutron
         private readonly IAkaRepository _akaRepository;
         private readonly ILacProcessor _lacProcessor;
         private readonly Mediator _mediator;
+        private readonly DeleteHelper _deleteHelper;
 
         //  private TcpIptiCommandCenter _tcpIptiCommandCenter;
         private CompressService _compressService;
@@ -133,7 +134,9 @@ namespace Neutron
             , ILocationsRepository locationsRepository
             , IInventoryRepository inventoryRepository
             , IInventoryUnitOfWork inventoryUnitOfWork, Func<NeutronDb> contextFactory
-            , IDialogService dialogService, Mediator mediator)
+            , IDialogService dialogService
+            , Mediator mediator
+            , DeleteHelper deleteHelper)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _dialogService = dialogService;
@@ -155,6 +158,7 @@ namespace Neutron
             _inventoryRepository = inventoryRepository ?? throw new ArgumentNullException(nameof(inventoryRepository));
             _inventoryUnitOfWork = inventoryUnitOfWork ?? throw new ArgumentNullException(nameof(inventoryUnitOfWork));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _deleteHelper = deleteHelper;
 
             InitializeComponent();
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
@@ -1222,7 +1226,7 @@ namespace Neutron
             {
                 Hide();
                 using (MetroForm frm = new FrmItemDefinitions(_workstationRepository, _jsonData, _workstationView
-                           , _akaRepository, _imageManager, _areaRepository, _historyManager, _contextFactory))
+                           , _akaRepository, _imageManager, _areaRepository, _historyManager, _contextFactory, _deleteHelper ))
                 {
                     frm.ShowDialog();
                     Show();

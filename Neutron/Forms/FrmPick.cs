@@ -3381,17 +3381,17 @@ namespace Neutron.Forms
         }
 
 
-        private void MBPickBack_Click(object sender, EventArgs e)
+        private async void MBPickBack_Click(object sender, EventArgs e)
         {
             MBPickBack.Enabled = false;
-            ExecutePickBackProcess();
+            await ExecutePickBackProcess();
             MBPickBack.Enabled = true;
         }
 
-        private void ExecutePickBackProcess()
+        private async Task ExecutePickBackProcess()
         {
             ClearIptiDisplayFunctions();
-            DeleteRelease();
+            await DeleteRelease();
             ResetHanelDeviceStatus();
             ClearProLites();
             ClearActiveDeviceIndicators();
@@ -7198,18 +7198,18 @@ namespace Neutron.Forms
             }
         }
 
-        private void MBSkipPick_Click(object sender, EventArgs e)
+        private async void MBSkipPick_Click(object sender, EventArgs e)
         {
-            SkipPick();
+            await SkipPick();
         }
 
-        private void SkipPick()
+        private async Task SkipPick()
         {
             if (_currentPickStop.PickViews.Count > 1 && _neutronVariables.SpecialBackOrder)
             {
                 //EnablePickAccept(false);
                 SpecialPickAccept();
-                CompleteSpecialPick();
+               await CompleteSpecialPick();
                 //EnablePickAccept(true);
             }
             else  // only skipping one pickview
@@ -7667,7 +7667,7 @@ namespace Neutron.Forms
 
             if (InvokeRequired)
             {
-                var method = new MethodInvoker(() => SpecialPickAccept());
+                var method = new MethodInvoker(SpecialPickAccept);
                 Invoke(method);
                 return;
             }
@@ -7682,7 +7682,7 @@ namespace Neutron.Forms
         }
 
 
-        private void CompleteSpecialPick()
+        private async Task CompleteSpecialPick()
         {
             if (_logLevel == 8) _logger.LogDetailAsync("Clear Active Device Indicator - Pick Accept").SafeFireAndForget();
 
@@ -7750,7 +7750,7 @@ namespace Neutron.Forms
             else
             {
                 // ---         Task.Run(() => _logger.LogDetailAsync($"CloseBatch"));
-                CloseBatch();
+                await CloseBatch();
             }
         }
         /// <summary>
@@ -8184,14 +8184,14 @@ namespace Neutron.Forms
         //    _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
         //}
 
-        private void CloseBatch()
+        private async Task CloseBatch()
         {
             var batchPositions = _ordersToPick.Where(r => r.OrderId != 0).ToList();
 
             LogCloseBatchStart();
             ResetHanelDeviceStatus();
             UpdateOrderStatus();
-            DeleteRelease();
+            await DeleteRelease();
             // await ClearBatchRelatedData(batchPositions);
             ClearAllDeviceIndicators();
             ClearProLites();
@@ -8286,12 +8286,12 @@ namespace Neutron.Forms
         //    }
         //}
 
-        private void DeleteRelease()
+        private async Task DeleteRelease()
         {
             _logger.LogDetailAsync($"DeleteRelease Start").SafeFireAndForget();
             // check for Inventory locations that need to be Released
             //var locationIds = new List<int>();
-            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
+            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
 
             try
             {
@@ -8302,7 +8302,7 @@ namespace Neutron.Forms
 
                     foreach (var inv in invs)
                     {
-                        var canDelete = inventoryManager.QuickReleaseCheck(inv);
+                        var canDelete = await inventoryManager.QuickReleaseCheck(inv);
                         if (!canDelete) continue;
                         var sb = new StringBuilder();
                         var item = inv.ItemDefinition != null ? inv.ItemDefinition.Item : string.Empty;
@@ -8321,7 +8321,7 @@ namespace Neutron.Forms
                             continue;
                         }
 
-                        inventoryManager.ReleaseCheck(inv);
+                        await inventoryManager.ReleaseCheck(inv);
                     }
 
 
@@ -11546,9 +11546,9 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void MBShortPick_Click(object sender, EventArgs e)
+        private async void MBShortPick_Click(object sender, EventArgs e)
         {
-            ShortPick();
+            await ShortPick();
         }
 
         //private void ShortPick()
@@ -11579,7 +11579,7 @@ namespace Neutron.Forms
         //    }
         //}
 
-        private void ShortPick()
+        private async Task ShortPick()
         {
             //EnablePickAccept(false);
 
@@ -11602,12 +11602,12 @@ namespace Neutron.Forms
 
                     pickView.OrderDetail.LineStatusId = (int)LineStatus.Complete;
                     pickView.OrderDetail.PickedQuantity = pickViewTotal;
-                    _repoOrderDetails.Update(pickView.OrderDetail);
+                    await _repoOrderDetails.UpdateAsync(pickView.OrderDetail);
                 }
             }
 
             // function to finish the move and update the lights for the next pick
-            CompleteSpecialPick();
+            await CompleteSpecialPick();
             //EnablePickAccept(true);
         }
 
@@ -11938,10 +11938,10 @@ namespace Neutron.Forms
             ChangeQuantity();
             e.Handled = true;
         }
-        private void HandleBKey(KeyEventArgs e)
+        private async Task HandleBKey(KeyEventArgs e)
         {
             e.Handled = true;
-            ShortPick();
+            await ShortPick();
         }
         private void HandleHKey(KeyEventArgs e)
         {

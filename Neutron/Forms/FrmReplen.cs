@@ -8542,9 +8542,9 @@ namespace Neutron.Forms
             _repoReplenOrder.Update(order);
         }
 
-        private void MBRefreshRack_Click(object sender, EventArgs e)
+        private async void MBRefreshRack_Click(object sender, EventArgs e)
         {
-            ShowAvailableOrders();
+            await ShowAvailableOrders();
             TextBoxFindAvailableOrdersRack.Focus();
         }
 
@@ -9757,8 +9757,9 @@ namespace Neutron.Forms
                            $"Release Inventory Location for/n {pickView.Item} at {inventory.Location.Slot}?", "Yes", "No");
                         if (result)
                         {
-                            _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventory);
+                            var inventoryView = _inventoryRepository.GetInventoryViewById(inventory.Id);
                             _repoInventory.Delete(inventory.Id);
+                            _historyManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventoryView);
                         }
                     }
 
@@ -10489,16 +10490,6 @@ namespace Neutron.Forms
             //    e.SuppressKeyPress = true;
             //    if (sender is TextBox textBox) HandleKeyboardInput(textBox);
             //}
-        }
-
-        private void MBMainReplenishments_Click(object sender, EventArgs e)
-        {
-            Hide();
-            using (Form frm = new FrmReplenishments(_replenRepository))
-            {
-                frm.ShowDialog();
-                Show();
-            }
         }
     }
 }

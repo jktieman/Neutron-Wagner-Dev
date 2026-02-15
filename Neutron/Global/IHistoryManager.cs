@@ -48,7 +48,7 @@ namespace Neutron.Global
         Task SaveHistoryAsync(ActionCode actionCode, ReplenOrderView order);
         Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, PickView pickView);
         Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory, int pickLocationQty, ReplenPickView pickView);
-        Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory);
+        Task SaveHistoryAsync(ActionCode actionCode, InventoryView inventoryView);
         List<HistoryView> GetHistoryRecordsByUser(string empId);
         List<HistoryView> GetHistoryRecords();
         List<HistoryView> GetHistoryRecords(string codes, DateTime fromDate, DateTime toDate, string find);

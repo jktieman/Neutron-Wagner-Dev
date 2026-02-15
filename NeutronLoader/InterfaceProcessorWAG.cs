@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -57,12 +58,14 @@ namespace NeutronLoader
         private DocumentPrinterPreferences _documentPrinter;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly Func<NeutronDb> _contextFactory;
+        private CancellationTokenSource _cancellationTokenSource;
+        
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
             IJsonData jsonData, WorkstationView workstationView, ISapService sapService
             , IReplenRepository replenRepository, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
-            
+
             _contextFactory = contextFactory;
             _neutronVariables = neutronVariables;
             _neutronLicense = neutronLicense;
@@ -111,40 +114,155 @@ namespace NeutronLoader
         /// Finally, it sets the loading process to not busy.
         /// </remarks>
         /// <returns>A Task representing the asynchronous operation.</returns>
+        //public async Task StartProcessingInterfaceFiles()
+        //{
+        //    try
+        //    {
+        //        if (_neutronVariables.LoaderDelay <= 0)
+        //        {
+        //            throw new ArgumentException("LoaderDelay must be greater than zero.");
+        //        }
+        //        _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
+        //        _timer.Elapsed += async (sender, e) =>
+        //        {
+        //            await _semaphore.WaitAsync();
+        //            try
+        //            {
+        //                Debug.WriteLine("Starting LoadOrders...");
+        //                await LoadOrders();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                _logger.LogDetailAsync($"Error in LoadOrders: {ex.Message}").SafeFireAndForget();
+        //            }
+        //            finally
+        //            {
+        //                _semaphore.Release();
+        //            }
+        //        };
+        //        Debug.WriteLine($"Timer started with interval: {_neutronVariables.LoaderDelay} seconds");
+        //        _timer.Start();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}").SafeFireAndForget();
+        //    }
+        //}
+
         public async Task StartProcessingInterfaceFiles()
         {
             try
             {
-                //var startTimeSpan = TimeSpan.Zero;
-                //var periodTimeSpan = TimeSpan.FromSeconds(_neutronVariables.LoaderDelay);
-                //_timer = new Timer(t => { _ = LoadOrders(); }, null, startTimeSpan, periodTimeSpan);
-                _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
-                //_timer.Elapsed += async (sender, e) => await LoadOrders();
-                _timer.Elapsed += async (sender, e) =>
+                if (_neutronVariables.LoaderDelay <= 0)
                 {
-                    if (_semaphore.CurrentCount == 0)
-                    {
-                        return;
-                    }
-                    await _semaphore.WaitAsync();
-                    try
-                    {
-                        await LoadOrders();
-                    }
-                    finally
-                    {
-                        _semaphore.Release();
-                    }
-                };
+                    throw new ArgumentException("LoaderDelay must be greater than zero.");
+                }
 
-                _timer.Start();
-                await Task.Delay(10);
+                _cancellationTokenSource = new CancellationTokenSource();
+                var token = _cancellationTokenSource.Token;
+
+                _ = Task.Run(async () =>
+                {
+                    while (!token.IsCancellationRequested)
+                    {
+                        await _semaphore.WaitAsync(token);
+                        try
+                        {
+                            Debug.WriteLine("Starting LoadOrders...");
+                            await LoadOrders();
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            _logger.LogDetailAsync("LoadOrders was cancelled.").SafeFireAndForget();
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogDetailAsync($"Error in LoadOrders: {ex.Message}").SafeFireAndForget();
+                        }
+                        finally
+                        {
+                            _semaphore.Release();
+                        }
+
+                        // Wait between executions
+                        try
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(_neutronVariables.LoaderDelay), token);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            _logger.LogDetailAsync("Delay was cancelled, stopping loader.").SafeFireAndForget();
+                            break;
+                        }
+                    }
+                }, token);
+
+                Debug.WriteLine($"Background loader started with interval: {_neutronVariables.LoaderDelay} seconds");
             }
             catch (Exception ex)
             {
                 _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}").SafeFireAndForget();
             }
         }
+
+        //public async Task StartProcessingInterfaceFiles()
+        //{
+        //    try
+        //    {
+        //        if (_neutronVariables.LoaderDelay <= 0)
+        //        {
+        //            throw new ArgumentException("LoaderDelay must be greater than zero.");
+        //        }
+        //        _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
+        //        _timer.Elapsed += async (sender, e) =>
+        //        {
+        //            // Stop timer to prevent overlap
+        //            _timer.Stop();
+
+        //            await _semaphore.WaitAsync();
+        //            try
+        //            {
+        //                Debug.WriteLine("Starting LoadOrders...");
+        //                await LoadOrders();
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                _logger.LogDetailAsync($"Error in LoadOrders: {ex.Message}{Environment.NewLine}{ex.StackTrace}").SafeFireAndForget();
+        //            }
+        //            finally
+        //            {
+        //                _semaphore.Release();
+
+        //                // Add delay before restarting timer
+        //                try
+        //                {
+        //                    await Task.Delay(TimeSpan.FromSeconds(30));
+        //                }
+        //                catch (Exception delayEx)
+        //                {
+        //                    _logger.LogDetailAsync($"Error during delay: {delayEx.Message}").SafeFireAndForget();
+        //                }
+
+        //                // Restart timer if not disposed
+        //                try
+        //                {
+        //                    _timer?.Start();
+        //                }
+        //                catch (ObjectDisposedException)
+        //                {
+        //                    _logger.LogDetailAsync("Timer was disposed, stopping loader.").SafeFireAndForget();
+        //                }
+        //            }
+        //        };
+        //        Debug.WriteLine($"Timer started with interval: {_neutronVariables.LoaderDelay} seconds");
+        //        _timer.Start();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}").SafeFireAndForget();
+        //    }
+        //}
 
         /// <summary>
         /// Asynchronously loads and processes orders from the SAP service.
@@ -492,9 +610,9 @@ namespace NeutronLoader
         private async Task<ItemDefinition> GetItemDefinition(NeutronInput line)
         {
             _logger.LogDetailAsync($"NeutronInput --  Delivery: {line.Order} Item: {line.Sku} Qty: {line.Qty}").SafeFireAndForget();
-            
+
             ItemDefinition itemDef = null;
-            
+
             // the ItemDefinition could be in multiple Areas and rules determine what Area to pick from.
             // If there are multiple Areas that have the ItemDefinition
             // There is a PickMax value in the ItemDefinition that determines where to pick from.
@@ -598,7 +716,7 @@ namespace NeutronLoader
             {
                 _logger.LogDetailAsync($"Error getting Item Definition: {ex.Message}").SafeFireAndForget();
             }
-            
+
             _logger.LogDetailAsync(
                 $"Final Answer => Item: {itemDef.Item} ItemDefinition Id: {itemDef.Id}  Area: {itemDef.AreaId}").SafeFireAndForget();
             return itemDef;
@@ -790,7 +908,11 @@ namespace NeutronLoader
 
         public void StopProcessingInterfaceFiles()
         {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _timer?.Stop();
             _timer?.Dispose();
+            Debug.WriteLine($"Loader Disposed");
         }
 
         public async Task RunLoaderOnce() => await LoadOrders();
