@@ -496,7 +496,7 @@ namespace NeutronData.Repositories
         {
             try
             {
-                var location = _repo.FindByKey(locationId);
+                var location = await _repo.FindByKeyAsync(locationId);
                 location.InUse = locationId != DefaultLocationId && isInUse;
                 await _repo.UpdateAsync(location);
             }
