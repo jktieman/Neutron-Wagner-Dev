@@ -70,6 +70,7 @@ namespace ReplenService
         private async Task<List<Inventory>> GetInventory(int itemDefinitionId)
         {
             var inventory = await _context.Inventory
+                .AsNoTracking()
                 .Where(inv => inv.ItemDefinitionId == itemDefinitionId)
                 .ToListAsync();
 
@@ -88,6 +89,7 @@ namespace ReplenService
             try
             {
                 var itemDefinition = await _context.ItemDefinitions
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.Item.ToUpper() == partNumber.ToUpper() && r.AreaId != AreaEight);
                 return itemDefinition;
             }
@@ -100,7 +102,7 @@ namespace ReplenService
 
         private async Task<ItemDefinition> GetItemDefinitionInEight(string partNumber)
         {
-            var itemDefinition = await _context.ItemDefinitions.FirstOrDefaultAsync(r => r.Item == partNumber && r.AreaId == AreaEight);
+            var itemDefinition = await _context.ItemDefinitions.AsNoTracking().FirstOrDefaultAsync(r => r.Item == partNumber && r.AreaId == AreaEight);
 
             return itemDefinition;
         }
@@ -108,8 +110,9 @@ namespace ReplenService
         private async Task<List<OrderDetail>> GetOrderDetails(List<int> orderDetailIds)
         {
             var orderDetails = await _context.OrderDetails
-                    .Where(od => orderDetailIds.Contains(od.Id))
-                    .ToListAsync();
+                .AsNoTracking()
+                .Where(od => orderDetailIds.Contains(od.Id))
+                .ToListAsync();
 
             return orderDetails;
         }
@@ -131,9 +134,10 @@ namespace ReplenService
 
                 foreach (var replen in replens)
                 {
-                    if (replen.OrderId == 547236)
+                    Debug.WriteLine($"Processing Order Id: {replen.OrderId}");
+                    if (replen.OrderId == 547322)
                     {
-                        Debug.WriteLine($"Hello {replen.OrderDetailId}");
+                        Debug.WriteLine($"Hello {replen.OrderDetailId} ------TESTING------");
                     }
                     var orderDetail = orderDetails.FirstOrDefault(od => od.Id == replen.OrderDetailId);
                     if (orderDetail == null) continue;
@@ -161,6 +165,7 @@ namespace ReplenService
                     if (totalQuantityInInventory > itemDefinition.SystemMin || totalInventoryInEight <= 0)
                     {
                         await DeleteReplenishment(orderDetail);
+                        Debug.WriteLine($"Deleting Item: {itemDefinition.Item}");
                     }
                 }
             }
