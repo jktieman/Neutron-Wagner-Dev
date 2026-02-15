@@ -14,31 +14,41 @@ namespace Neutron.Models
     {
         private readonly IInventoryUnitOfWork _inventoryUnitOfWork;
         private readonly ILocationsRepository _locationsRepository;
+        private readonly IInventoryRepository _inventoryRepository;
 
-        public InventoryManager(IInventoryUnitOfWork inventoryUnitOfWork, ILocationsRepository locationsRepository
+        public InventoryManager(IInventoryUnitOfWork inventoryUnitOfWork, ILocationsRepository locationsRepository, IInventoryRepository inventoryRepository
         )
         {
             _inventoryUnitOfWork = inventoryUnitOfWork;
             _locationsRepository = locationsRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
-        public bool DeleteInventoryRecord(int invId, bool releaseOnly = false)
+        public async Task<bool> DeleteInventoryRecord(int invId, bool releaseOnly = false)
         {
+            var result = false;
             var inventory = _inventoryUnitOfWork.Inventory.FindByKey(invId);
             if (inventory == null || (releaseOnly && inventory.StorageTypeId != (int)StorageType.Release))
             {
                 return false;
             }
-            GlobalVar.HistoryManager.SaveHistory(ActionCode.InventoryDelete, inventory);
+            var inventoryView = _inventoryRepository.GetInventoryViewById(inventory.Id);
+            
             var otherInventoryInLocation = _inventoryUnitOfWork.Inventory.FindBy(r => r.LocationId == inventory.LocationId);
             if (otherInventoryInLocation.Count() == 1)
             {
-                 _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
+                await _locationsRepository.SetLocationInUse(inventory.LocationId, b: false);
             }
-            return _inventoryUnitOfWork.Inventory.DeleteWithReturn(invId);
+
+            result = await _inventoryUnitOfWork.Inventory.DeleteAsync(invId);
+            if (result)
+            {
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryDelete, inventoryView);
+            }
+            return result;
         }
 
-        public bool ReleaseCheck(Inventory inventory)
+        public async Task<bool> ReleaseCheck(Inventory inventory)
         {
             var isInventoryEmpty = inventory.Quantity <= 0;
             var isStorageTypeRelease = inventory.StorageTypeId == (int)StorageType.Release;
@@ -46,13 +56,13 @@ namespace Neutron.Models
             {
                 return false;
             }
-            return DeleteInventoryRecord(inventory.Id, releaseOnly: true);
+            return await DeleteInventoryRecord(inventory.Id, releaseOnly: true);
         }
-        public bool QuickReleaseCheck(Inventory inventory)
+        public async Task<bool> QuickReleaseCheck(Inventory inventory)
         {
             var isInventoryEmpty = inventory.Quantity <= 0;
             var isStorageTypeRelease = inventory.StorageTypeId == (int)StorageType.Release;
-            return isInventoryEmpty && isStorageTypeRelease;
+            return await Task.FromResult(isInventoryEmpty && isStorageTypeRelease);
         }
     }
 }
