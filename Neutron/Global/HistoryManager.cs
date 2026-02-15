@@ -558,9 +558,9 @@ namespace Neutron.Global
             Save(history);
         }
 
-        public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inventory)
+        public async Task SaveHistoryAsync(ActionCode actionCode, InventoryView inv)
         {
-            var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
+            //var inv = _inventoryRepository.GetInventoryViewById(inventory.Id);
             var history = new History
             {
                 ActionCode = (int)actionCode,
