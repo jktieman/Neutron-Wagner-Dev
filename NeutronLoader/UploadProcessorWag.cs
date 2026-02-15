@@ -150,13 +150,13 @@ namespace NeutronLoader
                     {
                         if (history == null) continue;
 
-                        _logger.LogDetailAsync(
-                            $"History Record Order Detail Item: {history.Item} Info: {history.OrderDetailInfo}").SafeFireAndForget();
+                        //_logger.LogDetailAsync(
+                        //    $"History Record Order Detail Item: {history.Item} Info: {history.OrderDetailInfo}").SafeFireAndForget();
 
                         if (string.IsNullOrEmpty(history.OrderDetailInfo))
                         {
-                            _logger.LogDetailAsync(
-                                $"History Record Order Detail Info is Null or Empty.  Continue to Next Item").SafeFireAndForget();
+                            //_logger.LogDetailAsync(
+                            //    $"History Record Order Detail Info is Null or Empty.  Continue to Next Item").SafeFireAndForget();
                             continue;
                         }
 
@@ -170,10 +170,7 @@ namespace NeutronLoader
 
                         if (input != null)
                         {
-
-                            _logger.LogDetailAsync($"Record Found in NOVA_INPUT.  TransId: {transIdDec}").SafeFireAndForget();
-
-                            _logger.LogDetailAsync($"Build NOVA_OUTPUT record.").SafeFireAndForget();
+                            _logger.LogDetailAsync($"Record Found in NOVA_INPUT.  TransId: {transIdDec} --  Build NOVA_OUTPUT record.").SafeFireAndForget();
                             var output = new NOVA_OUTPUT
                             {
                                 TRANSID = input.TRANSID,
