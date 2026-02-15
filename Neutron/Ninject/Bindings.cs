@@ -133,7 +133,8 @@ namespace Neutron.Ninject
             Bind<IMemoryCache>().To<MemoryCache>().InSingletonScope();
             Bind<IHistoryRepository>().To<HistoryRepository>().InSingletonScope();
 
-
+            Bind<DeleteHelper>().ToSelf().InSingletonScope();
+            
             // Bind<IIptiDisplayFunctions>().To<IptiDisplayFunctions>().InSingletonScope();
             //Bind<ISendEmail>().To<SendEmail>().InSingletonScope();
             //Bind<ISapService>().To<SAPService>().InSingletonScope();
