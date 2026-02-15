@@ -43,28 +43,38 @@ namespace Neutron.Forms
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             InitializeComponent();
-            _repoHistory = new GenericRepository<History>(contextFactory);
             _cultureInfo = Thread.CurrentThread.CurrentCulture;
             SetCulture(_cultureInfo.Name);
+            _repoHistory = new GenericRepository<History>(contextFactory);
+
             HideTabControlTabs();
-            SetupCheckListBoxActionCodes();
             _akaRepository = akaRepository;
             _historyManager = historyManager;
             _workstationView = workstationView;
             _headerTextManager = new HeaderTextManager();
-            SetupGrids();
-            mlUserInfo.Text = GlobalVar.User?.UserInfo;
-        }
 
+            mlUserInfo.Text = GlobalVar.User?.UserInfo;
+
+        }
 
         private void FrmHistory_Load(object sender, EventArgs e)
         {
+
             var date = DateTime.Now;
             DateTimePickerFrom.Value = new DateTime(2023, 1, 1, 0, 0, 0);
             DateTimePickerTo.Value = date;
             _currentFromDateTime = new DateTime(2023, 1, 1, 0, 0, 0);
             _currentToDateTime = date;
+
+            SetupGrids();
+
         }
+
+        private void FrmHistory_Shown(object sender, EventArgs e)
+        {
+            SetupCheckListBoxActionCodes();
+        }
+
 
         protected override CreateParams CreateParams
         {
@@ -371,29 +381,25 @@ namespace Neutron.Forms
 
         private void SetupCheckListBoxActionCodes()
         {
+            // Guard check: Skip re-initialization if already populated
+            if (CheckedListBoxActionCodes.Items.Count > 0)
+            {
+                return;
+            }
+
             var actionCodes = ((ActionCode[])Enum.GetValues(typeof(ActionCode))).ToList();
 
-            var codes = new Dictionary<int, string>();
+            CheckedListBoxActionCodes.Items.Clear();
             foreach (var code in actionCodes)
             {
-                if ((int)code > 48)
-                {
-                    codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
-                }
-                else
-                {
-                    //codes.Add((int)code, code.GetEnumDescription());
-                    codes.Add((int)code, _enumResourceManager.GetString(code.ToString()));
-                }
-
+                var displayText = _enumResourceManager.GetString(code.ToString());
+                CheckedListBoxActionCodes.Items.Add(new KeyValuePair<int, string>((int)code, displayText));
             }
-            CheckedListBoxActionCodes.DataSource = new BindingSource(codes, null);
+
             CheckedListBoxActionCodes.DisplayMember = "Value";
             CheckedListBoxActionCodes.ValueMember = "Key";
+
         }
-
-
-
 
         private void ButtonCheckAll_Click(object sender, EventArgs e)
         {
@@ -543,7 +549,7 @@ namespace Neutron.Forms
                 _currentFromDateTime = DateTimePickerFrom.Value;
                 _currentToDateTime = DateTimePickerTo.Value.AddDays(1).AddSeconds(-1);
             }
-            
+
             //_currentFromDateTime = DateTimePickerFrom.Value;
             //_currentToDateTime = DateTimePickerTo.Value;
             GetHistoryRecords();
@@ -611,7 +617,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-           // GetHistoryRecords();
+            // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -625,7 +631,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-           // GetHistoryRecords();
+            // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -639,7 +645,7 @@ namespace Neutron.Forms
             DateTimePickerTo.Value = date;
             _currentFromDateTime = DateTimePickerFrom.Value;
             _currentToDateTime = DateTimePickerTo.Value;
-           // GetHistoryRecords();
+            // GetHistoryRecords();
             Cursor.Current = Cursors.Default;
         }
 
@@ -668,7 +674,7 @@ namespace Neutron.Forms
 
         private void TransmitSelectedRecords()
         {
-            foreach (DataGridViewRow row in  DataGridView1.SelectedRows)
+            foreach (DataGridViewRow row in DataGridView1.SelectedRows)
             {
                 var id = (int)row.Cells["Id"].Value;
                 var history = _repoHistory.FindByKey(id);
