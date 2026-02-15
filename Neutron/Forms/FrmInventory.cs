@@ -1021,8 +1021,8 @@ namespace Neutron.Forms
                 }
 
                 await _inventoryUnitOfWork.Inventory.InsertAsync(rec);
-
-                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, rec);
+                var inventoryView = _inventoryRepository.GetInventoryViewById(rec.Id);
+                await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, inventoryView);
 
                 await RefreshData(rec.Id);
 
@@ -1919,7 +1919,7 @@ namespace Neutron.Forms
                     var result = MessageBox.Show(_resourceManager.GetString($"Message17"), string.Empty,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (result != DialogResult.Yes) return;
-                    DeleteInventoryItem(locView.Id, false);
+                    await DeleteInventoryItem(locView.Id, false);
                     await LoadViewEdit();
                     tabControl1.SelectedTab = tabPage2;
                 }
@@ -1932,10 +1932,10 @@ namespace Neutron.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        public void DeleteInventoryItem(int invId, bool releaseOnly)
+        public async Task DeleteInventoryItem(int invId, bool releaseOnly)
         {
-            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-            inventoryManager.DeleteInventoryRecord(invId, releaseOnly: releaseOnly);
+            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
+            await inventoryManager.DeleteInventoryRecord(invId, releaseOnly: releaseOnly);
         }
 
         /// <summary>
@@ -2428,7 +2428,10 @@ namespace Neutron.Forms
                             RFID = TextBoxInventoryNewLocationsRfid.Text
                         };
                         await _inventoryUnitOfWork.Inventory.InsertAsync(inventory);
-                        await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, inventory);
+                        
+                        var inventoryView = _inventoryRepository.GetInventoryViewById(inventory.Id);
+                        
+                        await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.InventoryAdd, inventoryView);
                         await _locationsRepository.SetLocationInUse(inventory.LocationId, b: true);
 
                         //TODO  fixed locationCode 
@@ -2579,8 +2582,8 @@ namespace Neutron.Forms
                     true);
             }
 
-            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository);
-            var canDelete = inventoryManager.QuickReleaseCheck(inventory);
+            var inventoryManager = new InventoryManager(_inventoryUnitOfWork, _locationsRepository, _inventoryRepository);
+            var canDelete = await inventoryManager.QuickReleaseCheck(inventory);
             if (canDelete)
             {
                 var sb = new StringBuilder();
@@ -2595,7 +2598,7 @@ namespace Neutron.Forms
                 if (result == DialogResult.Yes)
                 {
                     _logger.LogDetailAsync($"{sb}").SafeFireAndForget();
-                    deleted = inventoryManager.ReleaseCheck(inventory);
+                    deleted = await inventoryManager.ReleaseCheck(inventory);
                 }
             }
 
