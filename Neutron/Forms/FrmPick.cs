@@ -328,7 +328,7 @@ namespace Neutron.Forms
             SetLoaderButtonText();
             SetUploadButtonText();
             FillComboBoxAreaNumbers();
-
+            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");
             mlUserInfo.Text = GetCurrentUserString();
 
             _currentAreaId = _workstationView.AreaId;
