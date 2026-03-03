@@ -293,7 +293,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();
-            //ToolTipPickScreen.SetToolTip(ButtonMove, _resourceManager.GetString($"GetBin"));
+            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");     // _resourceManager.GetString($"GetBin"));
 
 
             _orderDetailsRepository = new ReplenOrderDetailsRepository(_contextFactory);
@@ -6586,12 +6586,13 @@ namespace Neutron.Forms
             //var loc2 = _currentPickStop.CurrentInventoryLocation.Location.Loc2;
             //var loc3 = _currentPickStop.CurrentInventoryLocation.Location.Loc3;
             //var loc4 = _currentPickStop.CurrentInventoryLocation.Location.Loc4;
+            var areaId = _currentPickStop.CurrentInventoryLocation.AreaId;
             var loc1 = TextBoxPickLoc1.Text.ParseInt();
             var loc2 = TextBoxPickLoc2.Text.ParseInt();
             var loc3 = TextBoxPickLoc3.Text.ParseInt();
             var loc4 = TextBoxPickLoc4.Text.ParseInt();
 
-            var location = _repoLocationRepository.FindBy(r => r.Loc1 == loc1 && r.Loc2 == loc2 && r.Loc3 == loc3 && r.Loc4 == loc4).FirstOrDefault();
+            var location = _repoLocationRepository.FindBy(r => r.AreaId == areaId && r.Loc1 == loc1 && r.Loc2 == loc2 && r.Loc3 == loc3 && r.Loc4 == loc4).FirstOrDefault();
             if (location == null)
             {
                 MessageBox.Show($"Location does not exist.");
