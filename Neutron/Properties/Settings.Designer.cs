@@ -43,5 +43,41 @@ namespace Neutron.Properties {
                 return ((string)(this["ConfigFilePath"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DataGridView1ColumnWidths {
+            get {
+                return ((string)(this["DataGridView1ColumnWidths"]));
+            }
+            set {
+                this["DataGridView1ColumnWidths"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DataGridViewInventoryLocationsColumnWidths {
+            get {
+                return ((string)(this["DataGridViewInventoryLocationsColumnWidths"]));
+            }
+            set {
+                this["DataGridViewInventoryLocationsColumnWidths"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DataGridViewInventoryNewLocationsColumnWidths {
+            get {
+                return ((string)(this["DataGridViewInventoryNewLocationsColumnWidths"]));
+            }
+            set {
+                this["DataGridViewInventoryNewLocationsColumnWidths"] = value;
+            }
+        }
     }
 }

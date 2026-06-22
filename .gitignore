@@ -241,3 +241,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 #/SlotNameFactory/
+/Neutron/Forms/FrmPick.cs.bak
+/Neutron/Forms/FrmReplen.cs.bak

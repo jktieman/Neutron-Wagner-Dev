@@ -186,7 +186,7 @@ namespace Neutron.Forms
             _quantityToPick = quantity;
             InitForm();
 
-            if (_tcpIptiCommandCenter == null)
+            if (_tcpIptiCommandCenter == null && _workstationView.AreaId != 8 )
             {
                 _tcpIptiCommandCenter = new TcpIptiCommandCenter(_jsonData, _logger, _workstationView);
             }
@@ -240,8 +240,8 @@ namespace Neutron.Forms
 
                 if (_workstationView.AreaId == 8)
                 {
-                    // TextBoxScanLocation.Visible = true;
-                    //  LabelScanLocation.Visible = true;
+                     TextBoxScanLocation.Visible = true;
+                     LabelScanLocation.Visible = true;
                 }
                 else
                 {
@@ -289,7 +289,7 @@ namespace Neutron.Forms
                         }
                     case "Rack-Tablet":
                         {
-                            InitDeviceIndicators();
+                            //InitDeviceIndicators();
                             // Just the Tray Layout
                             break;
                         }
@@ -1186,6 +1186,28 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
             };
             DataGridViewHot.Columns.Add(col);
+
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "LotNumber",
+                HeaderText = "Lot Number", // _gridResourceManager.GetString($"LocationMax"),
+                Name = "LotNumber",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            };
+            DataGridViewHot.Columns.Add(col);
+            col = new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "ExpirationDate",
+                HeaderText = "Expiration Date",
+                //_gridResourceManager.GetString($"ReceivedDate"),
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
+                Name = "ExpirationDate"
+            };
+            col.DefaultCellStyle.Format = "MM-dd-yyyy";
+            DataGridViewHot.Columns.Add(col);
+            //---------
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "LocationMax",
@@ -1203,8 +1225,9 @@ namespace Neutron.Forms
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleLeft },
                 Name = "ReceivedDate"
             };
-            col.DefaultCellStyle.Format = "MM-dd-yyyy hh:mm:ss";
+            col.DefaultCellStyle.Format = "MM-dd-yyyy";
             DataGridViewHot.Columns.Add(col);
+            
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "StorageTypeName",
@@ -1646,334 +1669,359 @@ namespace Neutron.Forms
             // get the quantity to store
             _quantity = GetQuantity();
             if (_quantity == 0) return;
+            
+            _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
 
-            if (_currentGridDataType == GridDataType.Current)
+            if (_currentItemDefinition.Expires)
             {
-                _currentInventoryView = ((ObjectView<SqlInventoryView>)_bindingSourceCurrent.Current).Object;
-                var loc1 = _currentInventoryView.Loc1;
-                var loc2 = _currentInventoryView.Loc2;
-                var loc3 = _currentInventoryView.Loc3;
-                var loc4 = _currentInventoryView.Loc4;
-
-                var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.Area.Id, loc1, loc2);
-                var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, loc1, loc2);
-
-                //var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1
-                // && d.DeviceType.Pickable);
-                //if (device == null) return;
-                UpdateHotPickScreen(_currentInventoryView);
-                HotAction.BackColor = Color.Green;
-                LabelFormTitle.BackColor = Color.Green;
-                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                MBHotAccept.Text = _resourceManager.GetString($"Accept");
-                MBHotAccept.Enabled = true;
-                tabControl1.SelectedTab = HotAction;
-
-                if (_workstationView.HardwareDevices.Any()) // Hardware devices
-                {
-
-                    foreach (var device in _workstationView.HardwareDevices)
-                    {
-                        switch (device.DeviceTypeId)
-                        {
-                            //if (device == null) //No Hardware devices
-                            //{
-                            //    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                            //    await UpdateHotPickScreen(_currentInventoryView);
-                            //    tabControl1.SelectedTab = HotAction;
-                            //}
-                            //else 
-                            case (int)DeviceTypeEnum.Shuttle
-                                when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
-                                // HotActionTray.BackColor = Color.LightGray;
-                                HotAction.BackColor = Color.LightGray;
-                                LabelFormTitle.BackColor = Color.Red;
-                                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                                MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
-                                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  // Shuttle
-                                                                                           //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                                                                                           //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
-                                UpdateHotPickScreenTray(_currentInventoryView);
-                                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
-
-                                tabControl1.SelectedTab = HotAction;
-                                break;
-                            case (int)DeviceTypeEnum.Shuttle:
-                                //Access Denied
-                                MessageBox.Show($"Location Access Denied");
-                                break;
-                            case (int)DeviceTypeEnum.Carousel
-                                when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
-                                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-
-                                //  UpdateCurrentDeviceIndicator();
-                                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
-                                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  // Carousel
-                                ShowShi(loc1, loc2, loc3, loc4.ToString(), 1.ToString());
-                                UpdateHotPickScreen(_currentInventoryView);
-                                tabControl1.SelectedTab = HotAction;
-                                break;
-                            case (int)DeviceTypeEnum.Carousel:
-                                // Access Denied
-                                MessageBox.Show($"Location Access Denied");
-                                break;
-                            case (int)DeviceTypeEnum.Hanel12D
-                                when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
-                                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
-                                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                                // HotActionTray.BackColor = Color.LightGray;
-                                HotAction.BackColor = Color.LightGray;
-                                LabelFormTitle.BackColor = Color.LightGray;
-                                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                                MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
-                                PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  //Hanel12D
-                                                                                           //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                                                                                           //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
-                                UpdateHotPickScreen(_currentInventoryView);
-                                tabControl1.SelectedTab = HotAction;
-                                break;
-                            case (int)DeviceTypeEnum.Hanel12D:
-                                //Access Denied
-                                MessageBox.Show($"Location Access Denied");
-                                break;
-                            case (int)DeviceTypeEnum.Blastzone:
-                                // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
-                                //  BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                                // HotActionTray.BackColor = Color.LightGray;
-                                HotAction.BackColor = Color.LightGray;
-                                LabelFormTitle.BackColor = Color.LightGray;
-                                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
-                                MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
-                                //TextBoxHotPickQuantity.Text = _quantity.ToString();
-                                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-
-                                if (_neutronVariables.IptiDisplays)
-                                {
-                                    if (_iptiDisplayFunctions != null)
-                                    {
-                                        _iptiDisplayFunctions.TurnOnBlastzoneDisplay(loc2, loc4, _quantity.ToString());
-                                        _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(loc2, _currentInventoryView.Item.Trim());
-                                    }
-
-                                }
-                                UpdateHotPickScreen(_currentInventoryView);
-                                tabControl1.SelectedTab = HotAction;
-                                break;
-                            case (int)DeviceTypeEnum.ProLite:
-                                {
-                                    _workstationView.ProLiteManager?.TurnOn(loc1, loc3, loc4, _quantity);
-                                    break;
-                                }
-                            case (int)DeviceTypeEnum.IptiDisplays:  //Batch Table
-                                {
-                                    if (_neutronVariables.IptiDisplays)
-                                    {
-                                        if (_iptiDisplayFunctions != null)
-                                        {
-                                            _iptiDisplayFunctions.TurnOnBatchDisplay(1, _quantity.ToString());
-                                            _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentInventoryView.Item.Trim());
-                                        }
-                                    }
-                                    break;
-                                }
-                            case (int)DeviceTypeEnum.Rack:
-                                BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                                //HotAction.BackColor = Color.Red;
-                                LabelFormTitle.BackColor = Color.Red;
-                                LabelFormTitle.Text = "Rack Selection"; // $"{_resourceManager.GetString($"HotPick")}";
-                                MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
-                                //UpdateCurrentDeviceIndicator();
-                                //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-                                //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                                //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
-                                //await UpdateHotPickScreen(_currentInventoryView);
-                                // tabControl1.SelectedTab = HotRackTray;
-                                tabControl1.SelectedTab = HotAction;
-                                break;
-
-                            //case (int)DeviceTypeEnum.Rack:
-                            //    {
-                            //        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                            //        //HotAction.BackColor = Color.Red;
-                            //        LabelFormTitle.BackColor = Color.Red;
-                            //        LabelFormTitle.Text = "Rack Selection"; // $"{_resourceManager.GetString($"HotPick")}";
-                            //        MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
-                            //        //UpdateCurrentDeviceIndicator();
-                            //        //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
-                            //        //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                            //        //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
-                            //        //await UpdateHotPickScreen(_currentInventoryView);
-                            //        var manager = new NeutronTrayManager(PanelTableLayoutRack, 4, 1, 4, 2, 2, 2, 1, 1);
-                            //        tabControl1.SelectedTab = HotAction;
-                            //        break;
-                            //    }
-                            // Rack or Supervisor
-                            default:
-                                MessageBox.Show("Invalid Hardware Setting.");
-                                //await UpdateHotPickScreen(_currentInventoryView);
-                                ////UpdateCurrentDeviceIndicator();
-                                //_deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
-                                //tabControl1.SelectedTab = HotAction;
-                                break;
-                        }
-
-                        _logger.LogDetailAsync($"Hot Pick Button Press END").SafeFireAndForget();
-
-                        //---------------------------------------------------------------------
+                                AddNewLocation();
+                                return;
+            }
 
 
-                    }
-                }
+
+            if (_currentGridDataType == GridDataType.Current 
+                && string.IsNullOrEmpty(_currentInventoryView.LotNumber) 
+                || _currentInventoryView.ExpirationDate.HasValue == false)
+            {
+                UpdateCurrentLocation();
             }
             else // the current grid is New Items, Not Current Items
             {
-                var location = ((ObjectView<LocationView>)_bindingSourceNewLocations.Current).Object;
-
-                var itemDef = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
-                // Is this location and itemDef already in inventory
-                var inventoryView =
-                    _repoInv.GetInventoryViewByItemDefinitionIdAndLocationId(itemDef.Id, location.Id);
-                if (inventoryView == null)
-                {
-                    _currentInventoryView = new SqlInventoryView
-                    {
-                        ItemDefinitionId = itemDef.Id,
-                        Item = itemDef.Item,
-                        Description = itemDef.Description,
-                        HeightCodeId = itemDef.HeightCodeId,
-                        HeightCodeName = itemDef.HeightCodeName,
-                        ReceivedDate = DateTime.Now,
-                        SizeCodeId = itemDef.SizeCodeId,
-                        SizeCodeName = itemDef.SizeCodeName,
-                        VelocityCodeId = itemDef.VelocityCodeId,
-                        VelocityCodeName = itemDef.VelocityCodeName,
-                        StorageTypeId = itemDef.StorageTypeId,
-                        StorageTypeName = itemDef.StorageTypeName,
-                        AreaId = itemDef.AreaId,
-                        Quantity = 0,
-                        LocationId = location.Id,
-                        Loc1 = location.Loc1,
-                        Loc2 = location.Loc2,
-                        Loc3 = location.Loc3,
-                        Loc4 = location.Loc4,
-                        Loc5 = location.Loc5,
-                        LocationCode = location.LocationCode,
-                        InUse = location.InUse,
-                        UnitOfIssueId = itemDef.UnitOfIssueId,
-                        UnitOfIssueName = itemDef.UnitOfIssueName
-                    };
-                }
-                else
-                {
-                    _currentInventoryView = inventoryView;
-                }
-
-                // var loc1 = location.Loc1;
-                var loc2 = location.Loc2;
-                var loc3 = location.Loc3;
-                var loc4 = location.Loc4;
-
-                var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.AreaId, location.Loc1, loc2);
-                var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, location.Loc1, loc2);
-
-                var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == location.Loc1);
-
-
-                HotAction.BackColor = Color.Green;
-                LabelFormTitle.BackColor = Color.Green;
-                LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                MBHotAccept.Text = _resourceManager.GetString($"Accept");
-                MBHotAccept.Enabled = true;
-
-
-                if (device == null) //No Hardware devices
-                {
-                    // BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                    // HotActionTray.BackColor = Color.LightGray;
-                    HotAction.BackColor = Color.LightGray;
-                    UpdateHotPickScreen(_currentInventoryView);
-                    tabControl1.SelectedTab = HotAction;
-                }
-                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Shuttle)
-                {
-                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
-                    {
-                        _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
-                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                        //HotActionTray.BackColor = Color.LightGray;
-                        HotAction.BackColor = Color.LightGray;
-                        LabelFormTitle.BackColor = Color.Red;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
-                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Shuttle
-                        //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
-                        UpdateHotPickScreenTray(_currentInventoryView);
-                        // tabControl1.SelectedTab = HotActionTray;
-                        tabControl1.SelectedTab = HotAction;
-                    }
-                    else
-                    {
-                        //Access Denied
-                        MessageBox.Show($"Location Access Denied");
-                    }
-                }
-                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Carousel)
-                {
-                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
-                    {
-                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                        // UpdateCurrentDeviceIndicator();
-                        _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
-                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Carousel
-                        ShowShi(location.Loc1, loc2, loc3, loc4.ToString(), 1.ToString());
-                        UpdateHotPickScreen(_currentInventoryView);
-                        tabControl1.SelectedTab = HotAction;
-                    }
-                    else
-                    {
-                        // Access Denied
-                        MessageBox.Show($"Location Access Denied");
-                    }
-                }
-                else if (device.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D)
-                {
-                    if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
-                    {
-                        _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
-                        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
-                        // HotActionTray.BackColor = Color.LightGray;
-                        HotAction.BackColor = Color.LightGray;
-                        LabelFormTitle.BackColor = Color.LightGray;
-                        LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
-                        MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
-                        PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Hanel12D
-                        //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
-                        //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
-                        UpdateHotPickScreen(_currentInventoryView);
-                        tabControl1.SelectedTab = HotAction;
-                    }
-                    else
-                    {
-                        //Access Denied
-                        MessageBox.Show($"Location Access Denied");
-                    }
-                }
-                else // Rack or Supervisor
-                {
-                    UpdateHotPickScreen(_currentInventoryView);
-                    // UpdateCurrentDeviceIndicator();
-                    _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
-                    tabControl1.SelectedTab = HotAction;
-                }
-
-                _logger.LogDetailAsync($"Hot Pick Button Press END").SafeFireAndForget();
-
+                AddNewLocation();
             }
 
 
             _logger.LogDetailAsync($"Hot Store Button Press END").SafeFireAndForget();
+        }
+
+        private void UpdateCurrentLocation()
+        {
+            var loc1 = _currentInventoryView.Loc1;
+            var loc2 = _currentInventoryView.Loc2;
+            var loc3 = _currentInventoryView.Loc3;
+            var loc4 = _currentInventoryView.Loc4;
+
+            var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.Area.Id, loc1, loc2);
+            var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, loc1, loc2);
+
+            //var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == loc1
+            // && d.DeviceType.Pickable);
+            //if (device == null) return;
+            UpdateHotPickScreen(_currentInventoryView);
+            HotAction.BackColor = Color.Green;
+            LabelFormTitle.BackColor = Color.Green;
+            LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+            MBHotAccept.Text = _resourceManager.GetString($"Accept");
+            TextBoxLotNumber.Text = _currentInventoryView.LotNumber;
+            TextBoxExpirationDate.Text = _currentInventoryView.ExpirationDate.HasValue
+                ? _currentInventoryView.ExpirationDate.Value.ToShortDateString()
+                : string.Empty; MBHotAccept.Enabled = true;
+            tabControl1.SelectedTab = HotAction;
+
+            if (_workstationView.HardwareDevices.Any()) // Hardware devices
+            {
+
+                foreach (var device in _workstationView.HardwareDevices)
+                {
+                    switch (device.DeviceTypeId)
+                    {
+                        //if (device == null) //No Hardware devices
+                        //{
+                        //    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                        //    await UpdateHotPickScreen(_currentInventoryView);
+                        //    tabControl1.SelectedTab = HotAction;
+                        //}
+                        //else 
+                        case (int)DeviceTypeEnum.Shuttle
+                            when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
+                            // HotActionTray.BackColor = Color.LightGray;
+                            HotAction.BackColor = Color.LightGray;
+                            LabelFormTitle.BackColor = Color.Red;
+                            LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                            MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
+                            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  // Shuttle
+                            //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                            //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                            UpdateHotPickScreenTray(_currentInventoryView);
+                            BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
+
+                            tabControl1.SelectedTab = HotAction;
+                            break;
+                        case (int)DeviceTypeEnum.Shuttle:
+                            //Access Denied
+                            MessageBox.Show($"Location Access Denied");
+                            break;
+                        case (int)DeviceTypeEnum.Carousel
+                            when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
+                            BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+
+                            //  UpdateCurrentDeviceIndicator();
+                            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
+                            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  // Carousel
+                            ShowShi(loc1, loc2, loc3, loc4.ToString(), 1.ToString());
+                            UpdateHotPickScreen(_currentInventoryView);
+                            tabControl1.SelectedTab = HotAction;
+                            break;
+                        case (int)DeviceTypeEnum.Carousel:
+                            // Access Denied
+                            MessageBox.Show($"Location Access Denied");
+                            break;
+                        case (int)DeviceTypeEnum.Hanel12D
+                            when _lacProcessor.MovePermitted(_workstationView.WorkstationId, loc1, loc2):
+                            _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
+                            BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                            // HotActionTray.BackColor = Color.LightGray;
+                            HotAction.BackColor = Color.LightGray;
+                            LabelFormTitle.BackColor = Color.LightGray;
+                            LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                            MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
+                            PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);  //Hanel12D
+                            //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                            //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
+                            UpdateHotPickScreen(_currentInventoryView);
+                            tabControl1.SelectedTab = HotAction;
+                            break;
+                        case (int)DeviceTypeEnum.Hanel12D:
+                            //Access Denied
+                            MessageBox.Show($"Location Access Denied");
+                            break;
+                        case (int)DeviceTypeEnum.Blastzone:
+                            // _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
+                            //  BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                            // HotActionTray.BackColor = Color.LightGray;
+                            HotAction.BackColor = Color.LightGray;
+                            LabelFormTitle.BackColor = Color.LightGray;
+                            LabelFormTitle.Text = $"{_resourceManager.GetString($"HotPick")}";
+                            MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
+                            //TextBoxHotPickQuantity.Text = _quantity.ToString();
+                            //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+
+                            if (_neutronVariables.IptiDisplays)
+                            {
+                                if (_iptiDisplayFunctions != null)
+                                {
+                                    _iptiDisplayFunctions.TurnOnBlastzoneDisplay(loc2, loc4, _quantity.ToString());
+                                    _iptiDisplayFunctions.TurnOnBlastzoneOrderControl(loc2, _currentInventoryView.Item.Trim());
+                                }
+
+                            }
+                            UpdateHotPickScreen(_currentInventoryView);
+                            tabControl1.SelectedTab = HotAction;
+                            break;
+                        case (int)DeviceTypeEnum.ProLite:
+                        {
+                            _workstationView.ProLiteManager?.TurnOn(loc1, loc3, loc4, _quantity);
+                            break;
+                        }
+                        case (int)DeviceTypeEnum.IptiDisplays:  //Batch Table
+                        {
+                            if (_neutronVariables.IptiDisplays)
+                            {
+                                if (_iptiDisplayFunctions != null)
+                                {
+                                    _iptiDisplayFunctions.TurnOnBatchDisplay(1, _quantity.ToString());
+                                    _iptiDisplayFunctions.TurnOnBatchOrderControl(_currentInventoryView.Item.Trim());
+                                }
+                            }
+                            break;
+                        }
+                        case (int)DeviceTypeEnum.Rack:
+                            BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                            //HotAction.BackColor = Color.Red;
+                            LabelFormTitle.BackColor = Color.Red;
+                            LabelFormTitle.Text = "Rack Selection"; // $"{_resourceManager.GetString($"HotPick")}";
+                            MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
+                            //UpdateCurrentDeviceIndicator();
+                            //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                            //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                            //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                            //await UpdateHotPickScreen(_currentInventoryView);
+                            // tabControl1.SelectedTab = HotRackTray;
+                            tabControl1.SelectedTab = HotAction;
+                            break;
+
+                        //case (int)DeviceTypeEnum.Rack:
+                        //    {
+                        //        BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                        //        //HotAction.BackColor = Color.Red;
+                        //        LabelFormTitle.BackColor = Color.Red;
+                        //        LabelFormTitle.Text = "Rack Selection"; // $"{_resourceManager.GetString($"HotPick")}";
+                        //        MBHotAccept.Text = $"{_resourceManager.GetString($"Accept")}";
+                        //        //UpdateCurrentDeviceIndicator();
+                        //        //PositionDevice(loc1, loc2, loc3, loc4, moveDevice: true);
+                        //        //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                        //        //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                        //        //await UpdateHotPickScreen(_currentInventoryView);
+                        //        var manager = new NeutronTrayManager(PanelTableLayoutRack, 4, 1, 4, 2, 2, 2, 1, 1);
+                        //        tabControl1.SelectedTab = HotAction;
+                        //        break;
+                        //    }
+                        // Rack or Supervisor
+                        default:
+                            MessageBox.Show("Invalid Hardware Setting.");
+                            //await UpdateHotPickScreen(_currentInventoryView);
+                            ////UpdateCurrentDeviceIndicator();
+                            //_deviceIndicatorManager?.UpdateCurrentDeviceIndicator(loc1);
+                            //tabControl1.SelectedTab = HotAction;
+                            break;
+                    }
+
+                    _logger.LogDetailAsync($"Hot Pick Button Press END").SafeFireAndForget();
+
+                    //---------------------------------------------------------------------
+
+
+                }
+            }
+        }
+
+        private void AddNewLocation()
+        {
+            var location = ((ObjectView<LocationView>)_bindingSourceNewLocations.Current).Object;
+
+            var itemDef = ((ObjectView<ItemDefinitionView>)_bindingSourceItemDefinitions.Current).Object;
+            // Is this location and itemDef already in inventory
+            var inventoryView =
+                _repoInv.GetInventoryViewByItemDefinitionIdAndLocationId(itemDef.Id, location.Id);
+            if (inventoryView == null)
+            {
+                _currentInventoryView = new SqlInventoryView
+                {
+                    ItemDefinitionId = itemDef.Id,
+                    Item = itemDef.Item,
+                    Description = itemDef.Description,
+                    HeightCodeId = itemDef.HeightCodeId,
+                    HeightCodeName = itemDef.HeightCodeName,
+                    ReceivedDate = DateTime.Now,
+                    SizeCodeId = itemDef.SizeCodeId,
+                    SizeCodeName = itemDef.SizeCodeName,
+                    VelocityCodeId = itemDef.VelocityCodeId,
+                    VelocityCodeName = itemDef.VelocityCodeName,
+                    StorageTypeId = itemDef.StorageTypeId,
+                    StorageTypeName = itemDef.StorageTypeName,
+                    AreaId = itemDef.AreaId,
+                    Quantity = 0,
+                    LocationId = location.Id,
+                    Loc1 = location.Loc1,
+                    Loc2 = location.Loc2,
+                    Loc3 = location.Loc3,
+                    Loc4 = location.Loc4,
+                    Loc5 = location.Loc5,
+                    LocationCode = location.LocationCode,
+                    InUse = location.InUse,
+                    UnitOfIssueId = itemDef.UnitOfIssueId,
+                    UnitOfIssueName = itemDef.UnitOfIssueName,
+                    LotNumber = string.Empty,
+                    ExpirationDate = null
+                };
+            }
+            else
+            {
+                _currentInventoryView = inventoryView;
+            }
+
+            // var loc1 = location.Loc1;
+            var loc2 = location.Loc2;
+            var loc3 = location.Loc3;
+            var loc4 = location.Loc4;
+
+            var maxColumns = _locationsRepository.GetMaxColumns(_workstationView.AreaId, location.Loc1, loc2);
+            var maxRows = _locationsRepository.GetMaxRows(_workstationView.AreaId, location.Loc1, loc2);
+
+            var device = _workstationView.HardwareDevices.FirstOrDefault(d => d.DeviceNumber == location.Loc1);
+
+
+            HotAction.BackColor = Color.Green;
+            LabelFormTitle.BackColor = Color.Green;
+            LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+            MBHotAccept.Text = _resourceManager.GetString($"Accept");
+            MBHotAccept.Enabled = true;
+
+
+            if (device == null) //No Hardware devices
+            {
+                // BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                // HotActionTray.BackColor = Color.LightGray;
+                HotAction.BackColor = Color.LightGray;
+                UpdateHotPickScreen(_currentInventoryView);
+                tabControl1.SelectedTab = HotAction;
+            }
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Shuttle)
+            {
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
+                {
+                    _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                    //HotActionTray.BackColor = Color.LightGray;
+                    HotAction.BackColor = Color.LightGray;
+                    LabelFormTitle.BackColor = Color.Red;
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                    MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
+                    PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Shuttle
+                    //ShowShi(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    //    , _currentInventoryView.Loc4.ToString(), 1.ToString());
+                    UpdateHotPickScreenTray(_currentInventoryView);
+                    // tabControl1.SelectedTab = HotActionTray;
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else
+                {
+                    //Access Denied
+                    MessageBox.Show($"Location Access Denied");
+                }
+            }
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Carousel)
+            {
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
+                {
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                    // UpdateCurrentDeviceIndicator();
+                    _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
+                    PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Carousel
+                    ShowShi(location.Loc1, loc2, loc3, loc4.ToString(), 1.ToString());
+                    UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else
+                {
+                    // Access Denied
+                    MessageBox.Show($"Location Access Denied");
+                }
+            }
+            else if (device.DeviceTypeId == (int)DeviceTypeEnum.Hanel12D)
+            {
+                if (_lacProcessor.MovePermitted(_workstationView.WorkstationId, location.Loc1, loc2))
+                {
+                    _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
+                    BuildTrayLayout(maxColumns, maxRows, loc3, loc4, 1, 1);
+                    // HotActionTray.BackColor = Color.LightGray;
+                    HotAction.BackColor = Color.LightGray;
+                    LabelFormTitle.BackColor = Color.LightGray;
+                    LabelFormTitle.Text = $"{_resourceManager.GetString($"HotStore")}";
+                    MBHotAcceptTray.Text = $"{_resourceManager.GetString($"Accept")}";
+                    PositionDevice(location.Loc1, loc2, loc3, loc4, moveDevice: true);  //Hanel12D
+                    //ProLite(_currentInventoryView.Loc1, _currentInventoryView.Loc2, _currentInventoryView.Loc3
+                    //    , _currentInventoryView.Loc4.ToString(), 1.ToString(), quantity);
+                    UpdateHotPickScreen(_currentInventoryView);
+                    tabControl1.SelectedTab = HotAction;
+                }
+                else
+                {
+                    //Access Denied
+                    MessageBox.Show($"Location Access Denied");
+                }
+            }
+            else // Rack or Supervisor
+            {
+                UpdateHotPickScreen(_currentInventoryView);
+                // UpdateCurrentDeviceIndicator();
+                _deviceIndicatorManager?.UpdateCurrentDeviceIndicator(location.Loc1);
+                tabControl1.SelectedTab = HotAction;
+            }
+
+            _logger.LogDetailAsync($"Hot Pick Button Press END").SafeFireAndForget();
         }
 
         private void UpdateHotPickScreen(SqlInventoryView invItem)
@@ -1991,7 +2039,11 @@ namespace Neutron.Forms
                     LabelHotPickDescription.Text = itemDefinition.Description;
                     LabelHotPickItem.Text = itemDefinition.Item;
                     LabelHotPickUOI.Text = itemDefinition.UnitOfIssue.Name;
-
+                    TextBoxLotNumber.Text = _currentInventoryView.LotNumber;
+                    TextBoxExpirationDate.Text = _currentInventoryView.ExpirationDate.HasValue
+                        ? _currentInventoryView.ExpirationDate.Value.ToShortDateString()
+                        : string.Empty; MBHotAccept.Enabled = true;
+                    
                     //TextBoxHotPickLoc1.Text = location.Loc1.ToString();
                     //TextBoxHotPickLoc2.Text = location.Loc2.ToString();
                     //TextBoxHotPickLoc3.Text = location.Loc3.ToString();
@@ -2098,6 +2150,10 @@ namespace Neutron.Forms
                 TextBoxHotPickLoc1.Location = new Point(50, 57);
                 TextBoxHotPickLoc1.Size = new Size(300, 62);
                 TextBoxHotPickLoc1.Text = location.Slot;
+                TextBoxLotNumber.Text = _currentInventoryView.LotNumber;
+                TextBoxExpirationDate.Text = _currentInventoryView.ExpirationDate.HasValue
+                    ? _currentInventoryView.ExpirationDate.Value.ToShortDateString()
+                    : string.Empty; MBHotAccept.Enabled = true;
             }
             if (location.Area.LocationTypeId == (int)LocationTypeEnum.Blastzone)
             {
@@ -2127,6 +2183,10 @@ namespace Neutron.Forms
                 TextBoxHotPickLoc3.Text = location.Loc3.ToString();
                 TextBoxHotPickLoc4.Text = location.Loc4.ToString();
                 TextBoxHotPickLoc5.Text = location.Loc5.ToString();
+                TextBoxLotNumber.Text = _currentInventoryView.LotNumber;
+                TextBoxExpirationDate.Text = _currentInventoryView.ExpirationDate.HasValue
+                    ? _currentInventoryView.ExpirationDate.Value.ToShortDateString()
+                    : string.Empty; MBHotAccept.Enabled = true;
             }
             if (location.Area.LocationTypeId == (int)LocationTypeEnum.Vertical)
             {
@@ -2145,6 +2205,10 @@ namespace Neutron.Forms
                 TextBoxHotPickLoc3.Text = location.Loc3.ToString();
                 TextBoxHotPickLoc4.Text = location.Loc4.ToString();
                 TextBoxHotPickLoc5.Text = location.Loc5.ToString();
+                TextBoxLotNumber.Text = _currentInventoryView.LotNumber;
+                TextBoxExpirationDate.Text = _currentInventoryView.ExpirationDate.HasValue
+                    ? _currentInventoryView.ExpirationDate.Value.ToShortDateString()
+                    : string.Empty; MBHotAccept.Enabled = true;
             }
 
             //LabelLocationNumber.Text = $"{_currentPickStop.GroupBoxLocationInventoryIndex + 1} of {_currentPickStop.Inventory.Count}";
@@ -2210,6 +2274,10 @@ namespace Neutron.Forms
                         ? ""
                         : invItem.ReceivedDate.ToShortDateString();
                     LabelPrimeBinTray.Visible = invItem.PrimeBin;
+                    TextBoxLotNumber.Text = invItem.LotNumber;
+                    TextBoxExpirationDate.Text = invItem.ExpirationDate.HasValue
+                        ? invItem.ExpirationDate.Value.ToShortDateString()
+                        : string.Empty; MBHotAccept.Enabled = true;
                     LabelStaticReleaseTray.Text = invItem.StorageTypeName;
                     if (_neutronVariables.UseImages) PictureBoxItemHotImage.LoadAsync(_imageManager.GetImageFile(invItem.Item).ToString());
                 }
@@ -2492,7 +2560,9 @@ namespace Neutron.Forms
                         ReceivedDate = DateTime.Now,
                         PrimeBin = _currentInventoryView.PrimeBin,
                         AreaId = _currentInventoryView.AreaId,
-                        RFID = string.Empty
+                        RFID = string.Empty,
+                        LotNumber = _currentInventoryView.LotNumber,
+                        ExpirationDate = _currentInventoryView.ExpirationDate
                     };
                     if (inventory.Quantity > 0 || inventory.StorageTypeId == (int)StorageType.Static)
                     {
@@ -3422,6 +3492,24 @@ namespace Neutron.Forms
                 case GridDataType.None:
                     //LoadHotPick();
                     break;
+            }
+        }
+
+        private void ButtonExpirationDate_Click(object sender, EventArgs e)
+        {
+            var inv = _inventoryRepository.GetInventoryById(_currentInventoryView.Id);
+           // if (inv == null) return;
+
+            using (var frm = new FrmExpiration(_currentInventoryView))
+            {
+                var result = frm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    _currentInventoryView.LotNumber = frm.LotNumber;
+                    _currentInventoryView.ExpirationDate = frm.ExpirationDate;
+                    TextBoxLotNumber.Text = frm.LotNumber;
+                    TextBoxExpirationDate.Text = frm.ExpirationDate.ToShortDateString();
+                }
             }
         }
     }

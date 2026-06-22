@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -72,8 +72,6 @@
     <Compile Include="HostFilePr1.cs" />
     <Compile Include="HostFileSfh.cs" />
     <Compile Include="InterfaceProcessor.cs" />
-    <Compile Include="InterfaceProcessorWAG.cs" />
-    <Compile Include="InterfaceProcessorMET.cs" />
     <Compile Include="InterfaceProcessorPr1.cs" />
     <Compile Include="InterfaceProcessorTop.cs" />
     <Compile Include="IUploadProcessor.cs" />
@@ -101,8 +99,6 @@
     </Compile>
     <Compile Include="StartStopLoaderManager.cs" />
     <Compile Include="TopFileProcessor.cs" />
-    <Compile Include="UploadProcessorMet.cs" />
-    <Compile Include="UploadProcessorWag.cs" />
     <Compile Include="UploadProcessorSfh.cs" />
     <Compile Include="UploadProcessorTop.cs" />
     <Compile Include="UploadProcessorPr1.cs" />
@@ -118,14 +114,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
-      <Project>{B600904B-1B59-47BF-8884-5A4982D8B2FE}</Project>
-      <Name>HighJump</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
-      <Project>{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}</Project>
-      <Name>NeutronDllu</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AlliedFileSystemWatcher\AlliedFileSystemWatcher.csproj">
       <Project>{A8C533EF-F9B0-4B04-A1BA-53AAF5354A2B}</Project>
       <Name>AlliedFileSystemWatcher</Name>
@@ -142,6 +130,10 @@
       <Project>{E325F3E2-6660-451F-B9B2-D8866447BE4D}</Project>
       <Name>NeutronData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
+      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
+      <Name>NeutronDllu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronEvents\NeutronEvents.csproj">
       <Project>{FBC827AF-2CE9-4D2C-B8A2-F782E27C8078}</Project>
       <Name>NeutronEvents</Name>
@@ -149,10 +141,6 @@
     <ProjectReference Include="..\ReplenService\ReplenService.csproj">
       <Project>{93BF7D7C-0F65-4490-B653-34FE740559AC}</Project>
       <Name>ReplenService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SAPServer\SAPServer.csproj">
-      <Project>{0a3daa53-e7ff-4ea6-8ba1-2f671e341f09}</Project>
-      <Name>SAPServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

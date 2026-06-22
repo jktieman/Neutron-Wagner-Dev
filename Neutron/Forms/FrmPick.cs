@@ -74,7 +74,7 @@ namespace Neutron.Forms
 
         private ResourceManager _gridResourceManager;
 
-        private readonly NeutronDb _context = new NeutronDb();
+        //private readonly NeutronDb _context = new NeutronDb();
 
         private readonly GenericRepository<Order> _repoOrders;
         private readonly GenericRepository<OrderDetail> _repoOrderDetails;
@@ -329,6 +329,7 @@ namespace Neutron.Forms
             SetUploadButtonText();
             FillComboBoxAreaNumbers();
             ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");
+
             mlUserInfo.Text = GetCurrentUserString();
 
             _currentAreaId = _workstationView.AreaId;
@@ -342,6 +343,11 @@ namespace Neutron.Forms
             _defaultStorageType = _repoStorageTypes.FindByKey(_neutronVariables.DefaultStorageTypeId);
             MBMainAvailableOrders.Text = $"{_resourceManager.GetString($"AvailableOrders")} - {_workstationView.Area.Name}";
             if (_workstationView.Hanels.Any())
+            {
+                InitDeviceIndicators();
+                GetCurrentTrays();
+            }
+            if (_workstationView.CarouselShuttles.Any())
             {
                 InitDeviceIndicators();
                 GetCurrentTrays();
@@ -3927,6 +3933,9 @@ namespace Neutron.Forms
                         case "RadioButtonFifo":
                             exactInventorySequence = Fifo(item);
                             break;
+                        case "RadioButtonFifoFefo":
+                            exactInventorySequence = FifoFefo(item);
+                            break;
                         case "RadioButtonLifo":
                             exactInventorySequence = Lifo(item);
                             break;
@@ -4034,8 +4043,12 @@ namespace Neutron.Forms
                     Value = (int)(LineStatus.Picking)
                 };
 
-                _context.Database.ExecuteSqlCommandAsync("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
-                    newValueParameter);
+                using (var context = _contextFactory())
+                {
+                    context.Database.ExecuteSqlCommand("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
+                        newValueParameter);
+                }
+
             }
             catch (Exception e)
             {
@@ -4049,8 +4062,6 @@ namespace Neutron.Forms
 
         private void SetOrderStatusToPicking()
         {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
             try
             {
                 DataTable idTable = new DataTable();
@@ -4076,17 +4087,17 @@ namespace Neutron.Forms
                     Value = (int)(LineStatus.Picking)
                 };
 
-                _context.Database.ExecuteSqlCommandAsync("usp_UpdateStatus_Orders @IDS, @NEWVALUE", idParameter,
-                    newValueParameter);
+                using (var context = _contextFactory())
+                {
+                   context.Database.ExecuteSqlCommand("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
+                        newValueParameter);
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 throw;
             }
-
-            stopWatch.Stop();
-            Console.WriteLine($"Set Order StatusToPicking - Elapsed time: {stopWatch.ElapsedMilliseconds} ms");
         }
 
         private void SetOrderDetailStatusToPicking(OrderDetail orderDetail)
@@ -4226,6 +4237,34 @@ namespace Neutron.Forms
             return inventorySequence;
         }
 
+        private List<Inventory> FifoFefo(PickView item)
+        {
+
+            List<Inventory> sortedRecs;
+            var inventorySequence = new List<Inventory>();
+            var recs = GetInventory(item.ItemId);
+            // ---         Task.Run(() => _logger.LogDetailAsync($"1536 FIFO Inventory Rec Count:  {recs.Count}"));
+            if (recs.Count > 0)
+            {
+                //sequence the inventory Recs by Received Date
+
+
+                if (_currentAreaId == AreaEight)
+                {
+                    // sort the recs by the Location.PickSequence
+                    sortedRecs = recs.OrderBy(r => r.Location.PickSequence).ToList();
+                }
+                else
+                {
+                    //sequence the inventory Recs by Received Date
+                    sortedRecs = recs.OrderBy(o => o.ReceivedDate).ToList();
+                }
+
+                inventorySequence.AddRange(sortedRecs);
+            }
+            return inventorySequence;
+        }
+
         private List<Inventory> Lifo(PickView item)
         {
 
@@ -4336,13 +4375,6 @@ namespace Neutron.Forms
         private List<PickView> CreatePickViewsByBatchPosition(BatchPosition bp)
 
         {
-            var stopwatch1 = new Stopwatch();
-            stopwatch1.Start();
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-
             var previousPartNumber = string.Empty;
             var pickViews = new List<PickView>();
 
@@ -4363,16 +4395,15 @@ namespace Neutron.Forms
             // get the Order and OrderDetails for the current Order
             // and ONLY Items in this Area
 
-            stopwatch.Stop();
-            Console.WriteLine($"Elapsed time 1 - {bp.PositionNumber} : {stopwatch.ElapsedMilliseconds} ms");
-
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             Order orderAndDetails = _ordersRepository.GetOrderWithOrderDetailsInThisArea(bp.OrderId, _currentAreaId);
 
-            stopwatch.Stop();
-            Console.WriteLine($"Elapsed time 2 - {bp.PositionNumber} : {stopwatch.ElapsedMilliseconds} ms");
+            // Pre-load all UnitOfIssue names in a single query instead of N+1 per detail
+            var itemIds = orderAndDetails.OrderDetails.Select(d => d.ItemDefinitionId).Distinct().ToList();
+            var unitOfIssueMap = _contextFactory().ItemDefinitions
+                .Include(r => r.UnitOfIssue)
+                .Where(r => itemIds.Contains(r.Id))
+                .ToDictionary(r => r.Id, r => r.UnitOfIssue != null ? r.UnitOfIssue.Name : string.Empty);
+
 
 
             //var order = _ordersRepository.GetOrder(bp.OrderId);
@@ -4393,8 +4424,6 @@ namespace Neutron.Forms
             foreach (var detail in orderAndDetails.OrderDetails)
             {
 
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
                 //if (detail.LineStatusId != (int)LineStatus.Available &&
                 //    detail.LineStatusId != (int)LineStatus.Skipped) continue;
                 //key builder makes each line of orderdetails unique so that an order with the same item
@@ -4429,17 +4458,15 @@ namespace Neutron.Forms
                     // reset the counter to 0
                     counter = 0;
                 }
-                stopwatch.Stop();
-                Console.WriteLine($"Elapsed time 3 - {bp.PositionNumber} : {stopwatch.ElapsedMilliseconds} ms");
 
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
+                //var unitOfIssueName = _context.ItemDefinitions
+                //    .Include(r => r.UnitOfIssue)
+                //    .Where(r => r.Id == detail.ItemDefinitionId)
+                //    .Select(r => r.UnitOfIssue.Name)
+                //    .FirstOrDefault();
 
-                var unitOfIssueName = _context.ItemDefinitions
-                    .Include(r => r.UnitOfIssue)
-                    .Where(r => r.Id == detail.ItemDefinitionId)
-                    .Select(r => r.UnitOfIssue.Name)
-                    .FirstOrDefault();
+                //var unitOfIssueName = _repoItemDefinition.FindByKeyInclude(r => r.Id == detail.ItemDefinitionId
+                //    , r => r.UnitOfIssue).UnitOfIssue.Name;
 
 
                 // get the UnitOfIssueName for the current OrderDetail
@@ -4460,12 +4487,8 @@ namespace Neutron.Forms
 
                 // var itemDefinition = await _repoItemDefinition.FindByKeyAsync(detail.ItemDefinitionId);
                 // var unitOfIssueName = itemDefinition.UnitOfIssue.Name;
-                stopwatch.Stop();
-                Console.WriteLine($"Elapsed time 4 - {bp.PositionNumber} UnitOfIssue : {stopwatch.ElapsedMilliseconds} ms");
 
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
-
+                unitOfIssueMap.TryGetValue(detail.ItemDefinitionId, out var unitOfIssueName);
 
                 // create a new PickView and populate it with the OrderDetail
                 // and other information
@@ -4492,14 +4515,7 @@ namespace Neutron.Forms
                     ItemKey = key
                 };
                 pickViews.Add(pickView);
-                stopwatch.Stop();
-                Console.WriteLine($"Elapsed time 5 - {bp.PositionNumber} : {stopwatch.ElapsedMilliseconds} ms");
-
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
             }
-            stopwatch1.Stop();
-            Console.WriteLine($"Elapsed time Create PickView By Position - {bp.PositionNumber} : {stopwatch1.ElapsedMilliseconds} ms");
 
             return pickViews;
         }
@@ -4570,6 +4586,9 @@ namespace Neutron.Forms
                     break;
                 case "RadioButtonFifo":
                     exactInventorySequence = Fifo(pickView);
+                    break;
+                case "RadioButtonFifoFefo":
+                    exactInventorySequence = FifoFefo(pickView);
                     break;
                 case "RadioButtonLifo":
                     exactInventorySequence = Lifo(pickView);
@@ -6237,6 +6256,15 @@ namespace Neutron.Forms
             if (_logLevel == 8) _logger.LogDetailAsync($"FinalPickSequence Start Carousel Move").SafeFireAndForget();
 
             _deviceManager = new PickDeviceManager(newCarList, _neutronVariables.ShuttleEnabled, _logLevel);
+
+            for (var i = 0; i < _workstationView.CarouselShuttles.Count; i++)
+            {
+                //check to see if the device is enabled
+                if (_workstationView.CarouselShuttles[i].Enabled)
+                {
+                    _deviceManager.MoveNext(i + 1);
+                }
+            }
 
             for (var i = 0; i < _workstationView.Hanels.Count; i++)
             {
@@ -9863,6 +9891,9 @@ namespace Neutron.Forms
                         case "RadioButtonPrimeBinLast":
                             exactInventorySequence = PrimeBinLast(pickView);
                             break;
+                        case "RadioButtonFifoFefo":
+                            exactInventorySequence = FifoFefo(pickView);
+                            break;
                         case "RadioButtonFifo":
                             exactInventorySequence = Fifo(pickView);
                             break;
@@ -9934,6 +9965,9 @@ namespace Neutron.Forms
                         case "RadioButtonFifo":
                             exactInventorySequence = Fifo(pickView);
                             break;
+                        case "RadioButtonFifoFefo":
+                            exactInventorySequence = FifoFefo(pickView);
+                            break;
                         case "RadioButtonLifo":
                             exactInventorySequence = Lifo(pickView);
                             break;
@@ -9990,6 +10024,9 @@ namespace Neutron.Forms
                         break;
                     case "RadioButtonFifo":
                         exactInventorySequence = Fifo(currentPickView);
+                        break;
+                    case "RadioButtonFifoFefo":
+                        exactInventorySequence = FifoFefo(currentPickView);
                         break;
                     case "RadioButtonLifo":
                         exactInventorySequence = Lifo(currentPickView);

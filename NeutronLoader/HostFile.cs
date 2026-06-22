@@ -1,5 +1,4 @@
 ﻿using AlliedLogger;
-using HighJump;
 using NeutronCore;
 using NeutronCore.Enums;
 using NeutronCore.Global;
@@ -72,63 +71,63 @@ namespace NeutronLoader
         }
 
 
-        public void CreateMetHostFile(List<History> recs)
-        {
-            SendUploadToHostSql(recs);
-        }
+        //public void CreateMetHostFile(List<History> recs)
+        //{
+        //    SendUploadToHostSql(recs);
+        //}
 
-        public void SendUploadToHostSql(List<History> history)
-        {
-            if (history.Count == 0) return ;
+        //public void SendUploadToHostSql(List<History> history)
+        //{
+        //    if (history.Count == 0) return ;
 
-            _ = _logger.LogDetailAsync("Send Upload To Host Sql.");
+        //    _ = _logger.LogDetailAsync("Send Upload To Host Sql.");
 
-            try
-            {
-                using (var db = new HighJumpContext())
-                {
-                    using (var transaction = db.Database.BeginTransaction())
-                    {
-                        try
-                        {
-                            foreach (var line in history)
-                            {
-                                var inBound = new t_al_host_carousel_inbound();
-                                inBound.container_label = $"{line.Ord2}{line.Ord1}";
-                                inBound.employee_id = line.EmpId;
-                                inBound.item_number = line.Item;
-                                inBound.pick_quantity = Double.Parse(line.IssuedQuantity.ToString());
-                                inBound.status = "N";
-                                inBound.inserted_by = "CAROUSEL";
-                                inBound.inserted_date = DateTime.Now;
-                                inBound.updated_by = "CAROUSEL";
-                                inBound.updated_date = DateTime.Now;
+        //    try
+        //    {
+        //        using (var db = new HighJumpContext())
+        //        {
+        //            using (var transaction = db.Database.BeginTransaction())
+        //            {
+        //                try
+        //                {
+        //                    foreach (var line in history)
+        //                    {
+        //                        var inBound = new t_al_host_carousel_inbound();
+        //                        inBound.container_label = $"{line.Ord2}{line.Ord1}";
+        //                        inBound.employee_id = line.EmpId;
+        //                        inBound.item_number = line.Item;
+        //                        inBound.pick_quantity = Double.Parse(line.IssuedQuantity.ToString());
+        //                        inBound.status = "N";
+        //                        inBound.inserted_by = "CAROUSEL";
+        //                        inBound.inserted_date = DateTime.Now;
+        //                        inBound.updated_by = "CAROUSEL";
+        //                        inBound.updated_date = DateTime.Now;
 
-                                db.t_al_host_carousel_inbound.Add(inBound);
-                            }
+        //                        db.t_al_host_carousel_inbound.Add(inBound);
+        //                    }
 
-                            db.SaveChanges();
-                            transaction.Commit();
-                            _ = _logger.LogDetailAsync("Sql Table Updated With " + history.Count() + "Records.");
-                        }
-                        catch (Exception ex)
-                        {
-                            transaction.Rollback();
-                            var msg = $"Process Upload To Sql Table Transaction Error. Records: {history.Count} {Environment.NewLine}" +
-                                         $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
-                            _ = _logger.LogDetailAsync(msg);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = $"Process Upload To Sql Table.  {Environment.NewLine}" +
-                             $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
-                _ = _logger.LogDetailAsync(msg);
-            }
-            _ = _logger.LogDetailAsync("Send Upload To Host Sql - Success.");
-        }
+        //                    db.SaveChanges();
+        //                    transaction.Commit();
+        //                    _ = _logger.LogDetailAsync("Sql Table Updated With " + history.Count() + "Records.");
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    transaction.Rollback();
+        //                    var msg = $"Process Upload To Sql Table Transaction Error. Records: {history.Count} {Environment.NewLine}" +
+        //                                 $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
+        //                    _ = _logger.LogDetailAsync(msg);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var msg = $"Process Upload To Sql Table.  {Environment.NewLine}" +
+        //                     $"{ex.Message}{Environment.NewLine}{ex.InnerException}";
+        //        _ = _logger.LogDetailAsync(msg);
+        //    }
+        //    _ = _logger.LogDetailAsync("Send Upload To Host Sql - Success.");
+        //}
 
 
         private void SaveFile(List<History> historyRecs)

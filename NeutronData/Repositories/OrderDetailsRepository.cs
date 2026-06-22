@@ -18,7 +18,7 @@ using Microsoft.Extensions.Options;
 
 namespace NeutronData.Repositories
 {
-    public class OrderDetailsRepository  : IOrderDetailsRepository
+    public class OrderDetailsRepository : IOrderDetailsRepository
     {
         private readonly Func<NeutronDb> _contextFactory;
         private readonly IMemoryCache _memoryCache;
@@ -27,7 +27,8 @@ namespace NeutronData.Repositories
         // private readonly DbContext _context;
         private readonly GenericRepository<OrderDetail> _repoOrderDetails;
 
-        public OrderDetailsRepository(Func<NeutronDb> contextFactory, IMemoryCache memoryCache, IOptions<MemoryCacheOptions> cacheOptions)
+        public OrderDetailsRepository(Func<NeutronDb> contextFactory, IMemoryCache memoryCache,
+            IOptions<MemoryCacheOptions> cacheOptions)
         {
             _contextFactory = contextFactory;
             _memoryCache = memoryCache;
@@ -36,53 +37,105 @@ namespace NeutronData.Repositories
             _repoOrderDetails = new GenericRepository<OrderDetail>(contextFactory);
         }
 
+        //public void SetOrderDetailStatusToPicking(int[] currentOrderDetailIds)
+        //{
+        //    try
+        //    {
+        //        DataTable idTable = new DataTable();
+        //        idTable.Columns.Add("Id", typeof(int));
+        //        // Add each integer from the list to the DataTable
+        //        foreach (int id in currentOrderDetailIds)
+        //        {
+        //            idTable.Rows.Add(id);
+        //        }
+
+        //        // Create the SqlParameter for the table-valued parameter
+        //        var idParameter = new SqlParameter
+        //        {
+        //            ParameterName = "@IDS",
+        //            SqlDbType = SqlDbType.Structured,
+        //            TypeName = "dbo.IdTableType", // The name of the user-defined table type
+        //            Value = idTable
+        //        };
+        //        var newValueParameter = new SqlParameter
+        //        {
+        //            ParameterName = "@NEWVALUE",
+        //            SqlDbType = SqlDbType.Int,
+        //            Value = (int)(LineStatus.Picking)
+        //        };
+        //        using (var context = new NeutronDb())
+        //        {
+        //            context.Database.ExecuteSqlCommandAsync("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
+        //           newValueParameter);
+        //        }
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.Message);
+        //        throw;
+        //    }
+
+        //}
+
         public void SetOrderDetailStatusToPicking(int[] currentOrderDetailIds)
         {
-            
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
-                try
-                {
-                    DataTable idTable = new DataTable();
-                    idTable.Columns.Add("Id", typeof(int));
-                    // Add each integer from the list to the DataTable
-                    foreach (int id in currentOrderDetailIds)
-                    {
-                        idTable.Rows.Add(id);
-                    }
+            if (currentOrderDetailIds == null || currentOrderDetailIds.Length == 0)
+            {
+                throw new ArgumentException(@"Order detail IDs cannot be null or empty.",
+                    nameof(currentOrderDetailIds));
+            }
 
-                    // Create the SqlParameter for the table-valued parameter
-                    var idParameter = new SqlParameter
-                    {
-                        ParameterName = "@IDS",
-                        SqlDbType = SqlDbType.Structured,
-                        TypeName = "dbo.IdTableType", // The name of the user-defined table type
-                        Value = idTable
-                    };
-                    var newValueParameter = new SqlParameter
-                    {
-                        ParameterName = "@NEWVALUE",
-                        SqlDbType = SqlDbType.Int,
-                        Value = (int)(LineStatus.Picking)
-                    };
-                    using (var context = new NeutronDb())
-                    {
-                         context.Database.ExecuteSqlCommandAsync("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
-                        newValueParameter);
-                    }
-                   
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    throw;
-                }
-
-                stopWatch.Stop();
-                Console.WriteLine($"Set OrderDetail StatusToPicking - Elapsed time: {stopWatch.ElapsedMilliseconds} ms");
-             
+            try
+            {
+                var idTable = CreateIdDataTable(currentOrderDetailIds);
+                var idParameter = CreateSqlParameter("@IDS", SqlDbType.Structured, "dbo.IdTableType");
+                var newValueParameter = CreateSqlParameter("@NEWVALUE", SqlDbType.Int, (int)LineStatus.Picking);
+                ExecuteUpdateStatusProcedure(idParameter, newValueParameter);
+            }
+            catch (Exception ex)
+            {
+                LogException(ex);
+                throw;
+            }
         }
 
+        private static DataTable CreateIdDataTable(IEnumerable<int> ids)
+        {
+            var idTable = new DataTable();
+            idTable.Columns.Add("Id", typeof(int));
+            foreach (var id in ids)
+            {
+                idTable.Rows.Add(id);
+            }
+
+            return idTable;
+        }
+
+        private static SqlParameter CreateSqlParameter(string parameterName, SqlDbType sqlDbType, object value,
+            string typeName = null)
+        {
+            return new SqlParameter
+            {
+                ParameterName = parameterName,
+                SqlDbType = sqlDbType,
+                Value = value,
+                TypeName = typeName
+            };
+        }
+
+        private void ExecuteUpdateStatusProcedure(SqlParameter idParameter, SqlParameter newValueParameter)
+        {
+            using var context = new NeutronDb();
+            context.Database.ExecuteSqlCommandAsync("usp_UpdateStatus_OrderDetails @IDS, @NEWVALUE", idParameter,
+                newValueParameter);
+        }
+
+        private static void LogException(Exception ex)
+        {
+            // Replace with a proper logging mechanism
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
 
         public void PreloadCache()
         {
@@ -122,7 +175,7 @@ namespace NeutronData.Repositories
                 {
                     idTable.Rows.Add(id);
                 }
-                
+
                 // Create the SqlParameter for the table-valued parameter
                 var idParameter = new SqlParameter
                 {
@@ -200,84 +253,84 @@ namespace NeutronData.Repositories
         //}
 
         public List<OrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
+        {
+            var recs = new List<OrderDetailsView>();
+            try
             {
-                var recs = new List<OrderDetailsView>();
-                try
-                {
-                    recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
-                        .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
-                        {
-                            OrderId = s.OrderId,
-                            Ord1 = s.Order.Ord1,
-                            Ord2 = s.Order.Ord2,
-                            OrderDetailId = s.Id,
-                            ItemId = s.ItemDefinitionId,
-                            Item = s.ItemDefinition.Item,
-                            Description = s.ItemDefinition.Description,
-                            Quantity = s.Quantity,
-                            PickedQuantity = s.PickedQuantity,
-                            LineStatusId = s.LineStatusId,
-                            LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
-                            AreaId = s.AreaId
-                        }).OrderBy(o => o.AreaId).ThenBy(p => p.Item).ToList();
+                recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
+                    .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
+                    {
+                        OrderId = s.OrderId,
+                        Ord1 = s.Order.Ord1,
+                        Ord2 = s.Order.Ord2,
+                        OrderDetailId = s.Id,
+                        ItemId = s.ItemDefinitionId,
+                        Item = s.ItemDefinition.Item,
+                        Description = s.ItemDefinition.Description,
+                        Quantity = s.Quantity,
+                        PickedQuantity = s.PickedQuantity,
+                        LineStatusId = s.LineStatusId,
+                        LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
+                        AreaId = s.AreaId
+                    }).OrderBy(o => o.AreaId).ThenBy(p => p.Item).ToList();
 
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
-                return recs;
+            }
+            catch (Exception)
+            {
+                // ignored
             }
 
-            //public List<OrderDetailsView> GetOrderDetailsViewByOrderAndStation(int orderId, int stationNumber)
-            //{
-            //    List<OrderDetailsView> recs = new List<OrderDetailsView>();
-            //    try
-            //    {
-            //        recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
-            //        .Where(r => r.OrderId == orderId && r.StationNumber == stationNumber).Select(s => new OrderDetailsView
-            //        {
-            //            OrderId = s.OrderId,
-            //            Ord1 = s.Order.Ord1,
-            //            Ord2 = s.Order.Ord2,
-            //            OrderDetailId = s.Id,
-            //            ItemId = s.ItemDefinitionId,
-            //            Item = s.ItemDefinition.Item,
-            //            Description = s.ItemDefinition.Description,
-            //            Quantity = s.Quantity,
-            //            PickedQuantity = s.PickedQuantity,
-            //            LineStatusId = s.LineStatusId,
-            //            LineStatusName = s.LineStatus.Name,
-            //            StationNumber = s.StationNumber
-            //        }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item).ToList();
+            return recs;
+        }
 
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        // ignored
-            //    }
+        //public List<OrderDetailsView> GetOrderDetailsViewByOrderAndStation(int orderId, int stationNumber)
+        //{
+        //    List<OrderDetailsView> recs = new List<OrderDetailsView>();
+        //    try
+        //    {
+        //        recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
+        //        .Where(r => r.OrderId == orderId && r.StationNumber == stationNumber).Select(s => new OrderDetailsView
+        //        {
+        //            OrderId = s.OrderId,
+        //            Ord1 = s.Order.Ord1,
+        //            Ord2 = s.Order.Ord2,
+        //            OrderDetailId = s.Id,
+        //            ItemId = s.ItemDefinitionId,
+        //            Item = s.ItemDefinition.Item,
+        //            Description = s.ItemDefinition.Description,
+        //            Quantity = s.Quantity,
+        //            PickedQuantity = s.PickedQuantity,
+        //            LineStatusId = s.LineStatusId,
+        //            LineStatusName = s.LineStatus.Name,
+        //            StationNumber = s.StationNumber
+        //        }).OrderBy(o => o.StationNumber).ThenBy(p => p.Item).ToList();
 
-            //    return recs;
-            //}
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // ignored
+        //    }
 
-            public List<OrderDetail> GetOrderDetailsByOrderAndWorkstation(int orderId, WorkstationView workstationView)
+        //    return recs;
+        //}
+
+        public List<OrderDetail> GetOrderDetailsByOrderAndWorkstation(int orderId, WorkstationView workstationView)
+        {
+            var orderDetails = new List<OrderDetail>();
+            if (workstationView.AreaId <= 0) return orderDetails;
             {
-                var orderDetails = new List<OrderDetail>();
-                if (workstationView.AreaId <= 0) return orderDetails;
-                {
-                    var recs = _repoOrderDetails.All()
-                        .Where(r => r.OrderId == orderId && r.AreaId == workstationView.AreaId).ToList();
-                    orderDetails.AddRange(recs);
-                }
-                return orderDetails;
+                var recs = _repoOrderDetails.All()
+                    .Where(r => r.OrderId == orderId && r.AreaId == workstationView.AreaId).ToList();
+                orderDetails.AddRange(recs);
             }
+            return orderDetails;
+        }
 
-            public Order GetOrder(int orderDetailId)
-            {
-                var order = _repoOrderDetails.FindByKey(orderDetailId).Order;
-                return order;
-            }
-        
+        public Order GetOrder(int orderDetailId)
+        {
+            var order = _repoOrderDetails.FindByKey(orderDetailId).Order;
+            return order;
+        }
+
     }
 }

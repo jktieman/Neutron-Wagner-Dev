@@ -92,6 +92,7 @@ namespace Neutron
             // Check the Database connections
             var context = false;
             var neutron = new NeutronDb().CheckConnection();
+            
             var secure = new SecureDb().CheckConnection();
             if (neutron && secure)
             {

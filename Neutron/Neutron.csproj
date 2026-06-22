@@ -18,10 +18,10 @@
     <TargetFrameworkProfile />
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
     <ForceDesignerDpiUnaware>true</ForceDesignerDpiUnaware>
-    <PublishUrl>\\10.5.20.200\software\NeutronTestInstallation\</PublishUrl>
+    <PublishUrl>C:\NeutronTest Application\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -32,7 +32,6 @@
     <ProductName>Neutron Warehouse Management</ProductName>
     <PublisherName>Allied Inc</PublisherName>
     <SuiteName>Neutron</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>712</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
@@ -41,7 +40,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -50,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -236,6 +236,12 @@
     <Compile Include="Forms\FrmCostCenter.Designer.cs">
       <DependentUpon>FrmCostCenter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmExpiration.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmExpiration.Designer.cs">
+      <DependentUpon>FrmExpiration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmGetLocationBlast.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,6 +301,7 @@
     </Compile>
     <Compile Include="Forms\PickStoreBase.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
+    <Compile Include="Helpers\ThemeManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
     <Compile Include="Models\GridData.cs" />
     <Compile Include="Models\HeaderTextManager.cs" />
@@ -632,6 +639,9 @@
     <EmbeddedResource Include="Forms\FrmDefineUploadActions.resx">
       <DependentUpon>FrmDefineUploadActions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmExpiration.resx">
+      <DependentUpon>FrmExpiration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmGetLocationBlast.resx">
       <DependentUpon>FrmGetLocationBlast.cs</DependentUpon>
     </EmbeddedResource>
@@ -829,9 +839,9 @@
     <None Include="Icons\glyphicons-182-download-alt.png" />
     <None Include="Icons\glyphicons-224-chevron-right.png" />
     <None Include="Icons\glyphicons-225-chevron-left.png" />
-    <Build Include="Hart_LV.DLL">
+    <Content Include="Hart_LV.DLL">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Build>
+    </Content>
     <Content Include="Images\1121.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -846,18 +856,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\HighJump\HighJump\HighJump.csproj">
-      <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
-      <Name>HighJump</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
-      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
-      <Name>NeutronDllu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj">
-      <Project>{4f32e28f-e0e0-4144-982f-fe7920ad93a1}</Project>
-      <Name>NeutronTrayLayout</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AlliedPostOffice\AlliedPostOffice.csproj">
       <Project>{6ce97d6f-a149-42fe-a858-2272db64897e}</Project>
       <Name>AlliedPostOffice</Name>
@@ -902,6 +900,10 @@
       <Project>{66326536-a1d8-49e7-9380-1a4c97edf278}</Project>
       <Name>LogFileMaintenance</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
+      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
+      <Name>NeutronDllu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronLoader\NeutronLoader.csproj">
       <Project>{2748bdf0-d6ed-48c5-9230-f18e33779e67}</Project>
       <Name>NeutronLoader</Name>
@@ -926,6 +928,10 @@
       <Project>{D3E5D83E-1327-4346-B811-C86BD4F297FB}</Project>
       <Name>NeutronMaintenance</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj">
+      <Project>{4f32e28f-e0e0-4144-982f-fe7920ad93a1}</Project>
+      <Name>NeutronTrayLayout</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProLiteController\ProliteController\ProLiteController.csproj">
       <Project>{cc797714-8d01-40af-8a2f-737b06f133cd}</Project>
       <Name>ProLiteController</Name>
@@ -933,10 +939,6 @@
     <ProjectReference Include="..\ReplenService\ReplenService.csproj">
       <Project>{93bf7d7c-0f65-4490-b653-34fe740559ac}</Project>
       <Name>ReplenService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SAPServer\SAPServer.csproj">
-      <Project>{0A3DAA53-E7FF-4EA6-8BA1-2F671E341F09}</Project>
-      <Name>SAPServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\SlotNameFactory\SlotNameFactory.csproj">
       <Project>{68dac5ef-fe13-4541-a233-a5897a0a3016}</Project>

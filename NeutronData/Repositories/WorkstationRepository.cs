@@ -49,7 +49,14 @@ namespace NeutronData.Repositories
 
             try
             {
-                var workstation = _repoWorkstation.FindByKey(workstationId);
+                //var workstation = _repoWorkstation.FindByKeyIncludeAsync(c=>c.Area, c    workstationId);
+
+                var workstation = _repoWorkstation.FindByKeyInclude(
+                    w => w.Id == workstationId,
+                    w => w.Area,
+                    w => w.StationType
+                );
+
 
                 if (workstation != null)
                 {

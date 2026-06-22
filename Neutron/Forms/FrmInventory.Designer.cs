@@ -49,7 +49,7 @@
             this.ProgressBarInventory = new System.Windows.Forms.ProgressBar();
             this.ButtonLoadFromExcel = new MetroFramework.Controls.MetroButton();
             this.ButtonSaveToExcel = new MetroFramework.Controls.MetroButton();
-            this.label1 = new System.Windows.Forms.Label();
+            this.LabelFindDescription2 = new System.Windows.Forms.Label();
             this.LabelFindDescription = new System.Windows.Forms.Label();
             this.TextBoxFind = new System.Windows.Forms.TextBox();
             this.MButtonNew = new MetroFramework.Controls.MetroButton();
@@ -90,11 +90,15 @@
             this.ComboBoxNewStorageType = new System.Windows.Forms.ComboBox();
             this.LabelNewStorageType = new System.Windows.Forms.Label();
             this.TextBoxArea = new System.Windows.Forms.TextBox();
+            this.TextBoxNewExpirationDate = new System.Windows.Forms.TextBox();
+            this.TextBoxNewLotNumber = new System.Windows.Forms.TextBox();
             this.TextBoxNewLocationCode = new System.Windows.Forms.TextBox();
             this.TextBoxNewWeight = new System.Windows.Forms.TextBox();
             this.LabelNewWeight = new System.Windows.Forms.Label();
             this.CheckBoxNewScale = new System.Windows.Forms.CheckBox();
+            this.LabelNewExpirationDate = new System.Windows.Forms.Label();
             this.TextBoxNewSystemMin = new System.Windows.Forms.TextBox();
+            this.LabelNewLotNumber = new System.Windows.Forms.Label();
             this.LabelNewSystemMin = new System.Windows.Forms.Label();
             this.LabelNewLocationCode = new System.Windows.Forms.Label();
             this.ComboBoxNewHeightCode = new System.Windows.Forms.ComboBox();
@@ -129,6 +133,10 @@
             this.RadioButtonAllLocations = new System.Windows.Forms.RadioButton();
             this.LabelAvailableLocations = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.LabelNewLocationsExpirationDate = new System.Windows.Forms.Label();
+            this.TextBoxInventoryNewLocationsLotNumber = new System.Windows.Forms.TextBox();
+            this.LabelNewLocationsLotNumber = new System.Windows.Forms.Label();
+            this.DateTimePickerInventoryNewLocationsExpirationDate = new System.Windows.Forms.DateTimePicker();
             this.TextBoxInventoryNewLocationsRfid = new System.Windows.Forms.TextBox();
             this.LabelInventoryNewLocationsRfid = new System.Windows.Forms.Label();
             this.CheckBoxInventoryNewLocationsPrimeBin = new System.Windows.Forms.CheckBox();
@@ -153,9 +161,13 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.ButtonPositionDevice = new System.Windows.Forms.Button();
             this.PanelAddDetail = new System.Windows.Forms.Panel();
+            this.LabelAddDetailExpirationDate = new System.Windows.Forms.Label();
+            this.TextBoxAddDetailLotNumber = new System.Windows.Forms.TextBox();
+            this.LabelAddDetailLotNumber = new System.Windows.Forms.Label();
             this.TextBoxAddDetailArea = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.LabelAddDetailArea = new System.Windows.Forms.Label();
             this.CheckBoxAddDetailPrimeBin = new System.Windows.Forms.CheckBox();
+            this.DateTimePickerAddDetailExpirationDate = new System.Windows.Forms.DateTimePicker();
             this.DateTimePickerAddDetailReceivedDate = new System.Windows.Forms.DateTimePicker();
             this.LabelAddDetailReceivedDate = new System.Windows.Forms.Label();
             this.TextBoxAddDetailRfid = new System.Windows.Forms.TextBox();
@@ -250,7 +262,7 @@
             this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 38);
             this.LabelFormTitle.TabIndex = 17;
             this.LabelFormTitle.Text = "Inventory";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -278,7 +290,7 @@
             this.tabPage1.Controls.Add(this.ProgressBarInventory);
             this.tabPage1.Controls.Add(this.ButtonLoadFromExcel);
             this.tabPage1.Controls.Add(this.ButtonSaveToExcel);
-            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.LabelFindDescription2);
             this.tabPage1.Controls.Add(this.LabelFindDescription);
             this.tabPage1.Controls.Add(this.TextBoxFind);
             this.tabPage1.Controls.Add(this.MButtonNew);
@@ -368,16 +380,16 @@
             this.ButtonSaveToExcel.UseSelectable = true;
             this.ButtonSaveToExcel.Click += new System.EventHandler(this.ButtonSaveToExcel_Click);
             // 
-            // label1
+            // LabelFindDescription2
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(647, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(219, 22);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "SKU, Description or Slot";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelFindDescription2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelFindDescription2.ForeColor = System.Drawing.Color.White;
+            this.LabelFindDescription2.Location = new System.Drawing.Point(647, 62);
+            this.LabelFindDescription2.Name = "LabelFindDescription2";
+            this.LabelFindDescription2.Size = new System.Drawing.Size(219, 22);
+            this.LabelFindDescription2.TabIndex = 18;
+            this.LabelFindDescription2.Text = "SKU, Description or Slot";
+            this.LabelFindDescription2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelFindDescription
             // 
@@ -599,7 +611,7 @@
             // 
             // DataGridViewInventoryLocations
             // 
-            this.DataGridViewInventoryLocations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.DataGridViewInventoryLocations.AllowUserToOrderColumns = true;
             this.DataGridViewInventoryLocations.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
@@ -850,11 +862,15 @@
             this.panel4.Controls.Add(this.ComboBoxNewStorageType);
             this.panel4.Controls.Add(this.LabelNewStorageType);
             this.panel4.Controls.Add(this.TextBoxArea);
+            this.panel4.Controls.Add(this.TextBoxNewExpirationDate);
+            this.panel4.Controls.Add(this.TextBoxNewLotNumber);
             this.panel4.Controls.Add(this.TextBoxNewLocationCode);
             this.panel4.Controls.Add(this.TextBoxNewWeight);
             this.panel4.Controls.Add(this.LabelNewWeight);
             this.panel4.Controls.Add(this.CheckBoxNewScale);
+            this.panel4.Controls.Add(this.LabelNewExpirationDate);
             this.panel4.Controls.Add(this.TextBoxNewSystemMin);
+            this.panel4.Controls.Add(this.LabelNewLotNumber);
             this.panel4.Controls.Add(this.LabelNewSystemMin);
             this.panel4.Controls.Add(this.LabelNewLocationCode);
             this.panel4.Controls.Add(this.ComboBoxNewHeightCode);
@@ -876,7 +892,7 @@
             this.panel4.Controls.Add(this.LabelNewArea);
             this.panel4.Location = new System.Drawing.Point(145, 78);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(927, 367);
+            this.panel4.Size = new System.Drawing.Size(927, 405);
             this.panel4.TabIndex = 62;
             // 
             // LabelPickMaxInfo
@@ -947,6 +963,26 @@
             this.TextBoxArea.TabStop = false;
             this.TextBoxArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // TextBoxNewExpirationDate
+            // 
+            this.TextBoxNewExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewExpirationDate.Location = new System.Drawing.Point(642, 345);
+            this.TextBoxNewExpirationDate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewExpirationDate.Name = "TextBoxNewExpirationDate";
+            this.TextBoxNewExpirationDate.Size = new System.Drawing.Size(190, 34);
+            this.TextBoxNewExpirationDate.TabIndex = 12;
+            this.TextBoxNewExpirationDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxNewLotNumber
+            // 
+            this.TextBoxNewLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxNewLotNumber.Location = new System.Drawing.Point(642, 303);
+            this.TextBoxNewLotNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxNewLotNumber.Name = "TextBoxNewLotNumber";
+            this.TextBoxNewLotNumber.Size = new System.Drawing.Size(190, 34);
+            this.TextBoxNewLotNumber.TabIndex = 12;
+            this.TextBoxNewLotNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // TextBoxNewLocationCode
             // 
             this.TextBoxNewLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -997,6 +1033,16 @@
             this.CheckBoxNewScale.Text = "Use Scale";
             this.CheckBoxNewScale.UseVisualStyleBackColor = true;
             // 
+            // LabelNewExpirationDate
+            // 
+            this.LabelNewExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewExpirationDate.Location = new System.Drawing.Point(445, 344);
+            this.LabelNewExpirationDate.Name = "LabelNewExpirationDate";
+            this.LabelNewExpirationDate.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewExpirationDate.TabIndex = 81;
+            this.LabelNewExpirationDate.Text = "Expiration Date";
+            this.LabelNewExpirationDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // TextBoxNewSystemMin
             // 
             this.TextBoxNewSystemMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1008,6 +1054,16 @@
             this.TextBoxNewSystemMin.TabIndex = 9;
             this.TextBoxNewSystemMin.TabStop = false;
             this.TextBoxNewSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelNewLotNumber
+            // 
+            this.LabelNewLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewLotNumber.Location = new System.Drawing.Point(445, 302);
+            this.LabelNewLotNumber.Name = "LabelNewLotNumber";
+            this.LabelNewLotNumber.Size = new System.Drawing.Size(190, 29);
+            this.LabelNewLotNumber.TabIndex = 81;
+            this.LabelNewLotNumber.Text = "Lot Number";
+            this.LabelNewLotNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelNewSystemMin
             // 
@@ -1326,6 +1382,7 @@
             // PanelNewLocations
             // 
             this.PanelNewLocations.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            this.PanelNewLocations.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelNewLocations.Controls.Add(this.PanelRadioButtons);
             this.PanelNewLocations.Controls.Add(this.LabelAvailableLocations);
             this.PanelNewLocations.Controls.Add(this.panel5);
@@ -1341,7 +1398,7 @@
             this.PanelRadioButtons.Controls.Add(this.RadioButtonExactMatch);
             this.PanelRadioButtons.Controls.Add(this.RadioButtonAllAvailable);
             this.PanelRadioButtons.Controls.Add(this.RadioButtonAllLocations);
-            this.PanelRadioButtons.Location = new System.Drawing.Point(211, 152);
+            this.PanelRadioButtons.Location = new System.Drawing.Point(208, 194);
             this.PanelRadioButtons.Name = "PanelRadioButtons";
             this.PanelRadioButtons.Size = new System.Drawing.Size(794, 40);
             this.PanelRadioButtons.TabIndex = 91;
@@ -1354,7 +1411,7 @@
             this.RadioButtonExactMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RadioButtonExactMatch.Location = new System.Drawing.Point(7, 7);
             this.RadioButtonExactMatch.Name = "RadioButtonExactMatch";
-            this.RadioButtonExactMatch.Size = new System.Drawing.Size(232, 26);
+            this.RadioButtonExactMatch.Size = new System.Drawing.Size(240, 28);
             this.RadioButtonExactMatch.TabIndex = 0;
             this.RadioButtonExactMatch.TabStop = true;
             this.RadioButtonExactMatch.Tag = "0";
@@ -1369,7 +1426,7 @@
             this.RadioButtonAllAvailable.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RadioButtonAllAvailable.Location = new System.Drawing.Point(312, 7);
             this.RadioButtonAllAvailable.Name = "RadioButtonAllAvailable";
-            this.RadioButtonAllAvailable.Size = new System.Drawing.Size(240, 26);
+            this.RadioButtonAllAvailable.Size = new System.Drawing.Size(247, 28);
             this.RadioButtonAllAvailable.TabIndex = 0;
             this.RadioButtonAllAvailable.Tag = "1";
             this.RadioButtonAllAvailable.Text = "All Available Locations ";
@@ -1383,7 +1440,7 @@
             this.RadioButtonAllLocations.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RadioButtonAllLocations.Location = new System.Drawing.Point(625, 7);
             this.RadioButtonAllLocations.Name = "RadioButtonAllLocations";
-            this.RadioButtonAllLocations.Size = new System.Drawing.Size(146, 26);
+            this.RadioButtonAllLocations.Size = new System.Drawing.Size(150, 28);
             this.RadioButtonAllLocations.TabIndex = 0;
             this.RadioButtonAllLocations.Tag = "2";
             this.RadioButtonAllLocations.Text = "All Locations";
@@ -1395,7 +1452,7 @@
             this.LabelAvailableLocations.AutoSize = true;
             this.LabelAvailableLocations.BackColor = System.Drawing.Color.Transparent;
             this.LabelAvailableLocations.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAvailableLocations.Location = new System.Drawing.Point(1078, 155);
+            this.LabelAvailableLocations.Location = new System.Drawing.Point(1144, 207);
             this.LabelAvailableLocations.Name = "LabelAvailableLocations";
             this.LabelAvailableLocations.Size = new System.Drawing.Size(0, 20);
             this.LabelAvailableLocations.TabIndex = 90;
@@ -1404,6 +1461,10 @@
             // panel5
             // 
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.LabelNewLocationsExpirationDate);
+            this.panel5.Controls.Add(this.TextBoxInventoryNewLocationsLotNumber);
+            this.panel5.Controls.Add(this.LabelNewLocationsLotNumber);
+            this.panel5.Controls.Add(this.DateTimePickerInventoryNewLocationsExpirationDate);
             this.panel5.Controls.Add(this.TextBoxInventoryNewLocationsRfid);
             this.panel5.Controls.Add(this.LabelInventoryNewLocationsRfid);
             this.panel5.Controls.Add(this.CheckBoxInventoryNewLocationsPrimeBin);
@@ -1421,8 +1482,49 @@
             this.panel5.Controls.Add(this.LabelNewLocationsItem);
             this.panel5.Location = new System.Drawing.Point(17, 10);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1182, 137);
+            this.panel5.Size = new System.Drawing.Size(1180, 178);
             this.panel5.TabIndex = 89;
+            // 
+            // LabelNewLocationsExpirationDate
+            // 
+            this.LabelNewLocationsExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewLocationsExpirationDate.Location = new System.Drawing.Point(516, 131);
+            this.LabelNewLocationsExpirationDate.Name = "LabelNewLocationsExpirationDate";
+            this.LabelNewLocationsExpirationDate.Size = new System.Drawing.Size(192, 29);
+            this.LabelNewLocationsExpirationDate.TabIndex = 121;
+            this.LabelNewLocationsExpirationDate.Text = "Expiration Date";
+            this.LabelNewLocationsExpirationDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelNewLocationsExpirationDate.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // TextBoxInventoryNewLocationsLotNumber
+            // 
+            this.TextBoxInventoryNewLocationsLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxInventoryNewLocationsLotNumber.Location = new System.Drawing.Point(189, 131);
+            this.TextBoxInventoryNewLocationsLotNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxInventoryNewLocationsLotNumber.Name = "TextBoxInventoryNewLocationsLotNumber";
+            this.TextBoxInventoryNewLocationsLotNumber.Size = new System.Drawing.Size(190, 34);
+            this.TextBoxInventoryNewLocationsLotNumber.TabIndex = 119;
+            this.TextBoxInventoryNewLocationsLotNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelNewLocationsLotNumber
+            // 
+            this.LabelNewLocationsLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelNewLocationsLotNumber.Location = new System.Drawing.Point(20, 131);
+            this.LabelNewLocationsLotNumber.Name = "LabelNewLocationsLotNumber";
+            this.LabelNewLocationsLotNumber.Size = new System.Drawing.Size(160, 29);
+            this.LabelNewLocationsLotNumber.TabIndex = 120;
+            this.LabelNewLocationsLotNumber.Text = "Lot Number";
+            this.LabelNewLocationsLotNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // DateTimePickerInventoryNewLocationsExpirationDate
+            // 
+            this.DateTimePickerInventoryNewLocationsExpirationDate.Checked = false;
+            this.DateTimePickerInventoryNewLocationsExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DateTimePickerInventoryNewLocationsExpirationDate.Location = new System.Drawing.Point(712, 129);
+            this.DateTimePickerInventoryNewLocationsExpirationDate.Name = "DateTimePickerInventoryNewLocationsExpirationDate";
+            this.DateTimePickerInventoryNewLocationsExpirationDate.ShowCheckBox = true;
+            this.DateTimePickerInventoryNewLocationsExpirationDate.Size = new System.Drawing.Size(450, 34);
+            this.DateTimePickerInventoryNewLocationsExpirationDate.TabIndex = 118;
             // 
             // TextBoxInventoryNewLocationsRfid
             // 
@@ -1481,7 +1583,7 @@
             this.DateTimePickerInventoryNewLocationsReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerInventoryNewLocationsReceivedDate.Location = new System.Drawing.Point(712, 51);
             this.DateTimePickerInventoryNewLocationsReceivedDate.Name = "DateTimePickerInventoryNewLocationsReceivedDate";
-            this.DateTimePickerInventoryNewLocationsReceivedDate.Size = new System.Drawing.Size(373, 34);
+            this.DateTimePickerInventoryNewLocationsReceivedDate.Size = new System.Drawing.Size(450, 34);
             this.DateTimePickerInventoryNewLocationsReceivedDate.TabIndex = 4;
             // 
             // LabelNewLocationsReceivedDate
@@ -1599,7 +1701,7 @@
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.DataGridViewInventoryNewLocations.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DataGridViewInventoryNewLocations.Location = new System.Drawing.Point(3, 195);
+            this.DataGridViewInventoryNewLocations.Location = new System.Drawing.Point(3, 240);
             this.DataGridViewInventoryNewLocations.MultiSelect = false;
             this.DataGridViewInventoryNewLocations.Name = "DataGridViewInventoryNewLocations";
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -1613,7 +1715,7 @@
             this.DataGridViewInventoryNewLocations.RowHeadersWidth = 51;
             this.DataGridViewInventoryNewLocations.RowTemplate.Height = 28;
             this.DataGridViewInventoryNewLocations.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1210, 330);
+            this.DataGridViewInventoryNewLocations.Size = new System.Drawing.Size(1210, 282);
             this.DataGridViewInventoryNewLocations.TabIndex = 0;
             this.DataGridViewInventoryNewLocations.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewInventoryAddDetailLocations_CellClick);
             // 
@@ -1697,9 +1799,9 @@
             // 
             // ButtonPositionDevice
             // 
-            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 492);
+            this.ButtonPositionDevice.Location = new System.Drawing.Point(427, 484);
             this.ButtonPositionDevice.Name = "ButtonPositionDevice";
-            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 32);
+            this.ButtonPositionDevice.Size = new System.Drawing.Size(286, 34);
             this.ButtonPositionDevice.TabIndex = 104;
             this.ButtonPositionDevice.Text = "Position Device";
             this.ButtonPositionDevice.UseVisualStyleBackColor = true;
@@ -1709,9 +1811,13 @@
             // PanelAddDetail
             // 
             this.PanelAddDetail.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.PanelAddDetail.Controls.Add(this.LabelAddDetailExpirationDate);
+            this.PanelAddDetail.Controls.Add(this.TextBoxAddDetailLotNumber);
+            this.PanelAddDetail.Controls.Add(this.LabelAddDetailLotNumber);
             this.PanelAddDetail.Controls.Add(this.TextBoxAddDetailArea);
-            this.PanelAddDetail.Controls.Add(this.label2);
+            this.PanelAddDetail.Controls.Add(this.LabelAddDetailArea);
             this.PanelAddDetail.Controls.Add(this.CheckBoxAddDetailPrimeBin);
+            this.PanelAddDetail.Controls.Add(this.DateTimePickerAddDetailExpirationDate);
             this.PanelAddDetail.Controls.Add(this.DateTimePickerAddDetailReceivedDate);
             this.PanelAddDetail.Controls.Add(this.LabelAddDetailReceivedDate);
             this.PanelAddDetail.Controls.Add(this.TextBoxAddDetailRfid);
@@ -1726,8 +1832,38 @@
             this.PanelAddDetail.Controls.Add(this.LabelAddDetailQuantity);
             this.PanelAddDetail.Location = new System.Drawing.Point(17, 10);
             this.PanelAddDetail.Name = "PanelAddDetail";
-            this.PanelAddDetail.Size = new System.Drawing.Size(1182, 137);
+            this.PanelAddDetail.Size = new System.Drawing.Size(1182, 177);
             this.PanelAddDetail.TabIndex = 103;
+            // 
+            // LabelAddDetailExpirationDate
+            // 
+            this.LabelAddDetailExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailExpirationDate.Location = new System.Drawing.Point(515, 131);
+            this.LabelAddDetailExpirationDate.Name = "LabelAddDetailExpirationDate";
+            this.LabelAddDetailExpirationDate.Size = new System.Drawing.Size(192, 29);
+            this.LabelAddDetailExpirationDate.TabIndex = 117;
+            this.LabelAddDetailExpirationDate.Text = "Expiration Date";
+            this.LabelAddDetailExpirationDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // TextBoxAddDetailLotNumber
+            // 
+            this.TextBoxAddDetailLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxAddDetailLotNumber.Location = new System.Drawing.Point(189, 131);
+            this.TextBoxAddDetailLotNumber.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxAddDetailLotNumber.Name = "TextBoxAddDetailLotNumber";
+            this.TextBoxAddDetailLotNumber.Size = new System.Drawing.Size(190, 34);
+            this.TextBoxAddDetailLotNumber.TabIndex = 114;
+            this.TextBoxAddDetailLotNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelAddDetailLotNumber
+            // 
+            this.LabelAddDetailLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailLotNumber.Location = new System.Drawing.Point(20, 131);
+            this.LabelAddDetailLotNumber.Name = "LabelAddDetailLotNumber";
+            this.LabelAddDetailLotNumber.Size = new System.Drawing.Size(160, 29);
+            this.LabelAddDetailLotNumber.TabIndex = 116;
+            this.LabelAddDetailLotNumber.Text = "Lot Number";
+            this.LabelAddDetailLotNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxAddDetailArea
             // 
@@ -1741,15 +1877,15 @@
             this.TextBoxAddDetailArea.TabIndex = 112;
             this.TextBoxAddDetailArea.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label2
+            // LabelAddDetailArea
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(394, 58);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 29);
-            this.label2.TabIndex = 113;
-            this.label2.Text = "Area";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelAddDetailArea.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelAddDetailArea.Location = new System.Drawing.Point(394, 58);
+            this.LabelAddDetailArea.Name = "LabelAddDetailArea";
+            this.LabelAddDetailArea.Size = new System.Drawing.Size(80, 29);
+            this.LabelAddDetailArea.TabIndex = 113;
+            this.LabelAddDetailArea.Text = "Area";
+            this.LabelAddDetailArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // CheckBoxAddDetailPrimeBin
             // 
@@ -1762,12 +1898,22 @@
             this.CheckBoxAddDetailPrimeBin.Text = "Prime Bin";
             this.CheckBoxAddDetailPrimeBin.UseVisualStyleBackColor = true;
             // 
+            // DateTimePickerAddDetailExpirationDate
+            // 
+            this.DateTimePickerAddDetailExpirationDate.Checked = false;
+            this.DateTimePickerAddDetailExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DateTimePickerAddDetailExpirationDate.Location = new System.Drawing.Point(711, 131);
+            this.DateTimePickerAddDetailExpirationDate.Name = "DateTimePickerAddDetailExpirationDate";
+            this.DateTimePickerAddDetailExpirationDate.ShowCheckBox = true;
+            this.DateTimePickerAddDetailExpirationDate.Size = new System.Drawing.Size(450, 34);
+            this.DateTimePickerAddDetailExpirationDate.TabIndex = 4;
+            // 
             // DateTimePickerAddDetailReceivedDate
             // 
             this.DateTimePickerAddDetailReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DateTimePickerAddDetailReceivedDate.Location = new System.Drawing.Point(712, 51);
             this.DateTimePickerAddDetailReceivedDate.Name = "DateTimePickerAddDetailReceivedDate";
-            this.DateTimePickerAddDetailReceivedDate.Size = new System.Drawing.Size(373, 34);
+            this.DateTimePickerAddDetailReceivedDate.Size = new System.Drawing.Size(450, 34);
             this.DateTimePickerAddDetailReceivedDate.TabIndex = 4;
             // 
             // LabelAddDetailReceivedDate
@@ -1783,7 +1929,7 @@
             // TextBoxAddDetailRfid
             // 
             this.TextBoxAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailRfid.Location = new System.Drawing.Point(712, 89);
+            this.TextBoxAddDetailRfid.Location = new System.Drawing.Point(712, 92);
             this.TextBoxAddDetailRfid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailRfid.Name = "TextBoxAddDetailRfid";
             this.TextBoxAddDetailRfid.Size = new System.Drawing.Size(450, 34);
@@ -1793,7 +1939,7 @@
             // TextBoxAddDetailDescription
             // 
             this.TextBoxAddDetailDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxAddDetailDescription.Location = new System.Drawing.Point(712, 14);
+            this.TextBoxAddDetailDescription.Location = new System.Drawing.Point(712, 13);
             this.TextBoxAddDetailDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAddDetailDescription.Name = "TextBoxAddDetailDescription";
             this.TextBoxAddDetailDescription.Size = new System.Drawing.Size(450, 34);
@@ -1803,7 +1949,7 @@
             // LabelAddDetailRfid
             // 
             this.LabelAddDetailRfid.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelAddDetailRfid.Location = new System.Drawing.Point(632, 89);
+            this.LabelAddDetailRfid.Location = new System.Drawing.Point(636, 95);
             this.LabelAddDetailRfid.Name = "LabelAddDetailRfid";
             this.LabelAddDetailRfid.Size = new System.Drawing.Size(69, 29);
             this.LabelAddDetailRfid.TabIndex = 107;
@@ -1907,9 +2053,9 @@
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailTray);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailDevice);
             this.GroupBoxAddDetailLocation.Controls.Add(this.LabelAddDetailAreaNumber);
-            this.GroupBoxAddDetailLocation.Location = new System.Drawing.Point(125, 161);
+            this.GroupBoxAddDetailLocation.Location = new System.Drawing.Point(125, 193);
             this.GroupBoxAddDetailLocation.Name = "GroupBoxAddDetailLocation";
-            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 325);
+            this.GroupBoxAddDetailLocation.Size = new System.Drawing.Size(968, 285);
             this.GroupBoxAddDetailLocation.TabIndex = 62;
             this.GroupBoxAddDetailLocation.TabStop = false;
             this.GroupBoxAddDetailLocation.Text = "Location";
@@ -1919,7 +2065,7 @@
             this.CheckBoxInUse.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.CheckBoxInUse.Enabled = false;
             this.CheckBoxInUse.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxInUse.Location = new System.Drawing.Point(682, 278);
+            this.CheckBoxInUse.Location = new System.Drawing.Point(819, 37);
             this.CheckBoxInUse.Name = "CheckBoxInUse";
             this.CheckBoxInUse.Size = new System.Drawing.Size(113, 29);
             this.CheckBoxInUse.TabIndex = 6;
@@ -2233,7 +2379,7 @@
             // 
             // LabelRecordCount
             // 
-            this.LabelRecordCount.BackColor = System.Drawing.Color.White;
+            this.LabelRecordCount.BackColor = System.Drawing.Color.LightGray;
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelRecordCount.Location = new System.Drawing.Point(973, 46);
             this.LabelRecordCount.Name = "LabelRecordCount";
@@ -2463,13 +2609,25 @@
         private System.Windows.Forms.CheckBox CheckBoxUseSelectedItems;
         private System.Windows.Forms.Label LabelSelectArea;
         private System.ComponentModel.BackgroundWorker BackgroundWorkerInventory;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label LabelFindDescription2;
         private MetroFramework.Controls.MetroButton ButtonFindLocation;
         private System.Windows.Forms.Label LabelSlot;
         private System.Windows.Forms.TextBox TextBoxInventoryNewLocationsArea;
         private System.Windows.Forms.Label LabelNewLocationArea;
         private System.Windows.Forms.TextBox TextBoxAddDetailArea;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label LabelAddDetailArea;
         private System.Windows.Forms.TextBox TextBoxNewArea;
+        private System.Windows.Forms.TextBox TextBoxNewExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxNewLotNumber;
+        private System.Windows.Forms.Label LabelNewExpirationDate;
+        private System.Windows.Forms.Label LabelNewLotNumber;
+        private System.Windows.Forms.Label LabelAddDetailExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxAddDetailLotNumber;
+        private System.Windows.Forms.Label LabelAddDetailLotNumber;
+        private System.Windows.Forms.DateTimePicker DateTimePickerAddDetailExpirationDate;
+        private System.Windows.Forms.Label LabelNewLocationsExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxInventoryNewLocationsLotNumber;
+        private System.Windows.Forms.Label LabelNewLocationsLotNumber;
+        private System.Windows.Forms.DateTimePicker DateTimePickerInventoryNewLocationsExpirationDate;
     }
 }

@@ -53,6 +53,7 @@ using NeutronCore.StaticClasses;
 using NeutronData.UnitOfWorks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using Microsoft.Extensions.Logging;
+using Neutron.Helpers;
 using ReplenService;
 
 
@@ -254,6 +255,7 @@ namespace Neutron.Forms
 
             InitForm();
 
+            ThemeManager.StyleDataGridView(DataGridView1);
 
             //
             //_moveableDeviceTypes = _workstationRepository.GetMoveableDeviceTypeIds();
@@ -293,7 +295,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();
-            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");     // _resourceManager.GetString($"GetBin"));
+            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");
 
 
             _orderDetailsRepository = new ReplenOrderDetailsRepository(_contextFactory);
@@ -5706,7 +5708,7 @@ namespace Neutron.Forms
             //    return;
             //}
 
-            var slot = TextBoxSlot.Text.Trim().ToUpper();
+              var slot = TextBoxSlot.Text.Trim().ToUpper();
             // get the new location based on the scanned in slot number
             if (!string.IsNullOrEmpty(slot))
             {

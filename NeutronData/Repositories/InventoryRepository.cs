@@ -12,6 +12,7 @@ using AlliedLogger;
 using NeutronData.Interfaces;
 using System.Threading.Tasks;
 using NeutronCore.Enums;
+using System.Diagnostics;
 
 namespace NeutronData.Repositories
 {
@@ -79,7 +80,11 @@ namespace NeutronData.Repositories
         {
             using (var context = _contextFactory())
             {
-                return context.Inventory.Find(id);
+                return context.Inventory.Include(r => r.ItemDefinition)
+                    .Include(r => r.Location)
+                    .Include(r => r.StorageType)
+                    .Include(r => r.Area)
+                    .FirstOrDefault(r => r.Id == id);
             }
         }
         public InventoryView GetInventoryViewById(int id)
@@ -201,21 +206,66 @@ namespace NeutronData.Repositories
             return projection;
         }
 
-        public async Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find, int areaId)
+        public async Task<List<SqlInventoryView>> FindInventoryViewsByArea(string find,int areaId)
         {
-            var recs = new List<SqlInventoryView>();
+            if (_contextFactory == null)
+            {
+                throw new InvalidOperationException("Context factory is not initialized.");
+            }
+            if (_logger == null)
+            {
+                throw new InvalidOperationException("Logger is not initialized.");
+            }
+            List<SqlInventoryView> recs;
             try
             {
+                var swTotal = Stopwatch.StartNew();
+                var swContext = Stopwatch.StartNew();
                 using (var context = _contextFactory())
                 {
-                    var param = new SqlParameter(parameterName: "@FIND", value: find);
-                    var paramArea = new SqlParameter(parameterName: "@AREAID", value: areaId);
-                    recs = await context.Database.SqlQuery<SqlInventoryView>(sql: "usp_GetInventoryViewFind_Area @FIND, @AREAID", parameters: new object[] { param, paramArea }).ToListAsync();
+                    swContext.Stop();
+                    var paramFind = new SqlParameter("@FIND", find ?? string.Empty);
+                    var paramArea = new SqlParameter("@AREAID", areaId);
+
+                    var swSql = Stopwatch.StartNew();
+
+                    recs = await context.Database
+                        .SqlQuery<SqlInventoryView>(
+                            sql: "EXEC dbo.usp_GetInventoryViewFind_Area_V3 @FIND, @AREAID",
+                            parameters: new[] { paramFind, paramArea }
+                        )
+                        .ToListAsync();
+                    
+                    swSql.Stop();
+
+                    _ = _logger?.LogDetailAsync(
+                        $"InventoryRepository.FindInventoryViewsByArea SQL materialize: {swSql.ElapsedMilliseconds} ms; Rows: {recs?.Count ?? 0}; FIND: ; AREAID: {areaId}");
                 }
+
+                swTotal.Stop();
+                _ = _logger?.LogDetailAsync(
+                    $"InventoryRepository.FindInventoryViewsByArea total: {swTotal.ElapsedMilliseconds} ms; ContextCreate: {swContext.ElapsedMilliseconds} ms");
+
+                //using (var context = _contextFactory())
+                //{
+                //    var parameters =
+                //        new[]
+                //        {
+                //            new SqlParameter(parameterName: "@FIND", value: find),
+                //            new SqlParameter(parameterName: "@AREAID", value: areaId)
+                //        };
+                //        recs = await context.Database.SqlQuery<SqlInventoryView>(
+                //            sql: "usp_GetInventoryViewFind_Area @FIND, @AREAID", 
+                //            parameters)
+                //            .ToListAsync();
+                //}
             }
             catch (Exception ex)
             {
-                _ = _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+
+
+                await _logger.LogDetailAsync("Get All Inventory Views Error. " + ex.Message + " " + ex.InnerException);
+                throw;
             }
 
             return recs;
@@ -226,11 +276,26 @@ namespace NeutronData.Repositories
             var recs = new List<SqlInventoryView>();
             try
             {
+                var swTotal = Stopwatch.StartNew();
+                var swContext = Stopwatch.StartNew();
                 using (var context = _contextFactory())
                 {
+                    swContext.Stop();
                     var param = new SqlParameter("@Find", find);
-                    recs = await context.Database.SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param).ToListAsync();
+
+                    var swSql = Stopwatch.StartNew();
+                    recs = await context.Database
+                        .SqlQuery<SqlInventoryView>("usp_GetInventoryViewFind @Find", param)
+                        .ToListAsync();
+                    swSql.Stop();
+
+                    _ = _logger?.LogDetailAsync(
+                        $"InventoryRepository.FindInventoryViews SQL materialize: {swSql.ElapsedMilliseconds} ms; Rows: {recs?.Count ?? 0}; Find: '{find}'");
                 }
+
+                swTotal.Stop();
+                _ = _logger?.LogDetailAsync(
+                    $"InventoryRepository.FindInventoryViews total: {swTotal.ElapsedMilliseconds} ms; ContextCreate: {swContext.ElapsedMilliseconds} ms");
             }
             catch (Exception ex)
             {

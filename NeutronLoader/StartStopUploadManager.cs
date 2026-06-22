@@ -61,12 +61,12 @@ namespace NeutronLoader
                             , _workstationView, _contextFactory);
                         break;
                     }
-                case "MET":  
-                    {
-                        _uploadProcessor = new UploadProcessorMet(_neutronVariables, _neutronLicense, _logger
-                            , _workstationView, _contextFactory);
-                        break;
-                    }
+                //case "MET":  
+                //    {
+                //        _uploadProcessor = new UploadProcessorMet(_neutronVariables, _neutronLicense, _logger
+                //            , _workstationView, _contextFactory);
+                //        break;
+                //    }
                 case "PR1":
                     {
                         _uploadProcessor = new UploadProcessorPr1(_neutronVariables, _neutronLicense, _logger
@@ -75,8 +75,8 @@ namespace NeutronLoader
                     }
                 case "WAG":
                 {
-                 _logger.LogDetailAsync($"WAG - UploadProcessorWAG").SafeFireAndForget();
-                        _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger, _contextFactory);
+                 //_logger.LogDetailAsync($"WAG - UploadProcessorWAG").SafeFireAndForget();
+                 //       _uploadProcessor = new UploadProcessorWAG(_neutronVariables, _logger, _contextFactory);
                     break;
                 }
                 default:
