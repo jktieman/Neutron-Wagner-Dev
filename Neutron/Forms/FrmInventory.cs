@@ -3479,7 +3479,7 @@ namespace Neutron.Forms
                     {
                         var inventory = new Inventory
                         {
-                            ItemDefinitionId = id.ParseInt(),
+                            ItemDefinitionId = itemDefinitionId.ParseInt(),
                             LocationId = locationId.ParseInt(),
                             Quantity = quantity.ParseInt(),
                             ReceivedDate = DateTime.TryParse(receivedDate, out var date) ? date : DateTime.Now,

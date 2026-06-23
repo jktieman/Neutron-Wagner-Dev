@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11626.88 stable
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronData", "NeutronData\NeutronData.csproj", "{E325F3E2-6660-451F-B9B2-D8866447BE4D}"
 EndProject
@@ -62,6 +62,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronDllu", "NeutronDllu\NeutronDllu\NeutronDllu.csproj", "{AB3C26A8-5C8C-40D0-B937-C5E7B27D70CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeutronTrayLayout", "NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj", "{4F32E28F-E0E0-4144-982F-FE7920AD93A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlliedLicenseGenerator.Core", "AlliedLicenseGenerator\AlliedLicenseGenerator.Core\AlliedLicenseGenerator.Core.csproj", "{95EB6ADE-C6B6-4AF5-A3BD-425EB92AEEF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlliedLicenseVerifier", "AlliedLicenseGenerator\AlliedLicenseVerifier\AlliedLicenseVerifier.csproj", "{D062A05C-4944-4754-8D67-EF43EC77EA70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -190,6 +194,14 @@ Global
 		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F32E28F-E0E0-4144-982F-FE7920AD93A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95EB6ADE-C6B6-4AF5-A3BD-425EB92AEEF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95EB6ADE-C6B6-4AF5-A3BD-425EB92AEEF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95EB6ADE-C6B6-4AF5-A3BD-425EB92AEEF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95EB6ADE-C6B6-4AF5-A3BD-425EB92AEEF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D062A05C-4944-4754-8D67-EF43EC77EA70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D062A05C-4944-4754-8D67-EF43EC77EA70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D062A05C-4944-4754-8D67-EF43EC77EA70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D062A05C-4944-4754-8D67-EF43EC77EA70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
