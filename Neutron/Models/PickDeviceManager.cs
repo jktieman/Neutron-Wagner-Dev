@@ -20,7 +20,7 @@ namespace Neutron.Models
         private readonly IDynamicLogger _logger;
         private readonly Dictionary<int, NeutronData.Models.Location> _currentLocations = new Dictionary<int, NeutronData.Models.Location>();
 
-        public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled, int logLevel)
+        public PickDeviceManager(IReadOnlyList<List<PickStop>> carList, bool shuttleEnabled, int logLevel = 2)
         {
             _logLevel = logLevel;
             _logger = NeutronCore.Global.Logger.SetupLogger(@"HanelLog");
