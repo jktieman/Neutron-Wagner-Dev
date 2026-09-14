@@ -79,6 +79,37 @@ namespace Neutron
                 return;
             }
 
+            // Check the Database connections
+            bool neutron, secure;
+            using (var neutronDb = new NeutronDb())
+            using (var secureDb = new SecureDb())
+            {
+                neutron = neutronDb.CheckConnection();
+                secure = secureDb.CheckConnection();
+            }
+            var context = neutron && secure;
+
+            // Forces DbExpressionBuilder..cctor() to complete on the main thread
+            // so the VS debugger evaluator cannot race against it and abort it.
+            // Only attempt this if the DB connection is available.
+            if (context)
+            {
+                using (var ctx = new NeutronDb())
+                {
+                    ctx.Database.Initialize(force: false);
+                    try
+                    {
+                        var orders = ctx.Orders.Where(o => o.Id == -1).ToList();
+                    }
+                    catch
+                    {
+                        MessageBox.Show("There was an error initializing the DbExpressionBuilder.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 
@@ -89,14 +120,7 @@ namespace Neutron
             jsonData.RootDirectory = rootDirectory;
             LoaderSettings.SetRootDirectory(rootDirectory);
 
-            // Check the Database connections
-            var context = false;
-            var neutron = new NeutronDb().CheckConnection();
-            var secure = new SecureDb().CheckConnection();
-            if (neutron && secure)
-            {
-                context = true;
-            }
+
 
             var neutronVariables = jsonData.LoadFile<NeutronVariables>();
             var neutronLicense = jsonData.LoadFile<NeutronLicense>();
@@ -107,7 +131,7 @@ namespace Neutron
                     MessageBoxIcon.Warning);
                 return;
             }
-            
+
             var cultureInfo = neutronVariables.DefaultLanguage;
 
             if (cultureInfo == null || cultureInfo.Length != 5 || !cultureInfo.Contains('-'))
@@ -124,7 +148,7 @@ namespace Neutron
             if (context)
             {
                 var frmMain = DI.Create<FrmMain>(neutronVariables, neutronLicense);
-                //Application.Run(frmMain);
+
                 //if the FrmMain has already been disposed, just close the app
                 try
                 {
