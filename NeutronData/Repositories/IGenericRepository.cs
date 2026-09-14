@@ -9,14 +9,29 @@ namespace NeutronData.Repositories
 {
     public interface IGenericRepository<TEntity> where TEntity : class, IEntity
     {
-        IEnumerable<TEntity> All();
+        //IEnumerable<TEntity> All();
+
+        IEnumerable<TEntity> All(
+            Expression<Func<TEntity, bool>> filter = null,
+            int? skip = null,
+            int? take = null);
+        
+        //IEnumerable<TEntity> AllInclude(
+        //    params Expression<Func<TEntity, object>>[] includeProperties);
 
         IEnumerable<TEntity> AllInclude(
+            Expression<Func<TEntity, bool>> filter,
             params Expression<Func<TEntity, object>>[] includeProperties);
-
-        IQueryable<TEntity> GetAllIncluding(Expression<Func<TEntity, object>>[] includeProperties);
+       // IQueryable<TEntity> GetAllIncluding(Expression<Func<TEntity, object>>[] includeProperties);
 
         IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties);
+
+        TEntity FindByKeyInclude(Expression<Func<TEntity, bool>> predicate,
+            params Expression<Func<TEntity, object>>[] includeProperties);
+
+        TEntity FindByKeyInclude(Expression<Func<TEntity, bool>> predicate,
+            string[] stringIncludes,
             params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<TEntity> FindByKeyIncludeAsync(Expression<Func<TEntity, bool>> predicate,
