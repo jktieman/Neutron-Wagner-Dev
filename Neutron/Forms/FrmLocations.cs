@@ -746,9 +746,9 @@ namespace Neutron.Forms
             var result = false;
             try
             {
-                var rec = _locationUnitOfWork.Locations.All().FirstOrDefault(r =>
+                var rec = _locationUnitOfWork.Locations.All(r =>
                     r.AreaId == loc.AreaId && r.Loc1 == loc.Loc1 && r.Loc2 == loc.Loc2
-                    && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5);
+                    && r.Loc3 == loc.Loc3 && r.Loc4 == loc.Loc4 && r.Loc5 == loc.Loc5).FirstOrDefault();
                 if (rec != null)
                 {
                     MessageBox.Show(_resourceManager.GetString("Message15"), string.Empty, MessageBoxButtons.OK,
@@ -768,8 +768,12 @@ namespace Neutron.Forms
         private async void MbViewEditDelete_Click(object sender, EventArgs e)
         {
             var locationView = ((ObjectView<LocationView>)_bindingSource.Current).Object;
-            var loc = _locationUnitOfWork.Locations.FindByKey(locationView.Id);
-            if (!await LocationHasInventory(loc.Id))
+            var loc = await _locationUnitOfWork.Locations.FindByKeyIncludeAsync(
+                r => r.Id == locationView.Id,
+                l => l.Area,
+                l => l.SizeCode,
+                l => l.VelocityCode,
+                l => l.HeightCode); if (!await LocationHasInventory(loc.Id))
             {
                 var result = MessageBox.Show(_resourceManager.GetString("Message17"), string.Empty,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -907,7 +911,7 @@ namespace Neutron.Forms
             var area = ((Area)ComboBoxNewArea.SelectedItem);
             if (area == null) return;
 
-            ComboBoxNewDevice.DataSource = _locationUnitOfWork.StorageDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            ComboBoxNewDevice.DataSource = _locationUnitOfWork.StorageDevices.All(d => d.AreaId == area.Id).ToList();
             ComboBoxNewDevice.DisplayMember = "Name";
             ComboBoxNewDevice.ValueMember = "Id";
             ComboBoxNewDevice.Refresh();
@@ -929,9 +933,10 @@ namespace Neutron.Forms
             var area = ((Area)ComboBoxViewEditArea.SelectedItem);
             if (area == null) return;
 
-            var devices = _locationUnitOfWork.StorageDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            var devices = _locationUnitOfWork.StorageDevices.All(d => 
+                d.AreaId == area.Id).ToList(); 
+            
             ComboBoxViewEditDevice.DataSource = devices;
-
             ComboBoxViewEditDevice.DisplayMember = "Name";
             ComboBoxViewEditDevice.ValueMember = "Id";
             ComboBoxViewEditDevice.Refresh();
@@ -1359,7 +1364,7 @@ namespace Neutron.Forms
             ComboBoxNewArea.ValueMember = "Id";
             ComboBoxNewArea.SelectedIndex = ComboBoxNewArea.FindString(_workstationView.Area.Name);
 
-            ComboBoxNewDevice.DataSource = _locationUnitOfWork.StorageDevices.All().Where(d => d.AreaId == _workstationView.AreaId).ToList();
+            ComboBoxNewDevice.DataSource = _locationUnitOfWork.StorageDevices.All(d => d.AreaId == _workstationView.AreaId).ToList(); 
             ComboBoxNewDevice.DisplayMember = "Name";
             ComboBoxNewDevice.ValueMember = "Id";
             // }
@@ -1409,7 +1414,7 @@ namespace Neutron.Forms
 
             ComboBoxViewEditArea.SelectedValue = area.Id;
 
-            ComboBoxViewEditDevice.DataSource = _locationUnitOfWork.StorageDevices.All().Where(d => d.AreaId == area.Id).ToList();
+            ComboBoxViewEditDevice.DataSource = _locationUnitOfWork.StorageDevices.All(d => d.AreaId == area.Id).ToList();
             ComboBoxViewEditDevice.DisplayMember = "Name";
             ComboBoxViewEditDevice.ValueMember = "Id";
 
