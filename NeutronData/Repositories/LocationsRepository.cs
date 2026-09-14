@@ -536,7 +536,7 @@ namespace NeutronData.Repositories
         public int GetMaxColumns(int areaId, int device, int tray)
         {
             //return 8;
-            var i = _repo.All().Where(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
+            var i = _repo.All(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
                 .Select(s => s.Loc3).Max();
             return i;
         }
@@ -550,7 +550,7 @@ namespace NeutronData.Repositories
         public int GetMaxRows(int areaId, int device, int tray)
         {
             //return 4;
-            var i = _repo.All().Where(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
+            var i = _repo.All(r => r.AreaId == areaId && r.Loc1 == device && r.Loc2 == tray)
                 .Select(s => s.Loc4).Max();
             var j = int.Parse(i.ToString().Substring(0, 1));
 
