@@ -55,7 +55,15 @@ namespace Neutron.Forms
 
         public void FillForm(int id)
         {
-            ItemDefinition = _repoItemDefinition.FindByKey(id);
+            ItemDefinition = _repoItemDefinition.FindByKeyInclude(
+                r => r.Id == id,
+                i => i.Area,
+                i => i.UnitOfIssue,
+                i => i.SizeCode,
+                i => i.HeightCode,
+                i => i.VelocityCode,
+                i => i.StorageType);
+
             if (ItemDefinition == null) return;
             TextBoxViewEditArea.Text = ItemDefinition.Area.Name;
             TextBoxViewEditItem.Text = ItemDefinition.Item;
@@ -90,9 +98,12 @@ namespace Neutron.Forms
 
         private async Task UpdateItemDefinition()
         {
-            var rec = _repoItemDefinition.FindByKey(ItemDefinition.Id);
+            var rec = await _repoItemDefinition.FindByKeyIncludeAsync(
+                r => r.Id == ItemDefinition.Id,
+                i => i.Area);
             if (rec == null) return;
-           await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
+           
+            await _historyManager.SaveHistoryAsync(ActionCode.ItemModify, rec);
 
            rec.Description = TextBoxViewEditDescription.Text;
             rec.SystemMax = Convert.ToInt32(TextBoxViewEditSystemMax.Text);
