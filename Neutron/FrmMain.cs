@@ -482,8 +482,12 @@ namespace Neutron
             try
             {
                 //get all the hardware devices on this workstation; carousel, lights scale, etc
-                var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == _workstationView.WorkstationId).ToList();
-                if (hardwareDevices.Any())
+                //var hardwareDevices = _repoHardwareDevices.All().Where(r => r.WorkstationId == _workstationView.WorkstationId).ToList();
+                var hardwareDevices = _repoHardwareDevices.AllInclude(
+                    r => r.WorkstationId == _workstationView.WorkstationId,
+                    r => r.DeviceType,
+                    r => r.SerialConfiguration,
+                    r => r.TcpConfiguration).ToList(); if (hardwareDevices.Any())
                 {
                     _logger.LogDetailAsync($"Workstation Name: {_workstationView.Name} Number of Devices: {hardwareDevices.Count}").SafeFireAndForget();
                 }
