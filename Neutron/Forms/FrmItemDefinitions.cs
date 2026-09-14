@@ -31,6 +31,7 @@ using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AsyncAwaitBestPractices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using StorageType = NeutronData.Models.Lookups.StorageType;
 
@@ -70,6 +71,7 @@ namespace Neutron.Forms
         public bool CloseButtonPressed { get; set; }
         private BackgroundWorker _dgvColumnWidthSizer;
         private bool _startup = true;
+        private bool _lookupsLoaded;
 
         private readonly Func<NeutronDb> _contextFactory;
         // private readonly List<Workstation> _pickStations;
@@ -94,9 +96,7 @@ namespace Neutron.Forms
             _logger = NeutronCore.Global.Logger.SetupLogger("ItemDefinitions");
             //CreateLog();
             _jsonData = jsonData;
-            CloseButtonPressed = false;
-            SetupGrid();
-            SetupTabControl();
+
 
 
             _itemDefinitionsRepository = new ItemDefinitionsRepository();
@@ -115,15 +115,121 @@ namespace Neutron.Forms
             _imageManager = imageManager;
             _areaRepository = areaRepository;
             _historyManager = historyManager;
+
+            Load += async (sender, args) => await Init();
+        }
+
+        private async Task Init()
+        {
+            //       await LoadLookupDataAsync();
+            ConfigureAreaNumberComboBox();
+            SetupGrid();  
             mlUserInfo.Text = GlobalVar.User?.UserInfo;
             LabelStationName.Text = _workstation.ToString();
+            //Shown += async (sender, args) => await LoadLookupDataAsync();
 
             SetupViewEditBindings();
+            CloseButtonPressed = false;
 
+            SetupTabControl();
 
+            _startup = false;
 
-            var areas = _repoArea.All();
-            ComboBoxAreaNumber.DataSource = areas;
+            RefreshData();
+        }
+
+        private async Task LoadLookupDataAsync()
+        {
+            if (_lookupsLoaded) return;
+            _lookupsLoaded = true;
+
+           // Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                var sizeCodesTask = Task.Run(() => _repoSizeCode.All().ToList());
+                var velocityCodesTask = Task.Run(() => _repoVelocityCode.All().ToList());
+                var heightCodesTask = Task.Run(() => _repoHeightCode.All().ToList());
+                var newAreasTask = Task.Run(() => _areaRepository.GetAllAreas().ToList());
+                var areaNumbersTask = Task.Run(() => _repoArea.All().ToList());
+                var storageTypesTask = Task.Run(() => _repoStorageType.All().ToList());
+                var unitOfIssueTask = Task.Run(() => _repoUnitOfIssue.All().ToList());
+
+                await Task.WhenAll(sizeCodesTask, velocityCodesTask, heightCodesTask, newAreasTask, areaNumbersTask, storageTypesTask, unitOfIssueTask);
+
+                var sizeCodes = sizeCodesTask.Result;
+                var velocityCodes = velocityCodesTask.Result;
+                var heightCodes = heightCodesTask.Result;
+                var newAreas = newAreasTask.Result;
+                var areaNumbers = areaNumbersTask.Result;
+                var storageTypes = storageTypesTask.Result;
+                var unitOfIssues = unitOfIssueTask.Result;
+
+                ComboBoxNewSizeCode.DataSource = sizeCodes;
+                ComboBoxNewSizeCode.DisplayMember = "Name";
+                ComboBoxNewSizeCode.ValueMember = "Id";
+
+                ComboBoxViewEditSizeCode.DataSource = sizeCodes;
+                ComboBoxViewEditSizeCode.DisplayMember = "Name";
+                ComboBoxViewEditSizeCode.ValueMember = "Id";
+
+                ComboBoxNewVelocityCode.DataSource = velocityCodes;
+                ComboBoxNewVelocityCode.DisplayMember = "Name";
+                ComboBoxNewVelocityCode.ValueMember = "Id";
+
+                ComboBoxViewEditVelocityCode.DataSource = velocityCodes;
+                ComboBoxViewEditVelocityCode.DisplayMember = "Name";
+                ComboBoxViewEditVelocityCode.ValueMember = "Id";
+
+                ComboBoxNewHeightCode.DataSource = heightCodes;
+                ComboBoxNewHeightCode.DisplayMember = "Name";
+                ComboBoxNewHeightCode.ValueMember = "Id";
+
+                ComboBoxViewEditHeightCode.DataSource = heightCodes;
+                ComboBoxViewEditHeightCode.DisplayMember = "Name";
+                ComboBoxViewEditHeightCode.ValueMember = "Id";
+
+                ComboBoxNewArea.DataSource = newAreas;
+                ComboBoxNewArea.DisplayMember = "Name";
+                ComboBoxNewArea.ValueMember = "Id";
+
+                ComboBoxViewEditArea.DataSource = newAreas;
+                ComboBoxViewEditArea.DisplayMember = "Name";
+                ComboBoxViewEditArea.ValueMember = "Id";
+
+                ComboBoxNewStorageType.DataSource = storageTypes;
+                ComboBoxNewStorageType.DisplayMember = "Name";
+                ComboBoxNewStorageType.ValueMember = "Id";
+
+                ComboBoxViewEditStorageType.DataSource = storageTypes;
+                ComboBoxViewEditStorageType.DisplayMember = "Name";
+                ComboBoxViewEditStorageType.ValueMember = "Id";
+
+                ComboBoxNewUnitOfIssue.DataSource = unitOfIssues;
+                ComboBoxNewUnitOfIssue.DisplayMember = "Name";
+                ComboBoxNewUnitOfIssue.ValueMember = "Id";
+
+                ComboBoxViewEditUnitOfIssue.DataSource = unitOfIssues;
+                ComboBoxViewEditUnitOfIssue.DisplayMember = "Name";
+                ComboBoxViewEditUnitOfIssue.ValueMember = "Id";
+
+                ConfigureAreaNumberComboBox();
+
+            }
+            catch (Exception ex)
+            {
+                var message = $"Error loading lookup data: {Environment.NewLine}{ex.Message}";
+                _logger.LogDetailAsync(message).SafeFireAndForget();
+                Mediator.GetInstance().OnGeneralError(this, message);
+            }
+            finally
+            {
+               // Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void ConfigureAreaNumberComboBox()
+        {
+            ComboBoxAreaNumber.DataSource = _repoArea.All().ToList();
             ComboBoxAreaNumber.ValueMember = "Id";
             ComboBoxAreaNumber.DisplayMember = "Name";
             ComboBoxAreaNumber.SelectedIndex = 0;
@@ -136,13 +242,6 @@ namespace Neutron.Forms
             {
                 ComboBoxAreaNumber.SelectedValue = _workstation.AreaId;
             }
-
-            SetupNewForm();
-            SetupViewEditForm();
-
-            _startup = false;
-            RefreshData();
-
         }
 
         protected override CreateParams CreateParams
@@ -220,7 +319,7 @@ namespace Neutron.Forms
                 var find = string.IsNullOrWhiteSpace(aka) ? findWhat : aka;
                 TextBoxFind.Text = find;
 
-                var area = (Area)ComboBoxAreaNumber.SelectedItem;
+                var area = (Area)ComboBoxAreaNumber.SelectedItem ?? _workstation.Area;
 
                 var views = area.Name == "All Areas"
                     ? _itemDefinitionsRepository.FindItemDefinitionViews(find).ToList()
@@ -329,23 +428,25 @@ namespace Neutron.Forms
         {
             CloseButtonPressed = true;
         }
-        private void MButtonViewEdit_Click(object sender, EventArgs e)
+        private async void MButtonViewEdit_Click(object sender, EventArgs e)
         {
-            ViewEditItemDefinition();
+            await ViewEditItemDefinition();
         }
 
-        private void ViewEditItemDefinition()
+        private async Task ViewEditItemDefinition()
         {
             if (_bindingSource.Count <= 0) return;
+
+            await LoadLookupDataAsync();
 
             // Check Inventory and OrderDetails for this item
             var itemDefinitionView = ((ObjectView<ItemDefinitionView>)_bindingSource.Current).Object;
             if (itemDefinitionView == null) return;
             var item = itemDefinitionView.Item;
 
-            var recs = _repoInventory.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id).ToList();
+            var recs = _repoInventory.All(r => r.ItemDefinitionId == itemDefinitionView.Id).ToList();
             var msg = $"{recs.Count} {_resourceManager.GetString("Message14")} {Environment.NewLine}";
-            var recs2 = _repoOrderDetails.All().Where(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != (int)LineStatus.Complete).ToList();
+            var recs2 = _repoOrderDetails.All(r => r.ItemDefinitionId == itemDefinitionView.Id && r.LineStatusId != (int)LineStatus.Complete).ToList();
             msg += $"{recs2.Count} {_resourceManager.GetString("Message13")}{Environment.NewLine}";
             if (recs.Count == 0)
             {
@@ -373,14 +474,15 @@ namespace Neutron.Forms
 
             tabControl1.SelectedTab = ViewEdit;
         }
-        private void MButtonNew_Click(object sender, EventArgs e)
+        private async void MButtonNew_Click(object sender, EventArgs e)
         {
-            NewItem();
+            await NewItem();
         }
-        private void NewItem()
+        private async Task NewItem()
         {
             //CheckBoxAllStations.Checked = true;
             RefreshData();
+            await LoadLookupDataAsync();
             TextBoxNewItem.Visible = true;
             TextBoxNewDescription.Visible = true;
             LabelNewDescription.Visible = true;
@@ -724,9 +826,13 @@ namespace Neutron.Forms
         #region Form Setup
         private void SetupGrid()
         {
+            DataGridView1.SuspendLayout();
             DataGridView1.AutoGenerateColumns = false;
             DataGridView1.SelectionMode = DataGridViewSelectionMode.CellSelect;
             var w = (DataGridView1.Width - 60) / 10;
+
+            //var head = _gridResourceManager.GetString("SizeCodeName");
+
             var col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "AreaId",
@@ -861,13 +967,14 @@ namespace Neutron.Forms
             DataGridView1.EnableHeadersVisualStyles = false;
             DataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             DataGridView1.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            DataGridView1.ResumeLayout(false);
 
             //foreach (DataGridViewColumn column in DataGridView1.Columns)
             //{
             //    column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             //    column.HeaderCell.Style.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
             //}
-
+            DataGridViewExistingItems.SuspendLayout();
             DataGridViewExistingItems.AutoGenerateColumns = false;
             DataGridViewExistingItems.SelectionMode = DataGridViewSelectionMode.CellSelect;
 
@@ -902,7 +1009,10 @@ namespace Neutron.Forms
             DataGridViewExistingItems.EnableHeadersVisualStyles = false;
             DataGridViewExistingItems.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             DataGridViewExistingItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            DataGridViewExistingItems.ResumeLayout(false);
 
+
+            DataGridViewViewEditExistingItems.SuspendLayout();
             DataGridViewViewEditExistingItems.AutoGenerateColumns = false;
             DataGridViewViewEditExistingItems.SelectionMode = DataGridViewSelectionMode.CellSelect;
 
@@ -937,6 +1047,7 @@ namespace Neutron.Forms
             DataGridViewViewEditExistingItems.EnableHeadersVisualStyles = false;
             DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Bold);
+            DataGridViewViewEditExistingItems.ResumeLayout(false);
         }
         private void SetupTabControl()
         {
@@ -950,48 +1061,11 @@ namespace Neutron.Forms
         }
         private void SetupNewForm()
         {
-            //LabelFindDescription.Text = "Search any part of Item or Description fields";
-            ComboBoxNewSizeCode.DataSource = _repoSizeCode.All();
-            ComboBoxNewSizeCode.DisplayMember = "Name";
-            ComboBoxNewSizeCode.ValueMember = "Id";
-            ComboBoxNewVelocityCode.DataSource = _repoVelocityCode.All();
-            ComboBoxNewVelocityCode.DisplayMember = "Name";
-            ComboBoxNewVelocityCode.ValueMember = "Id";
-            ComboBoxNewHeightCode.DataSource = _repoHeightCode.All();
-            ComboBoxNewHeightCode.DisplayMember = "Name";
-            ComboBoxNewHeightCode.ValueMember = "Id";
-            ComboBoxNewArea.DataSource = _areaRepository.GetAllAreas();
-            ComboBoxNewArea.DisplayMember = "Name";
-            ComboBoxNewArea.ValueMember = "Id";
-            ComboBoxNewStorageType.DataSource = _repoStorageType.All();
-            ComboBoxNewStorageType.DisplayMember = "Name";
-            ComboBoxNewStorageType.ValueMember = "Id";
-            ComboBoxNewUnitOfIssue.DataSource = _repoUnitOfIssue.All();
-            ComboBoxNewUnitOfIssue.DisplayMember = "Name";
-            ComboBoxNewUnitOfIssue.ValueMember = "Id";
+            _ = LoadLookupDataAsync();
         }
         private void SetupViewEditForm()
         {
-
-            //LabelFindDescription.Text = "Search any part of Item or Description fields";
-            ComboBoxViewEditSizeCode.DataSource = _repoSizeCode.All();
-            ComboBoxViewEditSizeCode.DisplayMember = "Name";
-            ComboBoxViewEditSizeCode.ValueMember = "Id";
-            ComboBoxViewEditVelocityCode.DataSource = _repoVelocityCode.All();
-            ComboBoxViewEditVelocityCode.DisplayMember = "Name";
-            ComboBoxViewEditVelocityCode.ValueMember = "Id";
-            ComboBoxViewEditHeightCode.DataSource = _repoHeightCode.All();
-            ComboBoxViewEditHeightCode.DisplayMember = "Name";
-            ComboBoxViewEditHeightCode.ValueMember = "Id";
-            ComboBoxViewEditArea.DataSource = _areaRepository.GetAllAreas();
-            ComboBoxViewEditArea.DisplayMember = "Name";
-            ComboBoxViewEditArea.ValueMember = "Id";
-            ComboBoxViewEditStorageType.DataSource = _repoStorageType.All();
-            ComboBoxViewEditStorageType.DisplayMember = "Name";
-            ComboBoxViewEditStorageType.ValueMember = "Id";
-            ComboBoxViewEditUnitOfIssue.DataSource = _repoUnitOfIssue.All();
-            ComboBoxViewEditUnitOfIssue.DisplayMember = "Name";
-            ComboBoxViewEditUnitOfIssue.ValueMember = "Id";
+            _ = LoadLookupDataAsync();
         }
         #endregion
         #region Return Key Functions
@@ -1399,17 +1473,17 @@ namespace Neutron.Forms
                 MessageBox.Show($"Error loading language file.  {ex.Message} {Environment.NewLine} {ex.InnerException} ");
             }
         }
-        private void DataGridView1_DoubleClick(object sender, EventArgs e)
+        private async void DataGridView1_DoubleClick(object sender, EventArgs e)
         {
-            ViewEditItemDefinition();
+            await ViewEditItemDefinition();
         }
 
-        private void DataGridViewViewEditExistingItems_DoubleClick(object sender, EventArgs e)
+        private async void DataGridViewViewEditExistingItems_DoubleClick(object sender, EventArgs e)
         {
-            ShowExistingAreaViewEdit();
+            await ShowExistingAreaViewEdit();
         }
 
-        private void ShowExistingAreaViewEdit()
+        private async Task ShowExistingAreaViewEdit()
         {
             var itemDef = (ItemDefinitionView)DataGridViewViewEditExistingItems.CurrentRow?.DataBoundItem;
             if (itemDef == null) return;
@@ -1424,12 +1498,12 @@ namespace Neutron.Forms
 
             _bindingSource.Position = index;
 
-            ViewEditItemDefinition();
+            await ViewEditItemDefinition();
         }
 
-        private void DataGridViewExistingItems_DoubleClick(object sender, EventArgs e)
+        private async void DataGridViewExistingItems_DoubleClick(object sender, EventArgs e)
         {
-            ShowExistingArea();
+            await ShowExistingArea();
         }
 
         private void DataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -1442,7 +1516,7 @@ namespace Neutron.Forms
         }
 
 
-        private void ShowExistingArea()
+        private async Task ShowExistingArea()
         {
             var itemDef = (ItemDefinitionView)DataGridViewExistingItems.CurrentRow?.DataBoundItem;
             if (itemDef == null) return;
@@ -1451,7 +1525,7 @@ namespace Neutron.Forms
 
             _bindingSource.Position = index;
 
-            ViewEditItemDefinition();
+            await ViewEditItemDefinition();
         }
 
         private void TextBoxAka_Enter(object sender, EventArgs e)
@@ -1520,14 +1594,14 @@ namespace Neutron.Forms
             }
         }
 
-        private void DataGridViewViewEditExistingItems_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void DataGridViewViewEditExistingItems_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            ShowExistingAreaViewEdit();
+            await ShowExistingAreaViewEdit();
         }
 
         private List<ItemDefinitionView> GetSelectedItems(DataGridView dataGridView)
         {
-            // Create a list of ItemDefinitionView
+            // Create a list of ItemDefinitionView  
             var selectedList = new List<ItemDefinitionView>();
             // Loop through the selected rows
             foreach (DataGridViewRow row in dataGridView.SelectedRows)
@@ -1621,6 +1695,7 @@ namespace Neutron.Forms
             }
             //put a breakpoint here and check dataTable
             return dataTable;
+                
         }
 
         private void ComboBoxAreaNumber_SelectedIndexChanged(object sender, EventArgs e)
