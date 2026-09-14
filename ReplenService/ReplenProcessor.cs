@@ -210,7 +210,7 @@ namespace ReplenService
         /// <returns></returns>
         private Order GetExistingReplenishmentPick(string replenishmentOrder)
         {
-            var rec = _repoOrder.FindBy(r => r.Ord1 == replenishmentOrder && r.Ord2.Contains("REPLEN")).FirstOrDefault();
+            var rec = _repoOrder.FindByInclude(r => r.Ord1 == replenishmentOrder && r.Ord2.Contains("REPLEN"), o => o.OrderDetails).FirstOrDefault();
             return rec;
         }
         /// <summary>
