@@ -49,12 +49,18 @@ namespace Neutron.Forms
 
         public void FillForm()
         {
-            _location = _repoLocation.FindByKey(_id);
-            if (_location == null || _location.Area == null || _location.SizeCode == null || _location.VelocityCode == null || _location.HeightCode == null) return;
+            _location = _repoLocation.FindByKeyInclude(
+                r => r.Id == _id,
+                l => l.Area,
+                l => l.SizeCode,
+                l => l.VelocityCode,
+                l => l.HeightCode);
+            
+            if (_location == null || _location.Area == null || _location.SizeCode == null 
+                || _location.VelocityCode == null || _location.HeightCode == null) return;
             TextBoxViewEditArea.Text = _location.Area.Name;
 
-            var storageDevice = _repoStorageDevice.FindBy(r => r.StorageDeviceNumber == _location.Loc1).FirstOrDefault();
-            if (storageDevice is null) return;
+            var storageDevice = _repoStorageDevice.All(r => r.StorageDeviceNumber == _location.Loc1).FirstOrDefault(); if (storageDevice is null) return;
 
             ComboBoxViewEditDevice.SelectedValue = storageDevice.Id;
             TextBoxViewEditLoc2.Text = _location.Loc2.ToString();
@@ -93,7 +99,12 @@ namespace Neutron.Forms
         {
             if (_location == null) return;
 
-            var rec = _repoLocation.FindByKey(_location.Id);
+            var rec = await _repoLocation.FindByKeyIncludeAsync(
+                r => r.Id == _location.Id,
+                l => l.Area,
+                l => l.SizeCode,
+                l => l.VelocityCode,
+                l => l.HeightCode);
             if (rec == null) return;
 
             await GlobalVar.HistoryManager.SaveHistoryAsync(ActionCode.LocationModify, rec);
