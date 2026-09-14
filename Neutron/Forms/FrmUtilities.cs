@@ -1846,11 +1846,11 @@ namespace Neutron.Forms
                             var i1 = i;
                             var j1 = j;
                             var k1 = k;
-                            var locations = _repoLocations.All().Where(r => r.AreaId == areaId
-                                                                            && r.Loc1 == device
-                                                                            && r.Loc2 == i1
-                                                                            && r.Loc3 == j1
-                                                                            && r.Loc4 == k1);
+                            var locations = _repoLocations.All(r => r.AreaId == areaId
+                                                                    && r.Loc1 == device
+                                                                    && r.Loc2 == i1
+                                                                    && r.Loc3 == j1
+                                                                    && r.Loc4 == k1);
                             if (!locations.Any())
                             {
                                 SaveNew(areaId, device, i1, j1, k1, l);
@@ -2063,12 +2063,22 @@ namespace Neutron.Forms
         {
             var idx = -1;
             Cursor.Current = Cursors.WaitCursor;
-            var recs = _repoHardwareDevices.AllInclude(r => r.Workstation
-                , r => r.DeviceType
-                , r => r.CommunicationType
-                , r => r.TcpConfiguration
-                , r => r.SerialConfiguration
+            //var recs = _repoHardwareDevices.AllInclude(r => r.Workstation
+            //    , r => r.DeviceType
+            //    , r => r.CommunicationType
+            //    , r => r.TcpConfiguration
+            //    , r => r.SerialConfiguration
+            //).ToList();
+
+            var recs = _repoHardwareDevices.AllInclude(
+                null, // No filtering logic applied
+                r => r.Workstation,
+                r => r.DeviceType,
+                r => r.CommunicationType,
+                r => r.TcpConfiguration,
+                r => r.SerialConfiguration
             ).ToList();
+
             //create the view
             if (recs.Count > 0)
             {
@@ -2757,19 +2767,38 @@ namespace Neutron.Forms
             var idx = 1;
             Cursor.Current = Cursors.WaitCursor;
 
-            var recs = _repoWorkstations.AllInclude(r => r.StationType).Select(s => new StationViewModel
-            {
-                Id = s.Id,
-                Name = s.Name,
-                StationNumber = s.StationNumber,
-                StationTypeId = s.StationTypeId,
-                StationTypeName = s.StationType.Name,
-                AreaId = s.AreaId,
-                AreaName = s.Area.Name,
-                Sequence = s.Sequence
-            })
+            //var recs = _repoWorkstations.AllInclude(r => r.StationType).Select(s => new StationViewModel
+            //{
+            //    Id = s.Id,
+            //    Name = s.Name,
+            //    StationNumber = s.StationNumber,
+            //    StationTypeId = s.StationTypeId,
+            //    StationTypeName = s.StationType.Name,
+            //    AreaId = s.AreaId,
+            //    AreaName = s.Area.Name,
+            //    Sequence = s.Sequence
+            //})
+            //    .OrderBy(o => o.Sequence)
+            //    .ToList();
+
+            var recs = _repoWorkstations.AllInclude(
+                    null, // No filtering logic applied
+                    r => r.StationType, // Include related StationType entity
+                    r => r.Area)        // Include related Area entity
+                .Select(s => new StationViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    StationNumber = s.StationNumber,
+                    StationTypeId = s.StationTypeId,
+                    StationTypeName = s.StationType.Name,
+                    AreaId = s.AreaId,
+                    AreaName = s.Area.Name,
+                    Sequence = s.Sequence
+                })
                 .OrderBy(o => o.Sequence)
                 .ToList();
+
 
             if (recs.Any())
             {
@@ -3713,7 +3742,7 @@ namespace Neutron.Forms
         {
             var printer = GetCurrentDocumentPrinter();
             var order = TextBoxTestOrderNumber.Text;
-            var ord = _repoReplenOrders.FindBy(r => r.Ord1 == order).FirstOrDefault();
+            var ord = _repoReplenOrders.FindByInclude(r => r.Ord1 == order, o => o.ReplenOrderDetails).FirstOrDefault();
             if (ord == null)
             {
                 MessageBox.Show($"Order {order} not found.");
