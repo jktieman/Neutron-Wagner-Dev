@@ -77,7 +77,11 @@ namespace Neutron.Forms
                     _orderDetail.PickedQuantity = _orderDetail.Quantity;
                     _orderDetail.LineStatusId = newStatus;
                     _repoOrderDetails.Update(_orderDetail);
-                    var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
+                    var inv = _repoInventory.AllInclude(
+                            r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId,
+                            i => i.ItemDefinition,
+                            i => i.Location)
+                        .FirstOrDefault();
                     if (inv != null)
                     {
                         _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
@@ -98,7 +102,11 @@ namespace Neutron.Forms
                     _orderDetail.PickedQuantity = _orderDetail.Quantity;
                     _orderDetail.LineStatusId = newStatus;
                     _repoOrderDetails.Update(_orderDetail);
-                    var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
+                    var inv = _repoInventory.AllInclude(
+                            r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId,
+                            i => i.ItemDefinition,
+                            i => i.Location)
+                        .FirstOrDefault();
                     if (inv != null)
                     {
                         _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
@@ -119,10 +127,14 @@ namespace Neutron.Forms
                     _orderDetail.PickedQuantity = _orderDetail.Quantity;
                     _orderDetail.LineStatusId = newStatus;
                     _repoOrderDetails.Update(_orderDetail);
-                    var inv = _repoInventory.All().FirstOrDefault(r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId);
+                    var inv = _repoInventory.AllInclude(
+                            r => r.ItemDefinitionId == _orderDetail.ItemDefinitionId,
+                            i => i.ItemDefinition,
+                            i => i.Location)
+                        .FirstOrDefault();
                     if (inv != null)
                     {
-                        GlobalVar.HistoryManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
+                        _historyManager.SaveHistory(ActionCode.PickOrder, inv, _orderDetail.Quantity, _orderDetail);
                     }
 
                     CheckForOrderComplete(_orderDetail.Order);
