@@ -293,7 +293,7 @@ namespace Neutron.Forms
             mlUserInfo.Text = $"{_resourceManager.GetString($"CurrentUser")}{GlobalVar.User?.UserInfo}";
             CloseButtonPressed = false;
             _currentTextBoxPos = (TextBox)Controls.Find($"TextBoxPos1", true).First();
-            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");     // _resourceManager.GetString($"GetBin"));
+            ToolTipPickScreen.SetToolTip(ButtonMove, "Get Tray");
 
 
             _orderDetailsRepository = new ReplenOrderDetailsRepository(_contextFactory);
@@ -2416,7 +2416,13 @@ namespace Neutron.Forms
             foreach (DataGridViewRow row in dataGridView.SelectedRows)
             {
                 var orderDetailId = (int)row.Cells["OrderDetailId"].Value;
-                var orderDetail = _repoReplenOrderDetails.FindByKey(orderDetailId);
+                
+                var orderDetail = _repoReplenOrderDetails.FindByKeyInclude(
+                    od => od.Id == orderDetailId,
+                    new[] { "Area.LocationType" },
+                    od => od.ReplenOrder,
+                    od => od.ItemDefinition);
+                
                 if (orderDetail != null)
                 {
                     orderDetails.Add(orderDetail);
@@ -2506,12 +2512,12 @@ namespace Neutron.Forms
         //    return orderIds;
         //}
 
-        private void MBPickListBack_Click(object sender, EventArgs e)
+        private async void MBPickListBack_Click(object sender, EventArgs e)
         {
-            PickListBack();
+            await PickListBack();
         }
 
-        private void PickListBack()
+        private async Task PickListBack()
         {
             _replenOrdersRepository.SetOrderStatusToAvailableIfNotComplete(_currentOrderIds);
             //ShowAvailableStagingOrders();
@@ -2519,7 +2525,7 @@ namespace Neutron.Forms
             LabelFormTitle.BackColor = Color.Green;
             // NextButtonEnabled();
 
-            ShowAvailableOrders();
+            await ShowAvailableOrders();
 
             tabControl1.SelectedTab = AvailableOrders;
         }
@@ -3450,7 +3456,7 @@ namespace Neutron.Forms
                         if (firstTime)
                         {
                             prevPartNum = detail.PartNum;
-                            key = detail.PartNum;
+                            key = $"{detail.PartNum}-0";
                             firstTime = false;
                         }
                         else if (prevPartNum == detail.PartNum)
@@ -3465,7 +3471,10 @@ namespace Neutron.Forms
                             counter = 0;
                         }
 
-                        var unitOfIssue = _repoItemDefinition.FindBy(f => f.Id == detail.ItemDefinitionId).FirstOrDefault()?.UnitOfIssue.Name;
+                        //var unitOfIssue = _repoItemDefinition.FindBy(f => f.Id == detail.ItemDefinitionId).FirstOrDefault()?.UnitOfIssue.Name;
+                        var unitOfIssue = _repoItemDefinition
+                            .FindByInclude(f => f.Id == detail.ItemDefinitionId, i => i.UnitOfIssue)
+                            .FirstOrDefault()?.UnitOfIssue?.Name;
 
                         var pickView = new ReplenPickView()
                         {
@@ -3632,8 +3641,16 @@ namespace Neutron.Forms
             var itemIds = pickViews.Select(r => r.ItemId).Distinct().ToList();
 
             // get the current inventory in this area for all the distinct items in the pickviews
-            _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
-                .Where(f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId).ToList();
+            //_currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
+            //    .Where(f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId).ToList();
+
+            _currentInventory = _repoInventory.AllInclude(
+                    f => itemIds.Contains(f.ItemDefinitionId) && f.AreaId == areaId, // Filtering logic moved here
+                    l => l.Location,                                                // Include related Location entity
+                    l => l.ItemDefinition,                                          // Include related ItemDefinition entity
+                    l => l.StorageType)                                             // Include related StorageType entity
+                .ToList();
+
 
             _logger.LogDetailAsync($"Load Inventory For PickViews END").SafeFireAndForget();
         }
@@ -3643,9 +3660,18 @@ namespace Neutron.Forms
 
             _logger.LogDetailAsync($"Load Inventory START").SafeFireAndForget();
             var pickableLocations = _repoStorageTypes.FindBy(r => r.Pickable == true).Select(r => r.Id).ToList();  // new int[] { 1, 2 };  // 4 is an EBin
-                                                                                                                   // var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
-            _currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
-                .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
+            // var pickableLocations = new int[] { 1, 2 };  // 4 is an EBin
+            
+            //_currentInventory = _repoInventory.AllInclude(l => l.Location, l => l.ItemDefinition)
+            //    .Where(f => pickableLocations.Contains(f.StorageTypeId)).ToList();
+
+            _currentInventory = _repoInventory.AllInclude(
+                    f => pickableLocations.Contains(f.StorageTypeId), // Filtering logic moved here
+                    l => l.Location,                                  // Include related Location entity
+                    l => l.ItemDefinition,                            // Include related ItemDefinition entity
+                    l => l.StorageType)                              // Include related StorageType entity
+                .ToList();
+
             _logger.LogDetailAsync($"Load Inventory END").SafeFireAndForget();
         }
 
@@ -4784,7 +4810,11 @@ namespace Neutron.Forms
         }
         private IEnumerable<ReplenOrderDetail> GetPickingOrderDetails(BatchPosition batchPosition)
         {
-            return _repoReplenOrderDetails.FindBy(r => r.ReplenOrderId == batchPosition.OrderId && r.AreaId == _workstationView.AreaId && r.LineStatusId == (int)LineStatus.Picking);
+            return _repoReplenOrderDetails.FindByInclude(
+                r => r.ReplenOrderId == batchPosition.OrderId 
+                                                              && r.AreaId == _currentAreaId 
+                                                              && r.LineStatusId == (int)LineStatus.Picking
+                , i => i.ReplenOrder).ToList();
         }
         private void SetOrderDetailStatusToAvailable(ReplenOrderDetail orderDetail)
         {
@@ -4924,7 +4954,7 @@ namespace Neutron.Forms
                 }
             }
             //_logger.LogDetailAsync($"FinalPickSequence Start Carousel Move: [{DateTime.Now.ToLongTimeString()}]"));
-            _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled);
+            _deviceManager = new ReplenDeviceManager(newCarList, _neutronVariables.ShuttleEnabled, _logLevel);
             //for (var i = 1; i <= _workstationView.HardwareDevices.Count; i++)
             //{
             //    _deviceManager.MoveNext(i);
@@ -5721,8 +5751,11 @@ namespace Neutron.Forms
 
                 var itemDef = _currentPickStop.ItemId;
 
-                var inventoryRecord = _repoInventory.FindBy(r => r.ItemDefinitionId == _currentPickStop.ItemId
-                                                                     && r.LocationId == location.Id).FirstOrDefault();
+                var inventoryRecord = _repoInventory.FindByInclude(r => r.ItemDefinitionId == _currentPickStop.ItemId
+                                                                     && r.LocationId == location.Id,
+                                                                     i => i.Location,
+                                                                     i => i.ItemDefinition,
+                                                                     i => i.StorageType).FirstOrDefault();
 
 
                 if (inventoryRecord == null)
@@ -5741,8 +5774,11 @@ namespace Neutron.Forms
                     _logger.LogDetailAsync($"Insert Inventory Record. AreaId:{newInventoryRecord.AreaId} Item: {newInventoryRecord.ItemDefinitionId} LocationId: {newInventoryRecord.LocationId}").SafeFireAndForget();
                     _repoInventory.Insert(newInventoryRecord);
 
-                    var fullInventoryRecord = _repoInventory.FindBy(r => r.ItemDefinitionId == newInventoryRecord.ItemDefinitionId
-                    && r.LocationId == newInventoryRecord.LocationId).FirstOrDefault();
+                    var fullInventoryRecord = _repoInventory.FindByInclude(r => r.ItemDefinitionId == newInventoryRecord.ItemDefinitionId
+                    && r.LocationId == newInventoryRecord.LocationId,
+                    i => i.Location,
+                    i => i.ItemDefinition,
+                    i => i.StorageType).FirstOrDefault();
 
                     _currentPickStop.CurrentInventoryLocation = fullInventoryRecord;
                 }
@@ -7743,11 +7779,11 @@ namespace Neutron.Forms
         #region Find Functions Available Orders Screen
 
 
-        private void TextBoxFindAvailableOrders_KeyDown(object sender, KeyEventArgs e)
+        private async void TextBoxFindAvailableOrders_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Return)
             {
-                ShowAvailableOrders();
+                await ShowAvailableOrders();
             }
 
             if (e.KeyCode == Keys.Escape)
@@ -7777,10 +7813,10 @@ namespace Neutron.Forms
 
         #region Find Functions Main Orders
 
-        private void MButtonSearch_Click(object sender, EventArgs e)
+        private async void MButtonSearch_Click(object sender, EventArgs e)
         {
             //ShowOrders();
-            SearchDataSet();
+            await SearchDataSet();
         }
 
         /// <summary>
@@ -7791,7 +7827,7 @@ namespace Neutron.Forms
         /// logs any exceptions that occur during the search, and finally resets the cursor to the default cursor.
         /// The search operation can be one of the following: ShowAvailableStagingOrders, ShowCompleted, ShowRackOrders, ShowReplenOrders.
         /// </remarks>
-        private void SearchDataSet()
+        private async Task SearchDataSet()
         {
             Cursor.Current = Cursors.WaitCursor;
 
@@ -7801,7 +7837,7 @@ namespace Neutron.Forms
                 {
                     case CurrentDataSet.Available:
                         {
-                            ShowAvailableOrders();
+                            await ShowAvailableOrders();
                             break;
                         }
                     case CurrentDataSet.Complete:
@@ -7897,9 +7933,9 @@ namespace Neutron.Forms
 
         #endregion
 
-        private void MBAvailableOrdersRefresh_Click(object sender, EventArgs e)
+        private async void MBAvailableOrdersRefresh_Click(object sender, EventArgs e)
         {
-            ShowAvailableOrders();
+            await ShowAvailableOrders();
         }
 
         private void MBRefresh_Click(object sender, EventArgs e)
