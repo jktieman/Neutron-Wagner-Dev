@@ -385,9 +385,13 @@ namespace NeutronData.Repositories
         public IEnumerable<ReplenOrderView> GetOrderView()
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All()
-                // .Where(r => statusToGet.Contains(r.OrderStatusId))
-                .Select(s => new ReplenOrderView
+
+            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(
+                    null,
+                    r => r.ReplenOrderDetails,
+                    r => r.OrderStatus)
+                            // .Where(r => statusToGet.Contains(r.OrderStatusId))
+                            .Select(s => new ReplenOrderView
                 {
                     Id = s.Id,
                     Ord1 = s.Ord1,
@@ -418,7 +422,9 @@ namespace NeutronData.Repositories
         {
 
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Hold, (int)LineStatus.Picking, (int)LineStatus.Partial, (int)LineStatus.Archive };
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
+            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(null, 
+                    r=> r.ReplenOrderDetails, r => r.OrderStatus)
+                .Select(s => new ReplenOrderView
             {
                 Id = s.Id,
                 Ord1 = s.Ord1,
@@ -518,8 +524,10 @@ namespace NeutronData.Repositories
         {
             var availableRecs = new List<ReplenOrderView>();
             IEnumerable<ReplenOrderView> recs = null;
-            var replenOrderList = _repoReplenOrders.All().ToList();
-            if (replenOrderList.Count == 0) return availableRecs;
+            var replenOrderList = _repoReplenOrders.AllInclude(
+                null,
+                r => r.ReplenOrderDetails,
+                r => r.OrderStatus).ToList(); if (replenOrderList.Count == 0) return availableRecs;
 
             try
             {
@@ -688,7 +696,7 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetCompletedOrders(string find = "")
         {
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
+            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All(r => r.OrderStatusId == 6).Select(s => new ReplenOrderView
             {
                 Id = s.Id,
                 Ord1 = s.Ord1,
@@ -717,8 +725,9 @@ namespace NeutronData.Repositories
 
         public ReplenOrder GetOrder()
         {
-            var ord = _repoReplenOrders.All().FirstOrDefault();
-            if (ord == null) return null;
+            var ord = _repoReplenOrders.AllInclude(
+                null,
+                r => r.ReplenOrderDetails).FirstOrDefault(); if (ord == null) return null;
             var lines = ord.Lines();
             var pieces = ord.Pieces();
 
@@ -729,8 +738,14 @@ namespace NeutronData.Repositories
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
             var pickList = new List<ReplenPickView>();
-            List<ReplenOrder> result = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails)
-                .Where(r => statusToGet.Contains(r.OrderStatusId)).ToList();
+            //List<ReplenOrder> result = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails)
+            //    .Where(r => statusToGet.Contains(r.OrderStatusId)).ToList();
+
+            List<ReplenOrder> result = _repoReplenOrders.AllInclude(
+                    r => statusToGet.Contains(r.OrderStatusId), // Filtering logic moved here
+                    n => n.ReplenOrderDetails)                  // Include related ReplenOrderDetails entity
+                .ToList();
+
             foreach (var ord in result)
             {
                 var orderDetails = ord.ReplenOrderDetails.Where(o => statusToGet.Contains(o.LineStatusId)).ToList();
@@ -772,7 +787,7 @@ namespace NeutronData.Repositories
             //Add Pick Location based on Inventory
             foreach (var item in pickList)
             {
-                Inventory rec = _repoInventory.FindBy(f => f.ItemDefinitionId == item.ItemId).FirstOrDefault();
+                Inventory rec = _repoInventory.FindByInclude(f => f.ItemDefinitionId == item.ItemId, r => r.Location).FirstOrDefault();
                 if (rec != null)
                 {
                     item.Slot = rec.Location.Slot;
@@ -809,7 +824,7 @@ namespace NeutronData.Repositories
         public IEnumerable<ReplenOrderView> GetAvailableOrders(string search)
         {
             var statusToGet = new int[] { (int)LineStatus.Available, (int)LineStatus.Partial };
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All().Select(s => new ReplenOrderView
+            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.All(r => statusToGet.Contains(r.OrderStatusId)).Select(s => new ReplenOrderView
             {
                 Id = s.Id,
                 Ord1 = s.Ord1,
@@ -939,7 +954,13 @@ namespace NeutronData.Repositories
 
             if (orderIds.Length > 0)
             {
-                List<ReplenOrder> orders = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => orderIds.Contains(r.Id)).ToList();
+                //List<ReplenOrder> orders = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => orderIds.Contains(r.Id)).ToList();
+                List<ReplenOrder> orders = _repoReplenOrders.AllInclude(
+                        r => orderIds.Contains(r.Id), // Filtering logic moved here
+                        n => n.ReplenOrderDetails)    // Include related ReplenOrderDetails entity
+                    .ToList();
+
+
                 if (orders.Count > 0)
                 {
                     foreach (ReplenOrder ord in orders)
@@ -1008,7 +1029,14 @@ namespace NeutronData.Repositories
             {
                 if (orderIds.Length > 0)
                 {
-                    List<ReplenOrder> orders = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => orderIds.Contains(r.Id)).ToList();
+                    //List<ReplenOrder> orders = _repoReplenOrders.AllInclude(n => n.ReplenOrderDetails).Where(r => orderIds.Contains(r.Id)).ToList();
+
+                    List<ReplenOrder> orders = _repoReplenOrders.AllInclude(
+                            r => orderIds.Contains(r.Id), // Filtering logic moved here
+                            n => n.ReplenOrderDetails)    // Include related ReplenOrderDetails entity
+                        .ToList();
+
+
                     if (orders.Count > 0)
                     {
                         foreach (ReplenOrder ord in orders)
@@ -1128,18 +1156,37 @@ namespace NeutronData.Repositories
 
         public IEnumerable<RackReplenOrderView> GetRackOrdersView(int areaId, string search)
         {
-            IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
-            {
-                AreaId = areaId,
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                Priority = s.Priority,
-                Order = s,
-                LoadDate = s.LoadDate,
-                OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId).ToList()
-            }).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
-                .OrderBy(o => o.Ord2).ToList();
+            //IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new RackReplenOrderView
+            //{
+            //    AreaId = areaId,
+            //    Id = s.Id,
+            //    Ord1 = s.Ord1,
+            //    Ord2 = s.Ord2,
+            //    Priority = s.Priority,
+            //    Order = s,
+            //    LoadDate = s.LoadDate,
+            //    OrderDetails = s.ReplenOrderDetails.Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId).ToList()
+            //}).Where(o => o.Order.OrderStatusId != (int)LineStatus.Complete)
+            //    .OrderBy(o => o.Ord2).ToList();
+            IEnumerable<RackReplenOrderView> recs = _repoReplenOrders.AllInclude(
+                    r => r.OrderStatusId != (int)LineStatus.Complete, // Filtering logic moved here
+                    r => r.ReplenOrderDetails)                        // Include related ReplenOrderDetails entity
+                .Select(s => new RackReplenOrderView
+                {
+                    AreaId = areaId,
+                    Id = s.Id,
+                    Ord1 = s.Ord1,
+                    Ord2 = s.Ord2,
+                    Priority = s.Priority,
+                    Order = s,
+                    LoadDate = s.LoadDate,
+                    OrderDetails = s.ReplenOrderDetails
+                        .Where(o => o.LineStatusId != (int)LineStatus.Complete && o.AreaId == areaId) // Additional filtering for OrderDetails
+                        .ToList()
+                })
+                .OrderBy(o => o.Ord2)
+                .ToList();
+
 
             var result = recs.Where(s => s.SearchField.Contains(search) && s.OrderDetails.Count > 0);
             return result;
@@ -1226,29 +1273,58 @@ namespace NeutronData.Repositories
 
         public IEnumerable<ReplenOrderView> GetRackOrders(string search = "")
         {
-            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new ReplenOrderView
-            {
-                Id = s.Id,
-                Ord1 = s.Ord1,
-                Ord2 = s.Ord2,
-                OrderStatusName = s.OrderStatus.Name,
-              //  ShipMethodName = s.ShipMethod.Name,
-                Priority = s.Priority,
-                ReplenOrder = s,
-                Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
-                Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
-                Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
-                Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
-                Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
-                Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
-                Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
-                Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
-                //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
-                LoadDate = s.LoadDate,
-                OrderStatusId = s.OrderStatusId,
-              //  ShipMethodId = s.ShipMethodId
-            }).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
-                .OrderBy(o => o.Ord1).ToList();
+            //IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(r => r.ReplenOrderDetails).Select(s => new ReplenOrderView
+            //{
+            //    Id = s.Id,
+            //    Ord1 = s.Ord1,
+            //    Ord2 = s.Ord2,
+            //    OrderStatusName = s.OrderStatus.Name,
+            //  //  ShipMethodName = s.ShipMethod.Name,
+            //    Priority = s.Priority,
+            //    ReplenOrder = s,
+            //    Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+            //    Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+            //    Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+            //    Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+            //    Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+            //    Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+            //    Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+            //    Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+            //    //Station_8_HasPicks = _rackStation == null ? string.Empty : HasRackPicks(_rackStation.Id, s.ReplenOrderDetails),
+            //    LoadDate = s.LoadDate,
+            //    OrderStatusId = s.OrderStatusId,
+            //  //  ShipMethodId = s.ShipMethodId
+            //}).Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks))
+            //    .OrderBy(o => o.Ord1).ToList();
+
+            IEnumerable<ReplenOrderView> recs = _repoReplenOrders.AllInclude(
+                    null, // No filtering logic for the database query
+                    r => r.ReplenOrderDetails) // Include related ReplenOrderDetails entity
+                .Select(s => new ReplenOrderView
+                {
+                    Id = s.Id,
+                    Ord1 = s.Ord1,
+                    Ord2 = s.Ord2,
+                    OrderStatusName = s.OrderStatus.Name,
+                    Priority = s.Priority,
+                    ReplenOrder = s,
+                    Station_1_HasPicks = HasPicks(_allPickableAreaIds, 1, s.ReplenOrderDetails),
+                    Station_2_HasPicks = HasPicks(_allPickableAreaIds, 2, s.ReplenOrderDetails),
+                    Station_3_HasPicks = HasPicks(_allPickableAreaIds, 3, s.ReplenOrderDetails),
+                    Station_4_HasPicks = HasPicks(_allPickableAreaIds, 4, s.ReplenOrderDetails),
+                    Station_5_HasPicks = HasPicks(_allPickableAreaIds, 5, s.ReplenOrderDetails),
+                    Station_6_HasPicks = HasPicks(_allPickableAreaIds, 6, s.ReplenOrderDetails),
+                    Station_7_HasPicks = HasPicks(_allPickableAreaIds, 7, s.ReplenOrderDetails),
+                    Station_8_HasPicks = HasPicks(_allPickableAreaIds, 8, s.ReplenOrderDetails),
+                    LoadDate = s.LoadDate,
+                    OrderStatusId = s.OrderStatusId
+                })
+                .Where(r => !string.IsNullOrEmpty(r.Station_8_HasPicks)) // Filtering applied after projection
+                .OrderBy(o => o.Ord1)
+                .ToList();
+
+
+
             IEnumerable<ReplenOrderView> result = recs.Where(s => s.SearchField.Contains(search));
             return result;
         }
