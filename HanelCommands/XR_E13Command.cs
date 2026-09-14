@@ -18,7 +18,7 @@ namespace HanelCommands
         private string _over = string.Empty;
         private string _back = string.Empty;
         private string _width = "01";
-        private string _screenSize;
+        private string _screenSize = string.Empty;
         private string _displayText = String.Empty;
         private List<DisplayLine> _displayLines = new List<DisplayLine>();
 
@@ -30,9 +30,10 @@ namespace HanelCommands
         {
             _commandString = Encoding.UTF8.GetString(dataIn);
             _commandSegments = _commandString.Split('$');
-            _lift = _commandSegments[0].Substring(2, 2);
-            _accessPoint = _commandSegments[0].Substring(4, 1);
-            _screenSize = _commandSegments.FirstOrDefault(r => r.StartsWith("C"))?.Substring(2) ?? "";
+            var firstSegment = _commandSegments.Length > 0 ? _commandSegments[0] : string.Empty;
+            _lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            _accessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
+            _screenSize = _commandSegments.FirstOrDefault(r => r.StartsWith("C"))?.Substring(2) ?? string.Empty;
         }
 
         public XR_E13Command(string lift, string accessPoint, string screenSize = "08040")
@@ -40,6 +41,8 @@ namespace HanelCommands
             _lift = lift.PadLeft(2, '0');
             _accessPoint = accessPoint;
             _screenSize = screenSize;
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
         private string GetSegmentValue(string segmentType)
         {
@@ -67,7 +70,7 @@ namespace HanelCommands
         }
         public List<DisplayLine> DisplayLines => _displayLines;
         public string Lift => _lift;
-        public int Device => int.Parse(_lift);
+        public int Device => int.TryParse(_lift, out var d) ? d : 0;
         public string AccessPoint  => _accessPoint;
         public string Tray
         {
