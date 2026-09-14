@@ -117,6 +117,19 @@ namespace ReplenService
             return orderDetails;
         }
 
+        /// <summary>
+        /// Deletes replenishment records where the total inventory exceeds the system minimum threshold 
+        /// or where there is no inventory available in the secondary system.
+        /// </summary>
+        /// <remarks>
+        /// This method retrieves replenishment records, evaluates their associated inventory levels 
+        /// against the system minimum, and deletes those that meet the specified criteria. 
+        /// It also logs any errors encountered during the process.
+        /// </remarks>
+        /// <exception cref="Exception">
+        /// Thrown when an error occurs during the deletion process. The exception details are logged.
+        /// </exception>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task DeleteReplenishmentsAboveSystemMin()
         {
             List<Inventory> inventoryInEight;
