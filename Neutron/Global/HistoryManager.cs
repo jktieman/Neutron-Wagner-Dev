@@ -932,7 +932,10 @@ namespace Neutron.Global
         //Inventory Modify Action With Beginning Quantity in RequestedQuantity field
         public void SaveHistory(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
         {
-            var inventory = _repoInventory.FindByKey(inv.Id);
+            var inventory = _repoInventory.FindByKeyInclude(
+                r => r.Id == inv.Id,
+                r => r.ItemDefinition,
+                r => r.Location);
             var orderText = "  INV MOD";
             var history = new History
             {
@@ -964,7 +967,11 @@ namespace Neutron.Global
 
         public async Task SaveHistoryAsync(ActionCode actionCode, Inventory inv, int beginningQty, bool invMod)
         {
-            var inventory = _repoInventory.FindByKey(inv.Id);
+            //var inventory = _repoInventory.FindByKey(inv.Id);
+            var inventory = _repoInventory.FindByKeyInclude(
+                r => r.Id == inv.Id,
+                r => r.ItemDefinition,
+                r => r.Location);
             var orderText = "  INV MOD";
             var history = new History
             {
@@ -1188,7 +1195,7 @@ namespace Neutron.Global
 
         private bool CheckForExistingHistory(History history)
         {
-            var his = _repoHistory.All().FirstOrDefault(r => r.ActionCode == history.ActionCode
+            var his = _repoHistory.All(r => r.ActionCode == history.ActionCode
                                                              && r.OrderId == history.OrderId
                                                              && r.Ord1 == history.Ord1
                                                              && r.Ord2 == history.Ord2
@@ -1200,7 +1207,8 @@ namespace Neutron.Global
                                                              && r.Loc2 == history.Loc2
                                                              && r.Loc3 == history.Loc3
                                                              && r.Loc4 == history.Loc4
-                                                             && r.OrderDetailInfo == history.OrderDetailInfo);
+                                                             && r.OrderDetailInfo == history.OrderDetailInfo).FirstOrDefault();
+
             if (his != null)
             {
                 MessageBox.Show(
