@@ -809,7 +809,7 @@ namespace NeutronLoader
             Inventory inv = null;
             //is the location available
 
-            var location = _repoLocation.All().FirstOrDefault(l => l.Slot == hostOrder.PrimeBin);
+            var location = _repoLocation.All(l => l.Slot == hostOrder.PrimeBin).FirstOrDefault();
             if (location == null)
             {
                 var loc = new Location();
@@ -830,11 +830,11 @@ namespace NeutronLoader
 
             }
 
-            location = _repoLocation.All().FirstOrDefault(l => l.Slot == hostOrder.PrimeBin);
+            location = _repoLocation.All(l => l.Slot == hostOrder.PrimeBin).FirstOrDefault();
             if (location != null)
             {
                 //is there anything already in the location/Inventory
-                var inventory = _repoInventory.All().FirstOrDefault(l => l.LocationId == location.Id);
+                var inventory = _repoInventory.All(l => l.LocationId == location.Id).FirstOrDefault();
                 if (inventory == null)
                 {
                     //create the inventory record with zero quantity
