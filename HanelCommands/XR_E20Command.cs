@@ -34,6 +34,9 @@ namespace HanelCommands
 
         public XR_E20Command(byte[] dataIn)
         {
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
+
             if (dataIn.Length > 0)
             {
                 _commandString = Encoding.UTF8.GetString(dataIn);
@@ -41,15 +44,15 @@ namespace HanelCommands
 
                 if (_commandSegments.Length < MinSegments) return;
 
-                _lift = _commandSegments[0].Substring(2, 2);
-                _accessPoint = _commandSegments[0].Substring(4, 1);
+                var firstSegment = _commandSegments[0];
+                _lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+                _accessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
 
-                _tray = GetSegmentValue("T");
-                _over = GetSegmentValue("F");
-                _back = GetSegmentValue("O");
-                _width = GetSegmentValue("H"); 
+                _tray  = GetSegmentValue("T");
+                _over  = GetSegmentValue("F");
+                _back  = GetSegmentValue("O");
+                _width = GetSegmentValue("H");
             }
-
         }
         private string GetSegmentValue(string segmentType)
         {
@@ -61,6 +64,8 @@ namespace HanelCommands
         {
             _lift = lift.Trim().PadLeft(2, '0');
             _accessPoint = ap;
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
 
 
@@ -72,6 +77,8 @@ namespace HanelCommands
             _over = over.Trim().PadLeft(2, '0');
             _back = back.Trim().PadLeft(2, '0');
             _width = width.Trim().PadLeft(2, '0');
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
 
         public string HostCommand => "M XR";
@@ -94,7 +101,7 @@ namespace HanelCommands
         }
         public List<DisplayLine> DisplayLines => _displayLines;
         public string Lift => _lift;
-        public int Device => int.Parse(_lift);
+        public int Device => int.TryParse(_lift, out var d) ? d : 0;
         public string AccessPoint => _accessPoint;
         public string Tray
         {
