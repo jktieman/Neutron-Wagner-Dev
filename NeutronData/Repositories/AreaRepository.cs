@@ -1,18 +1,19 @@
-﻿using NeutronData.DataContexts;
+﻿using AlliedLogger;
+using NeutronCore.Enums;
+using NeutronCore.Global;
+using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.Models;
+using NeutronData.Models.Lookups;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
-using AlliedLogger;
-using NeutronData.Models.Lookups;
-using NeutronCore.Enums;
-using System.Data.SqlClient;
-using StationType = NeutronCore.Enums.StationType;
 using Logger = NeutronCore.Global.Logger;
-using NeutronCore.Global;
+using StationType = NeutronCore.Enums.StationType;
 
 namespace NeutronData.Repositories;
 
@@ -54,17 +55,17 @@ public class AreaRepository : IAreaRepository
 
     public int[] GetAllPickableAreaIds()
     {
-        var rec = new int[]{};
+        var recs = new int[]{};
         try
         {
-            rec = _repoArea.All().Where(r => r.Pickable == true).Select(r => r.Id).ToArray();
+            recs = _repoArea.All(r => r.Pickable).Select(r => r.Id).ToArray();
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
 
-        return rec;
+        return recs;
 
     }
 
@@ -88,7 +89,7 @@ public class AreaRepository : IAreaRepository
         var recs = new List<Area>();
         try
         {
-            recs = _repoArea.All().Where(r => r.Pickable == true).ToList();
+            recs = _repoArea.All(r => r.Pickable == true).ToList();
         }
         catch (Exception ex)
         {
@@ -103,7 +104,7 @@ public class AreaRepository : IAreaRepository
         var recs = new List<int>();
         try
         {
-            recs = _repoArea.All().Where(r => r.Pickable == true).Select(r => r.AreaNumber).ToList();
+            recs = _repoArea.All(r => r.Pickable == true).Select(r => r.AreaNumber).ToList();
         }
         catch (Exception ex)
         {
