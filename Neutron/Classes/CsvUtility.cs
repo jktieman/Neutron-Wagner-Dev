@@ -87,7 +87,16 @@ namespace Neutron.Classes
         {
             try
             {
-                var inventory = _repoInventory.All().Where(r => r.AreaId == areaId).OrderBy(o => o.ItemDefinition.Item).ToList();
+                var inventory = _repoInventory.AllInclude(
+                        r => r.AreaId == areaId,
+                        inv => inv.ItemDefinition,
+                        inv => inv.ItemDefinition.UnitOfIssue,
+                        inv => inv.ItemDefinition.VelocityCode,
+                        inv => inv.ItemDefinition.SizeCode,
+                        inv => inv.ItemDefinition.HeightCode,
+                        inv => inv.Location)
+                    .OrderBy(o => o.ItemDefinition.Item)
+                    .ToList();
                 const string columnNames = "sku" +
                                            ",Description" +
                                            ",Unit-Of_Issue" +
