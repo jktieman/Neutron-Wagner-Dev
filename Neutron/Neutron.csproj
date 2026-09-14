@@ -34,7 +34,7 @@
     <SuiteName>Neutron</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>712</ApplicationRevision>
+    <ApplicationRevision>713</ApplicationRevision>
     <ApplicationVersion>1.1.21.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -294,6 +294,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\PickStoreBase.cs" />
+    <Compile Include="FrmPickBase.cs" />
     <Compile Include="Global\IHistoryManager.cs" />
     <Compile Include="Interfaces\IHanelDriver.cs" />
     <Compile Include="Models\GridData.cs" />
@@ -850,10 +851,6 @@
       <Project>{b600904b-1b59-47bf-8884-5a4982d8b2fe}</Project>
       <Name>HighJump</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
-      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
-      <Name>NeutronDllu</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\NeutronUserControls\NeutronTrayLayout\NeutronTrayLayout\NeutronTrayLayout.csproj">
       <Project>{4f32e28f-e0e0-4144-982f-fe7920ad93a1}</Project>
       <Name>NeutronTrayLayout</Name>
@@ -902,6 +899,10 @@
       <Project>{66326536-a1d8-49e7-9380-1a4c97edf278}</Project>
       <Name>LogFileMaintenance</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NeutronDllu\NeutronDllu\NeutronDllu.csproj">
+      <Project>{ab3c26a8-5c8c-40d0-b937-c5e7b27d70ce}</Project>
+      <Name>NeutronDllu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NeutronLoader\NeutronLoader.csproj">
       <Project>{2748bdf0-d6ed-48c5-9230-f18e33779e67}</Project>
       <Name>NeutronLoader</Name>
@@ -948,9 +949,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
