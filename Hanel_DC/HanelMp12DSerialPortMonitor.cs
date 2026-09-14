@@ -101,7 +101,7 @@ namespace Hanel_DC
             await InitSerialPort();
             _hanelCommandService = new HanelCommandService(_currentHanelDeviceStatusList.Count, _currentHanelDeviceStatusList);
             _hanelCommandProcessor = new HanelCommandProcessor();
-            Task.Run(StartPollingAsync);
+            // Task.Run(StartPollingAsync);
         }
         protected virtual void OnSerialPortInfo(SerialPortInfoEventArgs e)
         {
