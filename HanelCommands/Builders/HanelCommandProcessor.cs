@@ -25,7 +25,7 @@ namespace HanelCommands.Builders
                 var commandString = Encoding.UTF8.GetString(dataIn);
                 var commandSegments = commandString.Split('$');
 
-                if (commandSegments.Length > 0)
+                if (commandSegments.Length >= 2)
                 {
                     var commandP = commandSegments.FirstOrDefault(r => r.StartsWith("P"));
                     if (commandP != null)
