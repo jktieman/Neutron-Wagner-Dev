@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HanelCommands
 {
@@ -45,12 +41,14 @@ namespace HanelCommands
 
         public HanelDeviceStatus()
         {
+            LastHanelCommand = new HanelCommand();
+            PreviousHanelCommand = new HanelCommand();
         }
 
         public int DeviceNumber { get; set; }
         public IHanelCommand LastHanelCommand { get; set; }
         public IHanelCommand PreviousHanelCommand { get; set; }
-        public string DisplayText { get; set; }
+        public string DisplayText { get; set; } = string.Empty;
         public string Lift { get; set; }
         public string AccessPoint { get; set; }
         public string Tray { get; set; }
@@ -62,10 +60,10 @@ namespace HanelCommands
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"Lift: {DeviceNumber}  Tray: {Tray}  Over: {Over}  Back: {Back} {Environment.NewLine}");
+            sb.AppendLine($"Lift: {DeviceNumber}  Tray: {Tray}  Over: {Over}  Back: {Back}");
             if (LastHanelCommand != null)
             {
-                sb.AppendLine($"LastCommand: {LastHanelCommand.Command} {Environment.NewLine}");
+                sb.AppendLine($"LastCommand: {LastHanelCommand.CommandString}");
             }
 
             return sb.ToString();
