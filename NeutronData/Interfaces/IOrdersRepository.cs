@@ -29,10 +29,10 @@ namespace NeutronData.Interfaces
         List<SkipView> GetSkippedOrders();
         IEnumerable<OrderView> GetRackOrders(string search);
         IEnumerable<RackOrderView> GetRackOrdersView(int rackStationNumber, string search = @"");
-        Order GetOrderWithOrderDetailsInThisArea(int orderId, int areaId);
         List<OrderDetail> GetOrderDetailsByOrderAndArea(int orderId, int areaId);
         string GetRoute(int orderId);
         IEnumerable<int> GetSizeCodesByArea(int areaId);
         int[] GetOrderDetailIds(int[] currentOrderIds, int currentAreaId);
+        Task<Order> GetOrderWithOrderDetailsInThisAreaAsync(int orderId, int areaId);
     }
 }
