@@ -125,7 +125,8 @@ namespace NeutronData.ModelViews
         private void SetOrderComplete(int orderId)
         {
             var order = _repoOrders.FindByKey(orderId);
-            var recs = _repoOrderDetails.All().Where(d => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
+            var recs = _repoOrderDetails.All(d
+                => d.ReplenOrderId == orderId && d.LineStatusId != 6).ToList();
             if (recs.Count == 0)
             {
                 order.OrderStatusId = 6;
