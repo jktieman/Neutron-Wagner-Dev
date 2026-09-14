@@ -24,7 +24,7 @@ using NeutronData.Repositories;
 using NeutronDllu;
 using NeutronEvents;
 using ReplenService;
-using SAPServer;
+
 using OrderStatus = NeutronCore.Enums.OrderStatus;
 using Timer = System.Timers.Timer;
 
@@ -50,7 +50,6 @@ namespace NeutronLoader
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
         private bool _loadOrdersBusy;
-        private readonly ISapService _sapService;
         private readonly IReplenRepository _replenRepository;
         private readonly IOrdersRepository _ordersRepository;
         private DocumentToPrint _documentToPrint;
@@ -60,7 +59,7 @@ namespace NeutronLoader
         private CancellationTokenSource _cancellationTokenSource;
         
         public InterfaceProcessorWAG(NeutronVariables neutronVariables, NeutronLicense neutronLicense,
-            IJsonData jsonData, WorkstationView workstationView, ISapService sapService
+            IJsonData jsonData, WorkstationView workstationView
             , IReplenRepository replenRepository, IOrdersRepository ordersRepository, Func<NeutronDb> contextFactory)
         {
             if (contextFactory == null) throw new ArgumentNullException(nameof(contextFactory));
@@ -70,7 +69,6 @@ namespace NeutronLoader
             _neutronLicense = neutronLicense;
             _jsonData = jsonData;
             _workstationView = workstationView;
-            _sapService = sapService;
             _replenRepository = replenRepository;
             _repoOrder = new GenericRepository<Order>(contextFactory);
             _repoOrderDetail = new GenericRepository<OrderDetail>(contextFactory);
@@ -92,15 +90,6 @@ namespace NeutronLoader
             _documentToPrint = new DocumentToPrint();
             _documentPrinter = _jsonData.LoadFile<DocumentPrinterPreferences>();
             _itemDefinitionProcessor = new ItemDefinitionProcessor(_jsonData, _contextFactory);
-            try
-            {
-                _sapService.Init();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogDetailAsync($"Error Initializing Loader. {Environment.NewLine} {ex.Message}");
-            }
-
         }
         
         public async Task StartProcessingInterfaceFiles()

@@ -21,6 +21,7 @@ namespace NeutronData.Models
         public int StorageTypeId { get; set; }
         public int PickMax { get; set; }
         public float Weight { get; set; }
+        public bool Expires { get; set; }
         public bool Scale { get; set; }
         [ForeignKey("StorageTypeId")]
         public virtual StorageType StorageType { get; set; }

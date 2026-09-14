@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmItemDefinitions));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
             this.mlUserInfo = new MetroFramework.Controls.MetroLabel();
             this.LabelFormHeaderText = new System.Windows.Forms.Label();
             this.LabelFormTitle = new System.Windows.Forms.Label();
@@ -64,6 +64,7 @@
             this.MbViewEditClose = new MetroFramework.Controls.MetroButton();
             this.MbViewEditSave = new MetroFramework.Controls.MetroButton();
             this.PanelViewEdit = new System.Windows.Forms.Panel();
+            this.CheckBoxViewEditExpires = new System.Windows.Forms.CheckBox();
             this.MbDeleteAka = new MetroFramework.Controls.MetroButton();
             this.MbAddAka = new MetroFramework.Controls.MetroButton();
             this.TextBoxAka = new System.Windows.Forms.TextBox();
@@ -115,6 +116,7 @@
             this.MbNewClose = new MetroFramework.Controls.MetroButton();
             this.MbNewSave = new MetroFramework.Controls.MetroButton();
             this.PanelNew = new System.Windows.Forms.Panel();
+            this.CheckBoxNewExpires = new System.Windows.Forms.CheckBox();
             this.TextBoxNewPickMax = new System.Windows.Forms.TextBox();
             this.LabelNewPickMaxInfo = new System.Windows.Forms.Label();
             this.LabelNewPickMax = new System.Windows.Forms.Label();
@@ -204,7 +206,7 @@
             this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
             this.LabelFormTitle.Location = new System.Drawing.Point(465, 10);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormTitle.Size = new System.Drawing.Size(350, 41);
             this.LabelFormTitle.TabIndex = 17;
             this.LabelFormTitle.Text = "Item Definitions";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -239,11 +241,11 @@
             this.Listing.Controls.Add(this.MButtonClose);
             this.Listing.Controls.Add(this.MButtonSearch);
             this.Listing.Controls.Add(this.DataGridView1);
-            this.Listing.Location = new System.Drawing.Point(4, 22);
+            this.Listing.Location = new System.Drawing.Point(4, 25);
             this.Listing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Listing.Name = "Listing";
             this.Listing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Listing.Size = new System.Drawing.Size(1232, 634);
+            this.Listing.Size = new System.Drawing.Size(1232, 631);
             this.Listing.TabIndex = 0;
             this.Listing.Text = "Listing";
             // 
@@ -254,7 +256,7 @@
             this.CheckBoxUseSelectedItems.ForeColor = System.Drawing.Color.White;
             this.CheckBoxUseSelectedItems.Location = new System.Drawing.Point(466, 38);
             this.CheckBoxUseSelectedItems.Name = "CheckBoxUseSelectedItems";
-            this.CheckBoxUseSelectedItems.Size = new System.Drawing.Size(143, 20);
+            this.CheckBoxUseSelectedItems.Size = new System.Drawing.Size(177, 24);
             this.CheckBoxUseSelectedItems.TabIndex = 27;
             this.CheckBoxUseSelectedItems.Text = "Use Selected Items";
             this.CheckBoxUseSelectedItems.UseVisualStyleBackColor = true;
@@ -289,7 +291,7 @@
             this.ComboBoxAreaNumber.FormattingEnabled = true;
             this.ComboBoxAreaNumber.Location = new System.Drawing.Point(273, 11);
             this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
-            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(177, 32);
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(177, 37);
             this.ComboBoxAreaNumber.TabIndex = 24;
             this.ComboBoxAreaNumber.SelectedIndexChanged += new System.EventHandler(this.ComboBoxAreaNumber_SelectedIndexChanged);
             // 
@@ -317,7 +319,7 @@
             this.TextBoxFind.Location = new System.Drawing.Point(645, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(221, 29);
+            this.TextBoxFind.Size = new System.Drawing.Size(221, 34);
             this.TextBoxFind.TabIndex = 3;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -402,35 +404,35 @@
             this.DataGridView1.AllowUserToDeleteRows = false;
             this.DataGridView1.AllowUserToOrderColumns = true;
             this.DataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle28.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle28.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle28;
             this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle29.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle29.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle29.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle29.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle29.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle29.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridView1.DefaultCellStyle = dataGridViewCellStyle29;
             this.DataGridView1.Location = new System.Drawing.Point(3, 97);
             this.DataGridView1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DataGridView1.Name = "DataGridView1";
             this.DataGridView1.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle30.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle30.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle30.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle30.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle30.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle30.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle30;
             this.DataGridView1.RowTemplate.Height = 24;
             this.DataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DataGridView1.Size = new System.Drawing.Size(1225, 514);
@@ -448,11 +450,11 @@
             this.ViewEdit.Controls.Add(this.MbViewEditClose);
             this.ViewEdit.Controls.Add(this.MbViewEditSave);
             this.ViewEdit.Controls.Add(this.PanelViewEdit);
-            this.ViewEdit.Location = new System.Drawing.Point(4, 22);
+            this.ViewEdit.Location = new System.Drawing.Point(4, 25);
             this.ViewEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ViewEdit.Name = "ViewEdit";
             this.ViewEdit.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ViewEdit.Size = new System.Drawing.Size(1232, 634);
+            this.ViewEdit.Size = new System.Drawing.Size(1232, 631);
             this.ViewEdit.TabIndex = 1;
             this.ViewEdit.Text = "View/Edit";
             // 
@@ -519,6 +521,7 @@
             // PanelViewEdit
             // 
             this.PanelViewEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.PanelViewEdit.Controls.Add(this.CheckBoxViewEditExpires);
             this.PanelViewEdit.Controls.Add(this.MbDeleteAka);
             this.PanelViewEdit.Controls.Add(this.MbAddAka);
             this.PanelViewEdit.Controls.Add(this.TextBoxAka);
@@ -566,6 +569,16 @@
             this.PanelViewEdit.Size = new System.Drawing.Size(1223, 529);
             this.PanelViewEdit.TabIndex = 0;
             // 
+            // CheckBoxViewEditExpires
+            // 
+            this.CheckBoxViewEditExpires.AutoSize = true;
+            this.CheckBoxViewEditExpires.Location = new System.Drawing.Point(470, 16);
+            this.CheckBoxViewEditExpires.Name = "CheckBoxViewEditExpires";
+            this.CheckBoxViewEditExpires.Size = new System.Drawing.Size(116, 33);
+            this.CheckBoxViewEditExpires.TabIndex = 46;
+            this.CheckBoxViewEditExpires.Text = "Expires";
+            this.CheckBoxViewEditExpires.UseVisualStyleBackColor = true;
+            // 
             // MbDeleteAka
             // 
             this.MbDeleteAka.FontSize = MetroFramework.MetroButtonSize.Tall;
@@ -598,7 +611,7 @@
             this.TextBoxAka.Location = new System.Drawing.Point(837, 339);
             this.TextBoxAka.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxAka.Name = "TextBoxAka";
-            this.TextBoxAka.Size = new System.Drawing.Size(276, 28);
+            this.TextBoxAka.Size = new System.Drawing.Size(276, 34);
             this.TextBoxAka.TabIndex = 44;
             this.TextBoxAka.Text = "Add AKA here...";
             this.TextBoxAka.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -618,7 +631,7 @@
             this.ListBoxViewEditAkas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
             this.ListBoxViewEditAkas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListBoxViewEditAkas.FormattingEnabled = true;
-            this.ListBoxViewEditAkas.ItemHeight = 22;
+            this.ListBoxViewEditAkas.ItemHeight = 29;
             this.ListBoxViewEditAkas.Location = new System.Drawing.Point(0, 0);
             this.ListBoxViewEditAkas.Name = "ListBoxViewEditAkas";
             this.ListBoxViewEditAkas.Size = new System.Drawing.Size(560, 140);
@@ -638,35 +651,35 @@
             this.DataGridViewViewEditExistingItems.AllowUserToAddRows = false;
             this.DataGridViewViewEditExistingItems.AllowUserToDeleteRows = false;
             this.DataGridViewViewEditExistingItems.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle31.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle31.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewViewEditExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle31;
             this.DataGridViewViewEditExistingItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewViewEditExistingItems.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle32.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle32.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle32.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle32.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle32.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle32.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewViewEditExistingItems.DefaultCellStyle = dataGridViewCellStyle32;
             this.DataGridViewViewEditExistingItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridViewViewEditExistingItems.Location = new System.Drawing.Point(0, 0);
             this.DataGridViewViewEditExistingItems.Name = "DataGridViewViewEditExistingItems";
             this.DataGridViewViewEditExistingItems.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewViewEditExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle33.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle33.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle33.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle33.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewViewEditExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle33;
             this.DataGridViewViewEditExistingItems.Size = new System.Drawing.Size(560, 140);
             this.DataGridViewViewEditExistingItems.TabIndex = 0;
             this.DataGridViewViewEditExistingItems.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewViewEditExistingItems_CellClick);
@@ -725,7 +738,7 @@
             this.TextBoxViewEditWeight.Location = new System.Drawing.Point(596, 293);
             this.TextBoxViewEditWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditWeight.Name = "TextBoxViewEditWeight";
-            this.TextBoxViewEditWeight.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditWeight.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditWeight.TabIndex = 13;
             this.TextBoxViewEditWeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -755,7 +768,7 @@
             this.ComboBoxViewEditUnitOfIssue.Location = new System.Drawing.Point(596, 253);
             this.ComboBoxViewEditUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditUnitOfIssue.Name = "ComboBoxViewEditUnitOfIssue";
-            this.ComboBoxViewEditUnitOfIssue.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditUnitOfIssue.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditUnitOfIssue.TabIndex = 12;
             // 
             // LabelViewEditUnitOfIssue
@@ -774,7 +787,7 @@
             this.ComboBoxViewEditStorageType.Location = new System.Drawing.Point(596, 213);
             this.ComboBoxViewEditStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditStorageType.Name = "ComboBoxViewEditStorageType";
-            this.ComboBoxViewEditStorageType.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditStorageType.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditStorageType.TabIndex = 11;
             // 
             // LabelViewEditStorageType
@@ -793,7 +806,7 @@
             this.ComboBoxViewEditHeightCode.Location = new System.Drawing.Point(216, 293);
             this.ComboBoxViewEditHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditHeightCode.Name = "ComboBoxViewEditHeightCode";
-            this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditHeightCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditHeightCode.TabIndex = 7;
             // 
             // LabelViewEditHeight
@@ -812,7 +825,7 @@
             this.ComboBoxViewEditVelocityCode.Location = new System.Drawing.Point(216, 253);
             this.ComboBoxViewEditVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditVelocityCode.Name = "ComboBoxViewEditVelocityCode";
-            this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditVelocityCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditVelocityCode.TabIndex = 6;
             this.ComboBoxViewEditVelocityCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxViewEditVelocityCode_KeyDown);
             // 
@@ -841,7 +854,7 @@
             this.ComboBoxViewEditSizeCode.Location = new System.Drawing.Point(216, 213);
             this.ComboBoxViewEditSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditSizeCode.Name = "ComboBoxViewEditSizeCode";
-            this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditSizeCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditSizeCode.TabIndex = 5;
             this.ComboBoxViewEditSizeCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxViewEditSizeCode_KeyDown);
             // 
@@ -862,7 +875,7 @@
             this.ComboBoxViewEditArea.Location = new System.Drawing.Point(216, 93);
             this.ComboBoxViewEditArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxViewEditArea.Name = "ComboBoxViewEditArea";
-            this.ComboBoxViewEditArea.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxViewEditArea.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxViewEditArea.TabIndex = 2;
             // 
             // TextBoxViewEditSystemMax
@@ -870,7 +883,7 @@
             this.TextBoxViewEditSystemMax.Location = new System.Drawing.Point(216, 173);
             this.TextBoxViewEditSystemMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSystemMax.Name = "TextBoxViewEditSystemMax";
-            this.TextBoxViewEditSystemMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditSystemMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditSystemMax.TabIndex = 4;
             this.TextBoxViewEditSystemMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditSystemMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditSystemMax_KeyDown);
@@ -880,7 +893,7 @@
             this.TextBoxViewEditPickMax.Location = new System.Drawing.Point(596, 94);
             this.TextBoxViewEditPickMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditPickMax.Name = "TextBoxViewEditPickMax";
-            this.TextBoxViewEditPickMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditPickMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditPickMax.TabIndex = 9;
             this.TextBoxViewEditPickMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditPickMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditLocationMin_KeyDown);
@@ -890,7 +903,7 @@
             this.TextBoxViewEditLocationMin.Location = new System.Drawing.Point(596, 133);
             this.TextBoxViewEditLocationMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLocationMin.Name = "TextBoxViewEditLocationMin";
-            this.TextBoxViewEditLocationMin.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditLocationMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditLocationMin.TabIndex = 9;
             this.TextBoxViewEditLocationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditLocationMin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditLocationMin_KeyDown);
@@ -900,7 +913,7 @@
             this.TextBoxViewEditLocationMax.Location = new System.Drawing.Point(216, 133);
             this.TextBoxViewEditLocationMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditLocationMax.Name = "TextBoxViewEditLocationMax";
-            this.TextBoxViewEditLocationMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditLocationMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditLocationMax.TabIndex = 3;
             this.TextBoxViewEditLocationMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditLocationMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditLocationMax_KeyDown);
@@ -910,7 +923,7 @@
             this.TextBoxViewEditDescription.Location = new System.Drawing.Point(216, 53);
             this.TextBoxViewEditDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditDescription.Name = "TextBoxViewEditDescription";
-            this.TextBoxViewEditDescription.Size = new System.Drawing.Size(370, 28);
+            this.TextBoxViewEditDescription.Size = new System.Drawing.Size(370, 34);
             this.TextBoxViewEditDescription.TabIndex = 1;
             this.TextBoxViewEditDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditDescription.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditDescription_KeyDown);
@@ -920,7 +933,7 @@
             this.TextBoxViewEditSystemMin.Location = new System.Drawing.Point(596, 174);
             this.TextBoxViewEditSystemMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditSystemMin.Name = "TextBoxViewEditSystemMin";
-            this.TextBoxViewEditSystemMin.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxViewEditSystemMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxViewEditSystemMin.TabIndex = 10;
             this.TextBoxViewEditSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -930,7 +943,7 @@
             this.TextBoxViewEditItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxViewEditItem.Name = "TextBoxViewEditItem";
             this.TextBoxViewEditItem.ReadOnly = true;
-            this.TextBoxViewEditItem.Size = new System.Drawing.Size(190, 28);
+            this.TextBoxViewEditItem.Size = new System.Drawing.Size(190, 34);
             this.TextBoxViewEditItem.TabIndex = 0;
             this.TextBoxViewEditItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxViewEditItem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxViewEditItem_KeyDown);
@@ -1019,11 +1032,11 @@
             this.New.Controls.Add(this.MbNewSave);
             this.New.Controls.Add(this.PanelNew);
             this.New.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.New.Location = new System.Drawing.Point(4, 22);
+            this.New.Location = new System.Drawing.Point(4, 25);
             this.New.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.New.Name = "New";
             this.New.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.New.Size = new System.Drawing.Size(1232, 634);
+            this.New.Size = new System.Drawing.Size(1232, 631);
             this.New.TabIndex = 2;
             this.New.Text = "New";
             // 
@@ -1115,6 +1128,7 @@
             // PanelNew
             // 
             this.PanelNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.PanelNew.Controls.Add(this.CheckBoxNewExpires);
             this.PanelNew.Controls.Add(this.TextBoxNewPickMax);
             this.PanelNew.Controls.Add(this.LabelNewPickMaxInfo);
             this.PanelNew.Controls.Add(this.LabelNewPickMax);
@@ -1158,12 +1172,22 @@
             this.PanelNew.Size = new System.Drawing.Size(1223, 529);
             this.PanelNew.TabIndex = 21;
             // 
+            // CheckBoxNewExpires
+            // 
+            this.CheckBoxNewExpires.AutoSize = true;
+            this.CheckBoxNewExpires.Location = new System.Drawing.Point(470, 16);
+            this.CheckBoxNewExpires.Name = "CheckBoxNewExpires";
+            this.CheckBoxNewExpires.Size = new System.Drawing.Size(116, 33);
+            this.CheckBoxNewExpires.TabIndex = 47;
+            this.CheckBoxNewExpires.Text = "Expires";
+            this.CheckBoxNewExpires.UseVisualStyleBackColor = true;
+            // 
             // TextBoxNewPickMax
             // 
             this.TextBoxNewPickMax.Location = new System.Drawing.Point(596, 94);
             this.TextBoxNewPickMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewPickMax.Name = "TextBoxNewPickMax";
-            this.TextBoxNewPickMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewPickMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewPickMax.TabIndex = 42;
             this.TextBoxNewPickMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1198,7 +1222,7 @@
             this.ListBoxAkas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
             this.ListBoxAkas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ListBoxAkas.FormattingEnabled = true;
-            this.ListBoxAkas.ItemHeight = 22;
+            this.ListBoxAkas.ItemHeight = 29;
             this.ListBoxAkas.Location = new System.Drawing.Point(0, 0);
             this.ListBoxAkas.Name = "ListBoxAkas";
             this.ListBoxAkas.Size = new System.Drawing.Size(560, 140);
@@ -1217,35 +1241,35 @@
             this.DataGridViewExistingItems.AllowUserToAddRows = false;
             this.DataGridViewExistingItems.AllowUserToDeleteRows = false;
             this.DataGridViewExistingItems.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle34.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle34.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle34.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle34.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewExistingItems.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle34;
             this.DataGridViewExistingItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewExistingItems.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle35.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(195)))), ((int)(((byte)(245)))));
+            dataGridViewCellStyle35.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle35.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle35.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewExistingItems.DefaultCellStyle = dataGridViewCellStyle35;
             this.DataGridViewExistingItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridViewExistingItems.Location = new System.Drawing.Point(0, 0);
             this.DataGridViewExistingItems.Name = "DataGridViewExistingItems";
             this.DataGridViewExistingItems.ReadOnly = true;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle36.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle36.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle36.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle36.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            dataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewExistingItems.RowHeadersDefaultCellStyle = dataGridViewCellStyle36;
             this.DataGridViewExistingItems.Size = new System.Drawing.Size(560, 140);
             this.DataGridViewExistingItems.TabIndex = 0;
             this.DataGridViewExistingItems.DoubleClick += new System.EventHandler(this.DataGridViewExistingItems_DoubleClick);
@@ -1278,7 +1302,7 @@
             this.ComboBoxNewUnitOfIssue.Location = new System.Drawing.Point(596, 253);
             this.ComboBoxNewUnitOfIssue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewUnitOfIssue.Name = "ComboBoxNewUnitOfIssue";
-            this.ComboBoxNewUnitOfIssue.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxNewUnitOfIssue.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewUnitOfIssue.TabIndex = 12;
             // 
             // LabelNewUnitOfIssue
@@ -1297,7 +1321,7 @@
             this.ComboBoxNewStorageType.Location = new System.Drawing.Point(596, 213);
             this.ComboBoxNewStorageType.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewStorageType.Name = "ComboBoxNewStorageType";
-            this.ComboBoxNewStorageType.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxNewStorageType.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewStorageType.TabIndex = 11;
             // 
             // LabelNewStorageType
@@ -1314,7 +1338,7 @@
             this.TextBoxNewWeight.Location = new System.Drawing.Point(596, 293);
             this.TextBoxNewWeight.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewWeight.Name = "TextBoxNewWeight";
-            this.TextBoxNewWeight.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewWeight.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewWeight.TabIndex = 13;
             this.TextBoxNewWeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1333,7 +1357,7 @@
             this.CheckBoxNewScale.Location = new System.Drawing.Point(716, 294);
             this.CheckBoxNewScale.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.CheckBoxNewScale.Name = "CheckBoxNewScale";
-            this.CheckBoxNewScale.Size = new System.Drawing.Size(114, 28);
+            this.CheckBoxNewScale.Size = new System.Drawing.Size(145, 33);
             this.CheckBoxNewScale.TabIndex = 14;
             this.CheckBoxNewScale.Text = "Use Scale";
             this.CheckBoxNewScale.UseVisualStyleBackColor = true;
@@ -1343,7 +1367,7 @@
             this.TextBoxNewSystemMin.Location = new System.Drawing.Point(596, 174);
             this.TextBoxNewSystemMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMin.Name = "TextBoxNewSystemMin";
-            this.TextBoxNewSystemMin.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewSystemMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewSystemMin.TabIndex = 10;
             this.TextBoxNewSystemMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1363,7 +1387,7 @@
             this.ComboBoxNewHeightCode.Location = new System.Drawing.Point(216, 293);
             this.ComboBoxNewHeightCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewHeightCode.Name = "ComboBoxNewHeightCode";
-            this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxNewHeightCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewHeightCode.TabIndex = 7;
             // 
             // LabelAkas
@@ -1402,7 +1426,7 @@
             this.ComboBoxNewVelocityCode.Location = new System.Drawing.Point(216, 253);
             this.ComboBoxNewVelocityCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewVelocityCode.Name = "ComboBoxNewVelocityCode";
-            this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxNewVelocityCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewVelocityCode.TabIndex = 6;
             this.ComboBoxNewVelocityCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxNewVelocityCode_KeyDown);
             // 
@@ -1422,7 +1446,7 @@
             this.ComboBoxNewSizeCode.Location = new System.Drawing.Point(216, 213);
             this.ComboBoxNewSizeCode.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewSizeCode.Name = "ComboBoxNewSizeCode";
-            this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 30);
+            this.ComboBoxNewSizeCode.Size = new System.Drawing.Size(190, 37);
             this.ComboBoxNewSizeCode.TabIndex = 5;
             this.ComboBoxNewSizeCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxNewSizeCode_KeyDown);
             // 
@@ -1442,7 +1466,7 @@
             this.ComboBoxNewArea.Location = new System.Drawing.Point(216, 93);
             this.ComboBoxNewArea.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ComboBoxNewArea.Name = "ComboBoxNewArea";
-            this.ComboBoxNewArea.Size = new System.Drawing.Size(189, 30);
+            this.ComboBoxNewArea.Size = new System.Drawing.Size(189, 37);
             this.ComboBoxNewArea.TabIndex = 2;
             // 
             // TextBoxNewSystemMax
@@ -1450,7 +1474,7 @@
             this.TextBoxNewSystemMax.Location = new System.Drawing.Point(216, 173);
             this.TextBoxNewSystemMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewSystemMax.Name = "TextBoxNewSystemMax";
-            this.TextBoxNewSystemMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewSystemMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewSystemMax.TabIndex = 4;
             this.TextBoxNewSystemMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewSystemMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewSystemMax_KeyDown);
@@ -1460,7 +1484,7 @@
             this.TextBoxNewLocationMin.Location = new System.Drawing.Point(596, 133);
             this.TextBoxNewLocationMin.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationMin.Name = "TextBoxNewLocationMin";
-            this.TextBoxNewLocationMin.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewLocationMin.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewLocationMin.TabIndex = 9;
             this.TextBoxNewLocationMin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewLocationMin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewLocationMin_KeyDown);
@@ -1470,7 +1494,7 @@
             this.TextBoxNewLocationMax.Location = new System.Drawing.Point(216, 133);
             this.TextBoxNewLocationMax.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewLocationMax.Name = "TextBoxNewLocationMax";
-            this.TextBoxNewLocationMax.Size = new System.Drawing.Size(100, 28);
+            this.TextBoxNewLocationMax.Size = new System.Drawing.Size(100, 34);
             this.TextBoxNewLocationMax.TabIndex = 3;
             this.TextBoxNewLocationMax.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewLocationMax.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewLocationMax_KeyDown);
@@ -1480,7 +1504,7 @@
             this.TextBoxNewDescription.Location = new System.Drawing.Point(216, 53);
             this.TextBoxNewDescription.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewDescription.Name = "TextBoxNewDescription";
-            this.TextBoxNewDescription.Size = new System.Drawing.Size(370, 28);
+            this.TextBoxNewDescription.Size = new System.Drawing.Size(370, 34);
             this.TextBoxNewDescription.TabIndex = 1;
             this.TextBoxNewDescription.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewDescription.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewDescription_KeyDown);
@@ -1490,7 +1514,7 @@
             this.TextBoxNewItem.Location = new System.Drawing.Point(216, 17);
             this.TextBoxNewItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewItem.Name = "TextBoxNewItem";
-            this.TextBoxNewItem.Size = new System.Drawing.Size(190, 28);
+            this.TextBoxNewItem.Size = new System.Drawing.Size(190, 34);
             this.TextBoxNewItem.TabIndex = 0;
             this.TextBoxNewItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewItem.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNewItem_KeyDown);
@@ -1735,5 +1759,7 @@
         private System.Windows.Forms.Label LabelSelectArea;
         private System.ComponentModel.BackgroundWorker BackgroundWorkerItemDefinitions;
         private System.Windows.Forms.CheckBox CheckBoxUseSelectedItems;
+        private System.Windows.Forms.CheckBox CheckBoxViewEditExpires;
+        private System.Windows.Forms.CheckBox CheckBoxNewExpires;
     }
 }

@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmHotAction));
             this.LabelRecordCount = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -59,6 +59,10 @@
             this.MBCurrentLocations = new MetroFramework.Controls.MetroButton();
             this.MBFindItem = new MetroFramework.Controls.MetroButton();
             this.HotAction = new System.Windows.Forms.TabPage();
+            this.TextBoxExpirationDate = new System.Windows.Forms.TextBox();
+            this.TextBoxLotNumber = new System.Windows.Forms.TextBox();
+            this.LabelExpirationDate = new System.Windows.Forms.Label();
+            this.LabelLotNumber = new System.Windows.Forms.Label();
             this.TextBoxCostCenter = new System.Windows.Forms.TextBox();
             this.LabelCostCenter = new System.Windows.Forms.Label();
             this.GroupBoxHotPickLocation = new System.Windows.Forms.GroupBox();
@@ -102,6 +106,7 @@
             this.LabelHotPickItem = new System.Windows.Forms.Label();
             this.LabelMainDescription = new System.Windows.Forms.Label();
             this.LabelMainItem = new System.Windows.Forms.Label();
+            this.ButtonExpirationDate = new MetroFramework.Controls.MetroButton();
             this.MBHotActionCount = new MetroFramework.Controls.MetroButton();
             this.MBHotAccept = new MetroFramework.Controls.MetroButton();
             this.MBHotActionBack = new MetroFramework.Controls.MetroButton();
@@ -195,9 +200,10 @@
             // LabelRecordCount
             // 
             this.LabelRecordCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelRecordCount.Location = new System.Drawing.Point(894, 43);
+            this.LabelRecordCount.Location = new System.Drawing.Point(1192, 53);
+            this.LabelRecordCount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelRecordCount.Name = "LabelRecordCount";
-            this.LabelRecordCount.Size = new System.Drawing.Size(279, 20);
+            this.LabelRecordCount.Size = new System.Drawing.Size(372, 25);
             this.LabelRecordCount.TabIndex = 29;
             this.LabelRecordCount.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             this.LabelRecordCount.Visible = false;
@@ -208,11 +214,11 @@
             this.tabControl1.Controls.Add(this.HotAction);
             this.tabControl1.Controls.Add(this.HotActionTray);
             this.tabControl1.Controls.Add(this.HotRackTray);
-            this.tabControl1.Location = new System.Drawing.Point(23, 44);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tabControl1.Location = new System.Drawing.Point(31, 54);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1243, 700);
+            this.tabControl1.Size = new System.Drawing.Size(1657, 862);
             this.tabControl1.TabIndex = 0;
             // 
             // HotPick
@@ -239,9 +245,10 @@
             this.HotPick.Controls.Add(this.MBNewLocations);
             this.HotPick.Controls.Add(this.MBCurrentLocations);
             this.HotPick.Controls.Add(this.MBFindItem);
-            this.HotPick.Location = new System.Drawing.Point(4, 22);
+            this.HotPick.Location = new System.Drawing.Point(4, 25);
+            this.HotPick.Margin = new System.Windows.Forms.Padding(4);
             this.HotPick.Name = "HotPick";
-            this.HotPick.Size = new System.Drawing.Size(1235, 674);
+            this.HotPick.Size = new System.Drawing.Size(1649, 833);
             this.HotPick.TabIndex = 4;
             this.HotPick.Text = "Hot Pick";
             // 
@@ -249,9 +256,10 @@
             // 
             this.PanelForDataGridViewHot.AutoScroll = true;
             this.PanelForDataGridViewHot.Controls.Add(this.DataGridViewHot);
-            this.PanelForDataGridViewHot.Location = new System.Drawing.Point(3, 156);
+            this.PanelForDataGridViewHot.Location = new System.Drawing.Point(4, 192);
+            this.PanelForDataGridViewHot.Margin = new System.Windows.Forms.Padding(4);
             this.PanelForDataGridViewHot.Name = "PanelForDataGridViewHot";
-            this.PanelForDataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.PanelForDataGridViewHot.Size = new System.Drawing.Size(1636, 591);
             this.PanelForDataGridViewHot.TabIndex = 37;
             // 
             // DataGridViewHot
@@ -259,80 +267,84 @@
             this.DataGridViewHot.AllowUserToAddRows = false;
             this.DataGridViewHot.AllowUserToDeleteRows = false;
             this.DataGridViewHot.BackgroundColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.DataGridViewHot.ColumnHeadersHeight = 28;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.DataGridViewHot.DefaultCellStyle = dataGridViewCellStyle2;
             this.DataGridViewHot.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DataGridViewHot.Location = new System.Drawing.Point(0, 0);
-            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DataGridViewHot.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.DataGridViewHot.MultiSelect = false;
             this.DataGridViewHot.Name = "DataGridViewHot";
             this.DataGridViewHot.ReadOnly = true;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.DataGridViewHot.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DataGridViewHot.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.DataGridViewHot.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DataGridViewHot.RowTemplate.Height = 28;
             this.DataGridViewHot.RowTemplate.ReadOnly = true;
             this.DataGridViewHot.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.DataGridViewHot.Size = new System.Drawing.Size(1227, 480);
+            this.DataGridViewHot.Size = new System.Drawing.Size(1636, 591);
             this.DataGridViewHot.TabIndex = 6;
             this.DataGridViewHot.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewHot_CellClick);
             // 
             // LabelOf
             // 
             this.LabelOf.AutoSize = true;
-            this.LabelOf.Location = new System.Drawing.Point(714, 651);
+            this.LabelOf.Location = new System.Drawing.Point(952, 801);
+            this.LabelOf.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelOf.Name = "LabelOf";
-            this.LabelOf.Size = new System.Drawing.Size(16, 13);
+            this.LabelOf.Size = new System.Drawing.Size(20, 17);
             this.LabelOf.TabIndex = 36;
             this.LabelOf.Text = "of";
             // 
             // TextBoxTotalPages
             // 
             this.TextBoxTotalPages.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalPages.Location = new System.Drawing.Point(738, 642);
+            this.TextBoxTotalPages.Location = new System.Drawing.Point(984, 790);
+            this.TextBoxTotalPages.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxTotalPages.Name = "TextBoxTotalPages";
-            this.TextBoxTotalPages.Size = new System.Drawing.Size(47, 22);
+            this.TextBoxTotalPages.Size = new System.Drawing.Size(61, 26);
             this.TextBoxTotalPages.TabIndex = 35;
             this.TextBoxTotalPages.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TextBoxGoTo
             // 
             this.TextBoxGoTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxGoTo.Location = new System.Drawing.Point(661, 642);
+            this.TextBoxGoTo.Location = new System.Drawing.Point(881, 790);
+            this.TextBoxGoTo.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxGoTo.Name = "TextBoxGoTo";
-            this.TextBoxGoTo.Size = new System.Drawing.Size(47, 22);
+            this.TextBoxGoTo.Size = new System.Drawing.Size(61, 26);
             this.TextBoxGoTo.TabIndex = 35;
             this.TextBoxGoTo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ButtonNextPage
             // 
             this.ButtonNextPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonNextPage.Location = new System.Drawing.Point(801, 640);
+            this.ButtonNextPage.Location = new System.Drawing.Point(1068, 788);
+            this.ButtonNextPage.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonNextPage.Name = "ButtonNextPage";
-            this.ButtonNextPage.Size = new System.Drawing.Size(133, 24);
+            this.ButtonNextPage.Size = new System.Drawing.Size(177, 30);
             this.ButtonNextPage.TabIndex = 34;
             this.ButtonNextPage.Text = "Next Page >>";
             this.ButtonNextPage.UseVisualStyleBackColor = true;
@@ -341,9 +353,10 @@
             // ButtonGoTo
             // 
             this.ButtonGoTo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonGoTo.Location = new System.Drawing.Point(522, 640);
+            this.ButtonGoTo.Location = new System.Drawing.Point(696, 788);
+            this.ButtonGoTo.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonGoTo.Name = "ButtonGoTo";
-            this.ButtonGoTo.Size = new System.Drawing.Size(133, 24);
+            this.ButtonGoTo.Size = new System.Drawing.Size(177, 30);
             this.ButtonGoTo.TabIndex = 34;
             this.ButtonGoTo.Text = "Go To";
             this.ButtonGoTo.UseVisualStyleBackColor = true;
@@ -352,9 +365,10 @@
             // ButtonPreviousPage
             // 
             this.ButtonPreviousPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonPreviousPage.Location = new System.Drawing.Point(372, 640);
+            this.ButtonPreviousPage.Location = new System.Drawing.Point(496, 788);
+            this.ButtonPreviousPage.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonPreviousPage.Name = "ButtonPreviousPage";
-            this.ButtonPreviousPage.Size = new System.Drawing.Size(133, 24);
+            this.ButtonPreviousPage.Size = new System.Drawing.Size(177, 30);
             this.ButtonPreviousPage.TabIndex = 34;
             this.ButtonPreviousPage.Text = "<< Prev Page";
             this.ButtonPreviousPage.UseVisualStyleBackColor = true;
@@ -363,9 +377,10 @@
             // LabelScanLocation
             // 
             this.LabelScanLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelScanLocation.Location = new System.Drawing.Point(427, 117);
+            this.LabelScanLocation.Location = new System.Drawing.Point(569, 144);
+            this.LabelScanLocation.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelScanLocation.Name = "LabelScanLocation";
-            this.LabelScanLocation.Size = new System.Drawing.Size(165, 29);
+            this.LabelScanLocation.Size = new System.Drawing.Size(220, 36);
             this.LabelScanLocation.TabIndex = 33;
             this.LabelScanLocation.Text = "Scan Location";
             this.LabelScanLocation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -374,9 +389,10 @@
             // LabelStationName2
             // 
             this.LabelStationName2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName2.Location = new System.Drawing.Point(827, 113);
+            this.LabelStationName2.Location = new System.Drawing.Point(1103, 139);
+            this.LabelStationName2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelStationName2.Name = "LabelStationName2";
-            this.LabelStationName2.Size = new System.Drawing.Size(393, 40);
+            this.LabelStationName2.Size = new System.Drawing.Size(524, 49);
             this.LabelStationName2.TabIndex = 32;
             this.LabelStationName2.Text = "Floor Supervisor";
             this.LabelStationName2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -385,9 +401,10 @@
             // LabelStationName
             // 
             this.LabelStationName.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelStationName.Location = new System.Drawing.Point(12, 113);
+            this.LabelStationName.Location = new System.Drawing.Point(16, 139);
+            this.LabelStationName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelStationName.Name = "LabelStationName";
-            this.LabelStationName.Size = new System.Drawing.Size(393, 40);
+            this.LabelStationName.Size = new System.Drawing.Size(524, 49);
             this.LabelStationName.TabIndex = 32;
             this.LabelStationName.Text = "Floor Supervisor";
             this.LabelStationName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -396,9 +413,10 @@
             // CheckBoxAll
             // 
             this.CheckBoxAll.AutoSize = true;
-            this.CheckBoxAll.Location = new System.Drawing.Point(777, 81);
+            this.CheckBoxAll.Location = new System.Drawing.Point(1036, 100);
+            this.CheckBoxAll.Margin = new System.Windows.Forms.Padding(4);
             this.CheckBoxAll.Name = "CheckBoxAll";
-            this.CheckBoxAll.Size = new System.Drawing.Size(37, 17);
+            this.CheckBoxAll.Size = new System.Drawing.Size(45, 21);
             this.CheckBoxAll.TabIndex = 8;
             this.CheckBoxAll.Text = "All";
             this.CheckBoxAll.UseVisualStyleBackColor = true;
@@ -410,10 +428,10 @@
             this.MBHotStore.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotStore.Enabled = false;
             this.MBHotStore.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotStore.Location = new System.Drawing.Point(177, 9);
-            this.MBHotStore.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotStore.Location = new System.Drawing.Point(236, 11);
+            this.MBHotStore.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotStore.Name = "MBHotStore";
-            this.MBHotStore.Size = new System.Drawing.Size(150, 96);
+            this.MBHotStore.Size = new System.Drawing.Size(200, 118);
             this.MBHotStore.TabIndex = 1;
             this.MBHotStore.Text = "Hot Store";
             this.MBHotStore.UseCustomBackColor = true;
@@ -426,10 +444,10 @@
             this.MBHotPick.BackColor = System.Drawing.Color.Red;
             this.MBHotPick.Enabled = false;
             this.MBHotPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotPick.Location = new System.Drawing.Point(12, 9);
-            this.MBHotPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotPick.Location = new System.Drawing.Point(16, 11);
+            this.MBHotPick.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotPick.Name = "MBHotPick";
-            this.MBHotPick.Size = new System.Drawing.Size(150, 96);
+            this.MBHotPick.Size = new System.Drawing.Size(200, 118);
             this.MBHotPick.Style = MetroFramework.MetroColorStyle.Red;
             this.MBHotPick.TabIndex = 0;
             this.MBHotPick.Text = "Hot Pick";
@@ -440,9 +458,10 @@
             // 
             // LabelSearch
             // 
-            this.LabelSearch.Location = new System.Drawing.Point(420, 44);
+            this.LabelSearch.Location = new System.Drawing.Point(560, 54);
+            this.LabelSearch.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelSearch.Name = "LabelSearch";
-            this.LabelSearch.Size = new System.Drawing.Size(350, 20);
+            this.LabelSearch.Size = new System.Drawing.Size(467, 25);
             this.LabelSearch.TabIndex = 31;
             this.LabelSearch.Text = "Search for any part of Item or Description and hit Enter";
             this.LabelSearch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -451,10 +470,10 @@
             // 
             this.TextBoxScanLocation.Enabled = false;
             this.TextBoxScanLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxScanLocation.Location = new System.Drawing.Point(598, 117);
-            this.TextBoxScanLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxScanLocation.Location = new System.Drawing.Point(797, 144);
+            this.TextBoxScanLocation.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxScanLocation.Name = "TextBoxScanLocation";
-            this.TextBoxScanLocation.Size = new System.Drawing.Size(165, 29);
+            this.TextBoxScanLocation.Size = new System.Drawing.Size(219, 34);
             this.TextBoxScanLocation.TabIndex = 10;
             this.TextBoxScanLocation.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxScanLocation.Visible = false;
@@ -465,20 +484,20 @@
             // TextBoxFindItem
             // 
             this.TextBoxFindItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxFindItem.Location = new System.Drawing.Point(425, 9);
-            this.TextBoxFindItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxFindItem.Location = new System.Drawing.Point(567, 11);
+            this.TextBoxFindItem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxFindItem.Name = "TextBoxFindItem";
-            this.TextBoxFindItem.Size = new System.Drawing.Size(301, 29);
+            this.TextBoxFindItem.Size = new System.Drawing.Size(400, 34);
             this.TextBoxFindItem.TabIndex = 2;
             this.TextBoxFindItem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ButtonClearFindItem
             // 
             this.ButtonClearFindItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ButtonClearFindItem.Location = new System.Drawing.Point(736, 9);
-            this.ButtonClearFindItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ButtonClearFindItem.Location = new System.Drawing.Point(981, 11);
+            this.ButtonClearFindItem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.ButtonClearFindItem.Name = "ButtonClearFindItem";
-            this.ButtonClearFindItem.Size = new System.Drawing.Size(34, 29);
+            this.ButtonClearFindItem.Size = new System.Drawing.Size(45, 36);
             this.ButtonClearFindItem.TabIndex = 3;
             this.ButtonClearFindItem.Text = "X";
             this.ButtonClearFindItem.UseVisualStyleBackColor = true;
@@ -489,10 +508,10 @@
             this.MBHotActionClose.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.MBHotActionClose.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotActionClose.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionClose.Location = new System.Drawing.Point(1070, 9);
-            this.MBHotActionClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionClose.Location = new System.Drawing.Point(1427, 11);
+            this.MBHotActionClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotActionClose.Name = "MBHotActionClose";
-            this.MBHotActionClose.Size = new System.Drawing.Size(150, 96);
+            this.MBHotActionClose.Size = new System.Drawing.Size(200, 118);
             this.MBHotActionClose.TabIndex = 9;
             this.MBHotActionClose.Text = "Close";
             this.MBHotActionClose.UseSelectable = true;
@@ -504,10 +523,10 @@
             this.MBNewLocations.BackColor = System.Drawing.Color.SkyBlue;
             this.MBNewLocations.Enabled = false;
             this.MBNewLocations.FontSize = MetroFramework.MetroButtonSize.Medium;
-            this.MBNewLocations.Location = new System.Drawing.Point(598, 71);
-            this.MBNewLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBNewLocations.Location = new System.Drawing.Point(797, 87);
+            this.MBNewLocations.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBNewLocations.Name = "MBNewLocations";
-            this.MBNewLocations.Size = new System.Drawing.Size(165, 34);
+            this.MBNewLocations.Size = new System.Drawing.Size(220, 42);
             this.MBNewLocations.TabIndex = 7;
             this.MBNewLocations.Text = "New Locations";
             this.MBNewLocations.UseSelectable = true;
@@ -520,10 +539,10 @@
             this.MBCurrentLocations.Enabled = false;
             this.MBCurrentLocations.FontSize = MetroFramework.MetroButtonSize.Medium;
             this.MBCurrentLocations.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.MBCurrentLocations.Location = new System.Drawing.Point(427, 71);
-            this.MBCurrentLocations.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBCurrentLocations.Location = new System.Drawing.Point(569, 87);
+            this.MBCurrentLocations.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBCurrentLocations.Name = "MBCurrentLocations";
-            this.MBCurrentLocations.Size = new System.Drawing.Size(165, 34);
+            this.MBCurrentLocations.Size = new System.Drawing.Size(220, 42);
             this.MBCurrentLocations.TabIndex = 6;
             this.MBCurrentLocations.Text = "Current Locations";
             this.MBCurrentLocations.UseSelectable = true;
@@ -533,10 +552,10 @@
             // MBFindItem
             // 
             this.MBFindItem.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBFindItem.Location = new System.Drawing.Point(905, 9);
-            this.MBFindItem.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBFindItem.Location = new System.Drawing.Point(1207, 11);
+            this.MBFindItem.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBFindItem.Name = "MBFindItem";
-            this.MBFindItem.Size = new System.Drawing.Size(150, 96);
+            this.MBFindItem.Size = new System.Drawing.Size(200, 118);
             this.MBFindItem.TabIndex = 4;
             this.MBFindItem.Text = "Search";
             this.MBFindItem.UseSelectable = true;
@@ -545,6 +564,10 @@
             // HotAction
             // 
             this.HotAction.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.HotAction.Controls.Add(this.TextBoxExpirationDate);
+            this.HotAction.Controls.Add(this.TextBoxLotNumber);
+            this.HotAction.Controls.Add(this.LabelExpirationDate);
+            this.HotAction.Controls.Add(this.LabelLotNumber);
             this.HotAction.Controls.Add(this.TextBoxCostCenter);
             this.HotAction.Controls.Add(this.LabelCostCenter);
             this.HotAction.Controls.Add(this.GroupBoxHotPickLocation);
@@ -563,23 +586,72 @@
             this.HotAction.Controls.Add(this.LabelHotPickItem);
             this.HotAction.Controls.Add(this.LabelMainDescription);
             this.HotAction.Controls.Add(this.LabelMainItem);
+            this.HotAction.Controls.Add(this.ButtonExpirationDate);
             this.HotAction.Controls.Add(this.MBHotActionCount);
             this.HotAction.Controls.Add(this.MBHotAccept);
             this.HotAction.Controls.Add(this.MBHotActionBack);
             this.HotAction.Controls.Add(this.PictureBoxItemHotImage);
-            this.HotAction.Location = new System.Drawing.Point(4, 22);
+            this.HotAction.Location = new System.Drawing.Point(4, 25);
+            this.HotAction.Margin = new System.Windows.Forms.Padding(4);
             this.HotAction.Name = "HotAction";
-            this.HotAction.Size = new System.Drawing.Size(1235, 674);
+            this.HotAction.Size = new System.Drawing.Size(1649, 833);
             this.HotAction.TabIndex = 7;
             this.HotAction.Text = "Hot Action";
+            // 
+            // TextBoxExpirationDate
+            // 
+            this.TextBoxExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxExpirationDate.Location = new System.Drawing.Point(335, 234);
+            this.TextBoxExpirationDate.Margin = new System.Windows.Forms.Padding(4);
+            this.TextBoxExpirationDate.Name = "TextBoxExpirationDate";
+            this.TextBoxExpirationDate.ReadOnly = true;
+            this.TextBoxExpirationDate.Size = new System.Drawing.Size(196, 30);
+            this.TextBoxExpirationDate.TabIndex = 170;
+            this.TextBoxExpirationDate.TabStop = false;
+            this.TextBoxExpirationDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TextBoxLotNumber
+            // 
+            this.TextBoxLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLotNumber.Location = new System.Drawing.Point(55, 234);
+            this.TextBoxLotNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.TextBoxLotNumber.Name = "TextBoxLotNumber";
+            this.TextBoxLotNumber.ReadOnly = true;
+            this.TextBoxLotNumber.Size = new System.Drawing.Size(197, 30);
+            this.TextBoxLotNumber.TabIndex = 170;
+            this.TextBoxLotNumber.TabStop = false;
+            this.TextBoxLotNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelExpirationDate
+            // 
+            this.LabelExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelExpirationDate.Location = new System.Drawing.Point(335, 210);
+            this.LabelExpirationDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelExpirationDate.Name = "LabelExpirationDate";
+            this.LabelExpirationDate.Size = new System.Drawing.Size(209, 20);
+            this.LabelExpirationDate.TabIndex = 169;
+            this.LabelExpirationDate.Text = "Expiration Date";
+            this.LabelExpirationDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // LabelLotNumber
+            // 
+            this.LabelLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLotNumber.Location = new System.Drawing.Point(55, 210);
+            this.LabelLotNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelLotNumber.Name = "LabelLotNumber";
+            this.LabelLotNumber.Size = new System.Drawing.Size(209, 20);
+            this.LabelLotNumber.TabIndex = 169;
+            this.LabelLotNumber.Text = "Lot Number";
+            this.LabelLotNumber.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // TextBoxCostCenter
             // 
             this.TextBoxCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxCostCenter.Location = new System.Drawing.Point(137, 221);
+            this.TextBoxCostCenter.Location = new System.Drawing.Point(183, 272);
+            this.TextBoxCostCenter.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxCostCenter.Name = "TextBoxCostCenter";
             this.TextBoxCostCenter.ReadOnly = true;
-            this.TextBoxCostCenter.Size = new System.Drawing.Size(311, 22);
+            this.TextBoxCostCenter.Size = new System.Drawing.Size(413, 26);
             this.TextBoxCostCenter.TabIndex = 168;
             this.TextBoxCostCenter.TabStop = false;
             this.TextBoxCostCenter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -588,9 +660,10 @@
             // 
             this.LabelCostCenter.AutoSize = true;
             this.LabelCostCenter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelCostCenter.Location = new System.Drawing.Point(37, 224);
+            this.LabelCostCenter.Location = new System.Drawing.Point(49, 276);
+            this.LabelCostCenter.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelCostCenter.Name = "LabelCostCenter";
-            this.LabelCostCenter.Size = new System.Drawing.Size(87, 16);
+            this.LabelCostCenter.Size = new System.Drawing.Size(110, 20);
             this.LabelCostCenter.TabIndex = 167;
             this.LabelCostCenter.Text = "Cost Center";
             // 
@@ -621,9 +694,11 @@
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelOver);
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelTray);
             this.GroupBoxHotPickLocation.Controls.Add(this.LabelDevice);
-            this.GroupBoxHotPickLocation.Location = new System.Drawing.Point(7, 369);
+            this.GroupBoxHotPickLocation.Location = new System.Drawing.Point(9, 454);
+            this.GroupBoxHotPickLocation.Margin = new System.Windows.Forms.Padding(4);
             this.GroupBoxHotPickLocation.Name = "GroupBoxHotPickLocation";
-            this.GroupBoxHotPickLocation.Size = new System.Drawing.Size(397, 303);
+            this.GroupBoxHotPickLocation.Padding = new System.Windows.Forms.Padding(4);
+            this.GroupBoxHotPickLocation.Size = new System.Drawing.Size(529, 373);
             this.GroupBoxHotPickLocation.TabIndex = 21;
             this.GroupBoxHotPickLocation.TabStop = false;
             this.GroupBoxHotPickLocation.Text = "Location";
@@ -631,9 +706,10 @@
             // LabelLocationCode
             // 
             this.LabelLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationCode.Location = new System.Drawing.Point(10, 269);
+            this.LabelLocationCode.Location = new System.Drawing.Point(13, 331);
+            this.LabelLocationCode.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelLocationCode.Name = "LabelLocationCode";
-            this.LabelLocationCode.Size = new System.Drawing.Size(157, 16);
+            this.LabelLocationCode.Size = new System.Drawing.Size(209, 20);
             this.LabelLocationCode.TabIndex = 6;
             this.LabelLocationCode.Text = " Location Code";
             this.LabelLocationCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -642,10 +718,10 @@
             // 
             this.ComboBoxHeightCodeLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxHeightCodeLocation.FormattingEnabled = true;
-            this.ComboBoxHeightCodeLocation.Location = new System.Drawing.Point(176, 241);
-            this.ComboBoxHeightCodeLocation.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxHeightCodeLocation.Location = new System.Drawing.Point(235, 297);
+            this.ComboBoxHeightCodeLocation.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxHeightCodeLocation.Name = "ComboBoxHeightCodeLocation";
-            this.ComboBoxHeightCodeLocation.Size = new System.Drawing.Size(149, 21);
+            this.ComboBoxHeightCodeLocation.Size = new System.Drawing.Size(197, 24);
             this.ComboBoxHeightCodeLocation.TabIndex = 8;
             this.ComboBoxHeightCodeLocation.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxHeightCodeLocation_SelectionChangeCommitted);
             // 
@@ -653,10 +729,10 @@
             // 
             this.ComboBoxVelocityCodeLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxVelocityCodeLocation.FormattingEnabled = true;
-            this.ComboBoxVelocityCodeLocation.Location = new System.Drawing.Point(176, 214);
-            this.ComboBoxVelocityCodeLocation.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxVelocityCodeLocation.Location = new System.Drawing.Point(235, 263);
+            this.ComboBoxVelocityCodeLocation.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxVelocityCodeLocation.Name = "ComboBoxVelocityCodeLocation";
-            this.ComboBoxVelocityCodeLocation.Size = new System.Drawing.Size(149, 21);
+            this.ComboBoxVelocityCodeLocation.Size = new System.Drawing.Size(197, 24);
             this.ComboBoxVelocityCodeLocation.TabIndex = 7;
             this.ComboBoxVelocityCodeLocation.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxVelocityCodeLocation_SelectionChangeCommitted);
             // 
@@ -664,18 +740,19 @@
             // 
             this.ComboBoxSizeCodeLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxSizeCodeLocation.FormattingEnabled = true;
-            this.ComboBoxSizeCodeLocation.Location = new System.Drawing.Point(176, 187);
-            this.ComboBoxSizeCodeLocation.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxSizeCodeLocation.Location = new System.Drawing.Point(235, 230);
+            this.ComboBoxSizeCodeLocation.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxSizeCodeLocation.Name = "ComboBoxSizeCodeLocation";
-            this.ComboBoxSizeCodeLocation.Size = new System.Drawing.Size(149, 21);
+            this.ComboBoxSizeCodeLocation.Size = new System.Drawing.Size(197, 24);
             this.ComboBoxSizeCodeLocation.TabIndex = 6;
             this.ComboBoxSizeCodeLocation.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxSizeCodeLocation_SelectionChangeCommitted);
             // 
             // ButtonEditLocationDefinition
             // 
-            this.ButtonEditLocationDefinition.Location = new System.Drawing.Point(331, 266);
+            this.ButtonEditLocationDefinition.Location = new System.Drawing.Point(441, 327);
+            this.ButtonEditLocationDefinition.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEditLocationDefinition.Name = "ButtonEditLocationDefinition";
-            this.ButtonEditLocationDefinition.Size = new System.Drawing.Size(60, 23);
+            this.ButtonEditLocationDefinition.Size = new System.Drawing.Size(80, 28);
             this.ButtonEditLocationDefinition.TabIndex = 10;
             this.ButtonEditLocationDefinition.Text = "Edit";
             this.ButtonEditLocationDefinition.UseVisualStyleBackColor = true;
@@ -684,9 +761,10 @@
             // LabelHeight
             // 
             this.LabelHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHeight.Location = new System.Drawing.Point(10, 242);
+            this.LabelHeight.Location = new System.Drawing.Point(13, 298);
+            this.LabelHeight.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHeight.Name = "LabelHeight";
-            this.LabelHeight.Size = new System.Drawing.Size(157, 16);
+            this.LabelHeight.Size = new System.Drawing.Size(209, 20);
             this.LabelHeight.TabIndex = 4;
             this.LabelHeight.Text = "Height";
             this.LabelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -694,9 +772,10 @@
             // LabelVelocity
             // 
             this.LabelVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelVelocity.Location = new System.Drawing.Point(10, 215);
+            this.LabelVelocity.Location = new System.Drawing.Point(13, 265);
+            this.LabelVelocity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelVelocity.Name = "LabelVelocity";
-            this.LabelVelocity.Size = new System.Drawing.Size(157, 16);
+            this.LabelVelocity.Size = new System.Drawing.Size(209, 20);
             this.LabelVelocity.TabIndex = 2;
             this.LabelVelocity.Text = "Velocity";
             this.LabelVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -704,9 +783,10 @@
             // LabelSize
             // 
             this.LabelSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelSize.Location = new System.Drawing.Point(10, 188);
+            this.LabelSize.Location = new System.Drawing.Point(13, 231);
+            this.LabelSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelSize.Name = "LabelSize";
-            this.LabelSize.Size = new System.Drawing.Size(157, 16);
+            this.LabelSize.Size = new System.Drawing.Size(209, 20);
             this.LabelSize.TabIndex = 0;
             this.LabelSize.Text = "Size";
             this.LabelSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -714,19 +794,21 @@
             // TextBoxHotPickReceivedDate
             // 
             this.TextBoxHotPickReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickReceivedDate.Location = new System.Drawing.Point(176, 130);
+            this.TextBoxHotPickReceivedDate.Location = new System.Drawing.Point(235, 160);
+            this.TextBoxHotPickReceivedDate.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickReceivedDate.Name = "TextBoxHotPickReceivedDate";
             this.TextBoxHotPickReceivedDate.ReadOnly = true;
-            this.TextBoxHotPickReceivedDate.Size = new System.Drawing.Size(183, 22);
+            this.TextBoxHotPickReceivedDate.Size = new System.Drawing.Size(243, 26);
             this.TextBoxHotPickReceivedDate.TabIndex = 4;
             this.TextBoxHotPickReceivedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelReceivedDate
             // 
             this.LabelReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelReceivedDate.Location = new System.Drawing.Point(10, 133);
+            this.LabelReceivedDate.Location = new System.Drawing.Point(13, 164);
+            this.LabelReceivedDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelReceivedDate.Name = "LabelReceivedDate";
-            this.LabelReceivedDate.Size = new System.Drawing.Size(157, 17);
+            this.LabelReceivedDate.Size = new System.Drawing.Size(209, 21);
             this.LabelReceivedDate.TabIndex = 11;
             this.LabelReceivedDate.Text = "Received Date";
             this.LabelReceivedDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -735,9 +817,10 @@
             // 
             this.LabelStaticRelease.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelStaticRelease.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelStaticRelease.Location = new System.Drawing.Point(272, 13);
+            this.LabelStaticRelease.Location = new System.Drawing.Point(363, 16);
+            this.LabelStaticRelease.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelStaticRelease.Name = "LabelStaticRelease";
-            this.LabelStaticRelease.Size = new System.Drawing.Size(118, 18);
+            this.LabelStaticRelease.Size = new System.Drawing.Size(157, 22);
             this.LabelStaticRelease.TabIndex = 17;
             this.LabelStaticRelease.Text = "Static Location";
             this.LabelStaticRelease.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -747,9 +830,10 @@
             // 
             this.LabelSlot.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSlot.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelSlot.Location = new System.Drawing.Point(106, 13);
+            this.LabelSlot.Location = new System.Drawing.Point(141, 16);
+            this.LabelSlot.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelSlot.Name = "LabelSlot";
-            this.LabelSlot.Size = new System.Drawing.Size(160, 18);
+            this.LabelSlot.Size = new System.Drawing.Size(213, 22);
             this.LabelSlot.TabIndex = 14;
             this.LabelSlot.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -757,9 +841,10 @@
             // 
             this.LabelPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelPrimeBin.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelPrimeBin.Location = new System.Drawing.Point(6, 13);
+            this.LabelPrimeBin.Location = new System.Drawing.Point(8, 16);
+            this.LabelPrimeBin.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPrimeBin.Name = "LabelPrimeBin";
-            this.LabelPrimeBin.Size = new System.Drawing.Size(92, 18);
+            this.LabelPrimeBin.Size = new System.Drawing.Size(123, 22);
             this.LabelPrimeBin.TabIndex = 14;
             this.LabelPrimeBin.Text = "Prime Bin";
             this.LabelPrimeBin.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -768,11 +853,11 @@
             // TextBoxHotPickLoc5
             // 
             this.TextBoxHotPickLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc5.Location = new System.Drawing.Point(359, 158);
-            this.TextBoxHotPickLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc5.Location = new System.Drawing.Point(479, 194);
+            this.TextBoxHotPickLoc5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc5.Name = "TextBoxHotPickLoc5";
             this.TextBoxHotPickLoc5.ReadOnly = true;
-            this.TextBoxHotPickLoc5.Size = new System.Drawing.Size(22, 26);
+            this.TextBoxHotPickLoc5.Size = new System.Drawing.Size(28, 30);
             this.TextBoxHotPickLoc5.TabIndex = 8;
             this.TextBoxHotPickLoc5.TabStop = false;
             this.TextBoxHotPickLoc5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -781,10 +866,11 @@
             // TextBoxLocationCode
             // 
             this.TextBoxLocationCode.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLocationCode.Location = new System.Drawing.Point(176, 268);
+            this.TextBoxLocationCode.Location = new System.Drawing.Point(235, 330);
+            this.TextBoxLocationCode.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxLocationCode.Name = "TextBoxLocationCode";
             this.TextBoxLocationCode.ReadOnly = true;
-            this.TextBoxLocationCode.Size = new System.Drawing.Size(149, 22);
+            this.TextBoxLocationCode.Size = new System.Drawing.Size(197, 26);
             this.TextBoxLocationCode.TabIndex = 5;
             this.TextBoxLocationCode.TabStop = false;
             this.TextBoxLocationCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -792,10 +878,11 @@
             // TextBoxHotPickLocationQuantity
             // 
             this.TextBoxHotPickLocationQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLocationQuantity.Location = new System.Drawing.Point(176, 158);
+            this.TextBoxHotPickLocationQuantity.Location = new System.Drawing.Point(235, 194);
+            this.TextBoxHotPickLocationQuantity.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickLocationQuantity.Name = "TextBoxHotPickLocationQuantity";
             this.TextBoxHotPickLocationQuantity.ReadOnly = true;
-            this.TextBoxHotPickLocationQuantity.Size = new System.Drawing.Size(149, 22);
+            this.TextBoxHotPickLocationQuantity.Size = new System.Drawing.Size(197, 26);
             this.TextBoxHotPickLocationQuantity.TabIndex = 5;
             this.TextBoxHotPickLocationQuantity.TabStop = false;
             this.TextBoxHotPickLocationQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -803,11 +890,11 @@
             // TextBoxHotPickLoc4
             // 
             this.TextBoxHotPickLoc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc4.Location = new System.Drawing.Point(292, 57);
-            this.TextBoxHotPickLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc4.Location = new System.Drawing.Point(389, 70);
+            this.TextBoxHotPickLoc4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc4.Name = "TextBoxHotPickLoc4";
             this.TextBoxHotPickLoc4.ReadOnly = true;
-            this.TextBoxHotPickLoc4.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxHotPickLoc4.Size = new System.Drawing.Size(88, 75);
             this.TextBoxHotPickLoc4.TabIndex = 3;
             this.TextBoxHotPickLoc4.TabStop = false;
             this.TextBoxHotPickLoc4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -815,11 +902,11 @@
             // TextBoxHotPickLoc3
             // 
             this.TextBoxHotPickLoc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc3.Location = new System.Drawing.Point(201, 57);
-            this.TextBoxHotPickLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc3.Location = new System.Drawing.Point(268, 70);
+            this.TextBoxHotPickLoc3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc3.Name = "TextBoxHotPickLoc3";
             this.TextBoxHotPickLoc3.ReadOnly = true;
-            this.TextBoxHotPickLoc3.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxHotPickLoc3.Size = new System.Drawing.Size(88, 75);
             this.TextBoxHotPickLoc3.TabIndex = 2;
             this.TextBoxHotPickLoc3.TabStop = false;
             this.TextBoxHotPickLoc3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -827,11 +914,11 @@
             // TextBoxHotPickLoc2
             // 
             this.TextBoxHotPickLoc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc2.Location = new System.Drawing.Point(95, 57);
-            this.TextBoxHotPickLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc2.Location = new System.Drawing.Point(127, 70);
+            this.TextBoxHotPickLoc2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc2.Name = "TextBoxHotPickLoc2";
             this.TextBoxHotPickLoc2.ReadOnly = true;
-            this.TextBoxHotPickLoc2.Size = new System.Drawing.Size(88, 62);
+            this.TextBoxHotPickLoc2.Size = new System.Drawing.Size(116, 75);
             this.TextBoxHotPickLoc2.TabIndex = 1;
             this.TextBoxHotPickLoc2.TabStop = false;
             this.TextBoxHotPickLoc2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -839,11 +926,11 @@
             // TextBoxHotPickLoc1
             // 
             this.TextBoxHotPickLoc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc1.Location = new System.Drawing.Point(10, 57);
-            this.TextBoxHotPickLoc1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc1.Location = new System.Drawing.Point(13, 70);
+            this.TextBoxHotPickLoc1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc1.Name = "TextBoxHotPickLoc1";
             this.TextBoxHotPickLoc1.ReadOnly = true;
-            this.TextBoxHotPickLoc1.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxHotPickLoc1.Size = new System.Drawing.Size(88, 75);
             this.TextBoxHotPickLoc1.TabIndex = 0;
             this.TextBoxHotPickLoc1.TabStop = false;
             this.TextBoxHotPickLoc1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -851,9 +938,10 @@
             // LabelLocationQuantity
             // 
             this.LabelLocationQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationQuantity.Location = new System.Drawing.Point(10, 161);
+            this.LabelLocationQuantity.Location = new System.Drawing.Point(13, 198);
+            this.LabelLocationQuantity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelLocationQuantity.Name = "LabelLocationQuantity";
-            this.LabelLocationQuantity.Size = new System.Drawing.Size(157, 16);
+            this.LabelLocationQuantity.Size = new System.Drawing.Size(209, 20);
             this.LabelLocationQuantity.TabIndex = 10;
             this.LabelLocationQuantity.Text = "Location Quantity";
             this.LabelLocationQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -861,9 +949,10 @@
             // LabelBack
             // 
             this.LabelBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBack.Location = new System.Drawing.Point(289, 31);
+            this.LabelBack.Location = new System.Drawing.Point(385, 38);
+            this.LabelBack.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelBack.Name = "LabelBack";
-            this.LabelBack.Size = new System.Drawing.Size(75, 22);
+            this.LabelBack.Size = new System.Drawing.Size(100, 27);
             this.LabelBack.TabIndex = 20;
             this.LabelBack.Text = "Back";
             this.LabelBack.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -871,9 +960,10 @@
             // LabelOver
             // 
             this.LabelOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOver.Location = new System.Drawing.Point(196, 31);
+            this.LabelOver.Location = new System.Drawing.Point(261, 38);
+            this.LabelOver.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelOver.Name = "LabelOver";
-            this.LabelOver.Size = new System.Drawing.Size(75, 22);
+            this.LabelOver.Size = new System.Drawing.Size(100, 27);
             this.LabelOver.TabIndex = 18;
             this.LabelOver.Text = "Over";
             this.LabelOver.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -881,9 +971,10 @@
             // LabelTray
             // 
             this.LabelTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTray.Location = new System.Drawing.Point(103, 31);
+            this.LabelTray.Location = new System.Drawing.Point(137, 38);
+            this.LabelTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelTray.Name = "LabelTray";
-            this.LabelTray.Size = new System.Drawing.Size(75, 22);
+            this.LabelTray.Size = new System.Drawing.Size(100, 27);
             this.LabelTray.TabIndex = 15;
             this.LabelTray.Text = "Tray";
             this.LabelTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -891,9 +982,10 @@
             // LabelDevice
             // 
             this.LabelDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDevice.Location = new System.Drawing.Point(10, 31);
+            this.LabelDevice.Location = new System.Drawing.Point(13, 38);
+            this.LabelDevice.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelDevice.Name = "LabelDevice";
-            this.LabelDevice.Size = new System.Drawing.Size(75, 22);
+            this.LabelDevice.Size = new System.Drawing.Size(100, 27);
             this.LabelDevice.TabIndex = 13;
             this.LabelDevice.Text = "Device";
             this.LabelDevice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -902,10 +994,10 @@
             // 
             this.ComboBoxHeightCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxHeightCodeItem.FormattingEnabled = true;
-            this.ComboBoxHeightCodeItem.Location = new System.Drawing.Point(137, 310);
-            this.ComboBoxHeightCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxHeightCodeItem.Location = new System.Drawing.Point(183, 382);
+            this.ComboBoxHeightCodeItem.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxHeightCodeItem.Name = "ComboBoxHeightCodeItem";
-            this.ComboBoxHeightCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxHeightCodeItem.Size = new System.Drawing.Size(159, 24);
             this.ComboBoxHeightCodeItem.TabIndex = 7;
             this.ComboBoxHeightCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxHeightCodeItem_SelectionChangeCommitted);
             // 
@@ -913,10 +1005,10 @@
             // 
             this.ComboBoxVelocityCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxVelocityCodeItem.FormattingEnabled = true;
-            this.ComboBoxVelocityCodeItem.Location = new System.Drawing.Point(137, 281);
-            this.ComboBoxVelocityCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxVelocityCodeItem.Location = new System.Drawing.Point(183, 346);
+            this.ComboBoxVelocityCodeItem.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxVelocityCodeItem.Name = "ComboBoxVelocityCodeItem";
-            this.ComboBoxVelocityCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxVelocityCodeItem.Size = new System.Drawing.Size(159, 24);
             this.ComboBoxVelocityCodeItem.TabIndex = 6;
             this.ComboBoxVelocityCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxVelocityCodeItem_SelectionChangeCommitted);
             // 
@@ -924,18 +1016,19 @@
             // 
             this.ComboBoxSizeCodeItem.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxSizeCodeItem.FormattingEnabled = true;
-            this.ComboBoxSizeCodeItem.Location = new System.Drawing.Point(137, 252);
-            this.ComboBoxSizeCodeItem.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxSizeCodeItem.Location = new System.Drawing.Point(183, 310);
+            this.ComboBoxSizeCodeItem.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxSizeCodeItem.Name = "ComboBoxSizeCodeItem";
-            this.ComboBoxSizeCodeItem.Size = new System.Drawing.Size(120, 21);
+            this.ComboBoxSizeCodeItem.Size = new System.Drawing.Size(159, 24);
             this.ComboBoxSizeCodeItem.TabIndex = 5;
             this.ComboBoxSizeCodeItem.SelectionChangeCommitted += new System.EventHandler(this.ComboBoxSizeCodeItem_SelectionChangeCommitted);
             // 
             // ButtonEditItemDefinition
             // 
-            this.ButtonEditItemDefinition.Location = new System.Drawing.Point(177, 339);
+            this.ButtonEditItemDefinition.Location = new System.Drawing.Point(236, 417);
+            this.ButtonEditItemDefinition.Margin = new System.Windows.Forms.Padding(4);
             this.ButtonEditItemDefinition.Name = "ButtonEditItemDefinition";
-            this.ButtonEditItemDefinition.Size = new System.Drawing.Size(80, 23);
+            this.ButtonEditItemDefinition.Size = new System.Drawing.Size(107, 28);
             this.ButtonEditItemDefinition.TabIndex = 9;
             this.ButtonEditItemDefinition.Text = "Edit";
             this.ButtonEditItemDefinition.UseVisualStyleBackColor = true;
@@ -944,9 +1037,10 @@
             // LabelMainHeight
             // 
             this.LabelMainHeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainHeight.Location = new System.Drawing.Point(14, 311);
+            this.LabelMainHeight.Location = new System.Drawing.Point(19, 383);
+            this.LabelMainHeight.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainHeight.Name = "LabelMainHeight";
-            this.LabelMainHeight.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainHeight.Size = new System.Drawing.Size(147, 20);
             this.LabelMainHeight.TabIndex = 9;
             this.LabelMainHeight.Text = "Height";
             this.LabelMainHeight.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -954,9 +1048,10 @@
             // LabelMainVelocity
             // 
             this.LabelMainVelocity.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainVelocity.Location = new System.Drawing.Point(14, 282);
+            this.LabelMainVelocity.Location = new System.Drawing.Point(19, 347);
+            this.LabelMainVelocity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainVelocity.Name = "LabelMainVelocity";
-            this.LabelMainVelocity.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainVelocity.Size = new System.Drawing.Size(147, 20);
             this.LabelMainVelocity.TabIndex = 7;
             this.LabelMainVelocity.Text = "Velocity";
             this.LabelMainVelocity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -964,9 +1059,10 @@
             // LabelMainSize
             // 
             this.LabelMainSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainSize.Location = new System.Drawing.Point(14, 253);
+            this.LabelMainSize.Location = new System.Drawing.Point(19, 311);
+            this.LabelMainSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainSize.Name = "LabelMainSize";
-            this.LabelMainSize.Size = new System.Drawing.Size(110, 16);
+            this.LabelMainSize.Size = new System.Drawing.Size(147, 20);
             this.LabelMainSize.TabIndex = 5;
             this.LabelMainSize.Text = "Size";
             this.LabelMainSize.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -976,18 +1072,20 @@
             this.LabelHotPickUOI.BackColor = System.Drawing.Color.White;
             this.LabelHotPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelHotPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickUOI.Location = new System.Drawing.Point(990, 248);
+            this.LabelHotPickUOI.Location = new System.Drawing.Point(1320, 305);
+            this.LabelHotPickUOI.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickUOI.Name = "LabelHotPickUOI";
-            this.LabelHotPickUOI.Size = new System.Drawing.Size(230, 66);
+            this.LabelHotPickUOI.Size = new System.Drawing.Size(307, 81);
             this.LabelHotPickUOI.TabIndex = 18;
             this.LabelHotPickUOI.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelMainUnitOfIssue
             // 
             this.LabelMainUnitOfIssue.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainUnitOfIssue.Location = new System.Drawing.Point(778, 260);
+            this.LabelMainUnitOfIssue.Location = new System.Drawing.Point(1037, 320);
+            this.LabelMainUnitOfIssue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainUnitOfIssue.Name = "LabelMainUnitOfIssue";
-            this.LabelMainUnitOfIssue.Size = new System.Drawing.Size(206, 42);
+            this.LabelMainUnitOfIssue.Size = new System.Drawing.Size(275, 52);
             this.LabelMainUnitOfIssue.TabIndex = 17;
             this.LabelMainUnitOfIssue.Text = "Unit of Issue";
             this.LabelMainUnitOfIssue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -995,9 +1093,10 @@
             // TextBoxHotPickQuantity
             // 
             this.TextBoxHotPickQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickQuantity.Location = new System.Drawing.Point(1043, 453);
+            this.TextBoxHotPickQuantity.Location = new System.Drawing.Point(1384, 580);
+            this.TextBoxHotPickQuantity.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickQuantity.Name = "TextBoxHotPickQuantity";
-            this.TextBoxHotPickQuantity.Size = new System.Drawing.Size(177, 80);
+            this.TextBoxHotPickQuantity.Size = new System.Drawing.Size(235, 98);
             this.TextBoxHotPickQuantity.TabIndex = 1;
             this.TextBoxHotPickQuantity.Text = "1";
             this.TextBoxHotPickQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1009,18 +1108,20 @@
             this.LabelHotPickDescription.BackColor = System.Drawing.SystemColors.Control;
             this.LabelHotPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelHotPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickDescription.Location = new System.Drawing.Point(445, 334);
+            this.LabelHotPickDescription.Location = new System.Drawing.Point(593, 411);
+            this.LabelHotPickDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickDescription.Name = "LabelHotPickDescription";
-            this.LabelHotPickDescription.Size = new System.Drawing.Size(775, 63);
+            this.LabelHotPickDescription.Size = new System.Drawing.Size(1033, 78);
             this.LabelHotPickDescription.TabIndex = 20;
             this.LabelHotPickDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelMainQuantity
             // 
             this.LabelMainQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainQuantity.Location = new System.Drawing.Point(912, 466);
+            this.LabelMainQuantity.Location = new System.Drawing.Point(1216, 613);
+            this.LabelMainQuantity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainQuantity.Name = "LabelMainQuantity";
-            this.LabelMainQuantity.Size = new System.Drawing.Size(118, 44);
+            this.LabelMainQuantity.Size = new System.Drawing.Size(157, 54);
             this.LabelMainQuantity.TabIndex = 14;
             this.LabelMainQuantity.Text = "Qty";
             this.LabelMainQuantity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1030,18 +1131,20 @@
             this.LabelHotPickItem.BackColor = System.Drawing.SystemColors.Control;
             this.LabelHotPickItem.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelHotPickItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickItem.Location = new System.Drawing.Point(445, 259);
+            this.LabelHotPickItem.Location = new System.Drawing.Point(593, 319);
+            this.LabelHotPickItem.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickItem.Name = "LabelHotPickItem";
-            this.LabelHotPickItem.Size = new System.Drawing.Size(280, 66);
+            this.LabelHotPickItem.Size = new System.Drawing.Size(373, 81);
             this.LabelHotPickItem.TabIndex = 16;
             this.LabelHotPickItem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelMainDescription
             // 
             this.LabelMainDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainDescription.Location = new System.Drawing.Point(326, 334);
+            this.LabelMainDescription.Location = new System.Drawing.Point(435, 411);
+            this.LabelMainDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainDescription.Name = "LabelMainDescription";
-            this.LabelMainDescription.Size = new System.Drawing.Size(113, 44);
+            this.LabelMainDescription.Size = new System.Drawing.Size(151, 54);
             this.LabelMainDescription.TabIndex = 15;
             this.LabelMainDescription.Text = "Desc";
             this.LabelMainDescription.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1050,20 +1153,33 @@
             // LabelMainItem
             // 
             this.LabelMainItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelMainItem.Location = new System.Drawing.Point(332, 270);
+            this.LabelMainItem.Location = new System.Drawing.Point(443, 332);
+            this.LabelMainItem.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelMainItem.Name = "LabelMainItem";
-            this.LabelMainItem.Size = new System.Drawing.Size(107, 44);
+            this.LabelMainItem.Size = new System.Drawing.Size(143, 54);
             this.LabelMainItem.TabIndex = 15;
             this.LabelMainItem.Text = "Item";
             this.LabelMainItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // ButtonExpirationDate
+            // 
+            this.ButtonExpirationDate.FontSize = MetroFramework.MetroButtonSize.Tall;
+            this.ButtonExpirationDate.Location = new System.Drawing.Point(957, 580);
+            this.ButtonExpirationDate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.ButtonExpirationDate.Name = "ButtonExpirationDate";
+            this.ButtonExpirationDate.Size = new System.Drawing.Size(236, 105);
+            this.ButtonExpirationDate.TabIndex = 2;
+            this.ButtonExpirationDate.Text = "Expiration Date";
+            this.ButtonExpirationDate.UseSelectable = true;
+            this.ButtonExpirationDate.Click += new System.EventHandler(this.ButtonExpirationDate_Click);
+            // 
             // MBHotActionCount
             // 
             this.MBHotActionCount.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionCount.Location = new System.Drawing.Point(766, 565);
-            this.MBHotActionCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionCount.Location = new System.Drawing.Point(957, 708);
+            this.MBHotActionCount.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotActionCount.Name = "MBHotActionCount";
-            this.MBHotActionCount.Size = new System.Drawing.Size(177, 96);
+            this.MBHotActionCount.Size = new System.Drawing.Size(236, 105);
             this.MBHotActionCount.TabIndex = 2;
             this.MBHotActionCount.Text = "Location Count";
             this.MBHotActionCount.UseSelectable = true;
@@ -1072,10 +1188,10 @@
             // MBHotAccept
             // 
             this.MBHotAccept.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotAccept.Location = new System.Drawing.Point(1037, 565);
-            this.MBHotAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotAccept.Location = new System.Drawing.Point(1383, 695);
+            this.MBHotAccept.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotAccept.Name = "MBHotAccept";
-            this.MBHotAccept.Size = new System.Drawing.Size(177, 96);
+            this.MBHotAccept.Size = new System.Drawing.Size(236, 118);
             this.MBHotAccept.TabIndex = 3;
             this.MBHotAccept.Text = "Accept";
             this.MBHotAccept.UseSelectable = true;
@@ -1085,10 +1201,10 @@
             // 
             this.MBHotActionBack.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotActionBack.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionBack.Location = new System.Drawing.Point(1096, 4);
-            this.MBHotActionBack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionBack.Location = new System.Drawing.Point(1461, 5);
+            this.MBHotActionBack.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotActionBack.Name = "MBHotActionBack";
-            this.MBHotActionBack.Size = new System.Drawing.Size(135, 96);
+            this.MBHotActionBack.Size = new System.Drawing.Size(180, 118);
             this.MBHotActionBack.TabIndex = 4;
             this.MBHotActionBack.Text = "Back";
             this.MBHotActionBack.UseSelectable = true;
@@ -1099,9 +1215,10 @@
             this.PictureBoxItemHotImage.BackColor = System.Drawing.Color.Transparent;
             this.PictureBoxItemHotImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemHotImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemHotImage.InitialImage")));
-            this.PictureBoxItemHotImage.Location = new System.Drawing.Point(426, 414);
+            this.PictureBoxItemHotImage.Location = new System.Drawing.Point(568, 510);
+            this.PictureBoxItemHotImage.Margin = new System.Windows.Forms.Padding(4);
             this.PictureBoxItemHotImage.Name = "PictureBoxItemHotImage";
-            this.PictureBoxItemHotImage.Size = new System.Drawing.Size(256, 256);
+            this.PictureBoxItemHotImage.Size = new System.Drawing.Size(340, 314);
             this.PictureBoxItemHotImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.PictureBoxItemHotImage.TabIndex = 166;
             this.PictureBoxItemHotImage.TabStop = false;
@@ -1121,10 +1238,11 @@
             this.HotActionTray.Controls.Add(this.LabelHotPickUOITray);
             this.HotActionTray.Controls.Add(this.LabelHotPickDescriptionTray);
             this.HotActionTray.Controls.Add(this.LabelHotPickItemTray);
-            this.HotActionTray.Location = new System.Drawing.Point(4, 22);
+            this.HotActionTray.Location = new System.Drawing.Point(4, 25);
+            this.HotActionTray.Margin = new System.Windows.Forms.Padding(4);
             this.HotActionTray.Name = "HotActionTray";
-            this.HotActionTray.Padding = new System.Windows.Forms.Padding(3);
-            this.HotActionTray.Size = new System.Drawing.Size(1235, 674);
+            this.HotActionTray.Padding = new System.Windows.Forms.Padding(4);
+            this.HotActionTray.Size = new System.Drawing.Size(1649, 833);
             this.HotActionTray.TabIndex = 8;
             this.HotActionTray.Text = "Hot Action Tray";
             // 
@@ -1134,9 +1252,10 @@
             this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox2.Image = global::Neutron.Properties.Resources.Neutron_Logo;
             this.pictureBox2.InitialImage = global::Neutron.Properties.Resources.Neutron_Logo;
-            this.pictureBox2.Location = new System.Drawing.Point(794, 6);
+            this.pictureBox2.Location = new System.Drawing.Point(1059, 7);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(333, 345);
+            this.pictureBox2.Size = new System.Drawing.Size(443, 424);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 167;
             this.pictureBox2.TabStop = false;
@@ -1144,19 +1263,20 @@
             // PanelTableLayoutTray
             // 
             this.PanelTableLayoutTray.BackColor = System.Drawing.Color.SlateGray;
-            this.PanelTableLayoutTray.Location = new System.Drawing.Point(6, 6);
+            this.PanelTableLayoutTray.Location = new System.Drawing.Point(8, 7);
+            this.PanelTableLayoutTray.Margin = new System.Windows.Forms.Padding(4);
             this.PanelTableLayoutTray.Name = "PanelTableLayoutTray";
-            this.PanelTableLayoutTray.Size = new System.Drawing.Size(769, 345);
+            this.PanelTableLayoutTray.Size = new System.Drawing.Size(1025, 425);
             this.PanelTableLayoutTray.TabIndex = 32;
             // 
             // MBHotActionBackTray
             // 
             this.MBHotActionBackTray.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBHotActionBackTray.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotActionBackTray.Location = new System.Drawing.Point(757, 660);
-            this.MBHotActionBackTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotActionBackTray.Location = new System.Drawing.Point(1009, 812);
+            this.MBHotActionBackTray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotActionBackTray.Name = "MBHotActionBackTray";
-            this.MBHotActionBackTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotActionBackTray.Size = new System.Drawing.Size(236, 118);
             this.MBHotActionBackTray.TabIndex = 1;
             this.MBHotActionBackTray.Text = "Cancel";
             this.MBHotActionBackTray.UseSelectable = true;
@@ -1189,9 +1309,11 @@
             this.groupBox1.Controls.Add(this.label17);
             this.groupBox1.Controls.Add(this.label18);
             this.groupBox1.Controls.Add(this.label19);
-            this.groupBox1.Location = new System.Drawing.Point(6, 490);
+            this.groupBox1.Location = new System.Drawing.Point(8, 603);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(745, 266);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(993, 327);
             this.groupBox1.TabIndex = 30;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Location";
@@ -1199,9 +1321,10 @@
             // label20
             // 
             this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(42, 12);
+            this.label20.Location = new System.Drawing.Point(56, 15);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(75, 18);
+            this.label20.Size = new System.Drawing.Size(100, 22);
             this.label20.TabIndex = 24;
             this.label20.Text = "Device";
             this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1209,9 +1332,10 @@
             // label8
             // 
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(416, 202);
+            this.label8.Location = new System.Drawing.Point(555, 249);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(119, 16);
+            this.label8.Size = new System.Drawing.Size(159, 20);
             this.label8.TabIndex = 6;
             this.label8.Text = "Location Code";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1221,10 +1345,10 @@
             this.ComboBoxHeightCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
             this.ComboBoxHeightCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxHeightCodeLocationTray.FormattingEnabled = true;
-            this.ComboBoxHeightCodeLocationTray.Location = new System.Drawing.Point(428, 235);
-            this.ComboBoxHeightCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxHeightCodeLocationTray.Location = new System.Drawing.Point(571, 289);
+            this.ComboBoxHeightCodeLocationTray.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxHeightCodeLocationTray.Name = "ComboBoxHeightCodeLocationTray";
-            this.ComboBoxHeightCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxHeightCodeLocationTray.Size = new System.Drawing.Size(132, 24);
             this.ComboBoxHeightCodeLocationTray.TabIndex = 2;
             // 
             // ComboBoxVelocityCodeLocationTray
@@ -1232,10 +1356,10 @@
             this.ComboBoxVelocityCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
             this.ComboBoxVelocityCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxVelocityCodeLocationTray.FormattingEnabled = true;
-            this.ComboBoxVelocityCodeLocationTray.Location = new System.Drawing.Point(251, 234);
-            this.ComboBoxVelocityCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxVelocityCodeLocationTray.Location = new System.Drawing.Point(335, 288);
+            this.ComboBoxVelocityCodeLocationTray.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxVelocityCodeLocationTray.Name = "ComboBoxVelocityCodeLocationTray";
-            this.ComboBoxVelocityCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxVelocityCodeLocationTray.Size = new System.Drawing.Size(132, 24);
             this.ComboBoxVelocityCodeLocationTray.TabIndex = 1;
             // 
             // ComboBoxSizeCodeLocationTray
@@ -1243,17 +1367,18 @@
             this.ComboBoxSizeCodeLocationTray.BackColor = System.Drawing.SystemColors.Control;
             this.ComboBoxSizeCodeLocationTray.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBoxSizeCodeLocationTray.FormattingEnabled = true;
-            this.ComboBoxSizeCodeLocationTray.Location = new System.Drawing.Point(63, 234);
-            this.ComboBoxSizeCodeLocationTray.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
+            this.ComboBoxSizeCodeLocationTray.Location = new System.Drawing.Point(84, 288);
+            this.ComboBoxSizeCodeLocationTray.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.ComboBoxSizeCodeLocationTray.Name = "ComboBoxSizeCodeLocationTray";
-            this.ComboBoxSizeCodeLocationTray.Size = new System.Drawing.Size(100, 21);
+            this.ComboBoxSizeCodeLocationTray.Size = new System.Drawing.Size(132, 24);
             this.ComboBoxSizeCodeLocationTray.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(683, 166);
+            this.button1.Location = new System.Drawing.Point(911, 204);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(49, 23);
+            this.button1.Size = new System.Drawing.Size(65, 28);
             this.button1.TabIndex = 9;
             this.button1.Text = "Edit";
             this.button1.UseVisualStyleBackColor = true;
@@ -1261,9 +1386,10 @@
             // label9
             // 
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(359, 236);
+            this.label9.Location = new System.Drawing.Point(479, 290);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(61, 16);
+            this.label9.Size = new System.Drawing.Size(81, 20);
             this.label9.TabIndex = 4;
             this.label9.Text = "Height";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1271,9 +1397,10 @@
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(171, 235);
+            this.label10.Location = new System.Drawing.Point(228, 289);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(72, 16);
+            this.label10.Size = new System.Drawing.Size(96, 20);
             this.label10.TabIndex = 2;
             this.label10.Text = "Velocity";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1281,9 +1408,10 @@
             // label11
             // 
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(7, 236);
+            this.label11.Location = new System.Drawing.Point(9, 290);
+            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(48, 16);
+            this.label11.Size = new System.Drawing.Size(64, 20);
             this.label11.TabIndex = 0;
             this.label11.Text = "Size";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1291,19 +1419,21 @@
             // TextBoxHotPickReceivedDateTray
             // 
             this.TextBoxHotPickReceivedDateTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickReceivedDateTray.Location = new System.Drawing.Point(136, 167);
+            this.TextBoxHotPickReceivedDateTray.Location = new System.Drawing.Point(181, 206);
+            this.TextBoxHotPickReceivedDateTray.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickReceivedDateTray.Name = "TextBoxHotPickReceivedDateTray";
             this.TextBoxHotPickReceivedDateTray.ReadOnly = true;
-            this.TextBoxHotPickReceivedDateTray.Size = new System.Drawing.Size(183, 22);
+            this.TextBoxHotPickReceivedDateTray.Size = new System.Drawing.Size(243, 26);
             this.TextBoxHotPickReceivedDateTray.TabIndex = 22;
             this.TextBoxHotPickReceivedDateTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label12
             // 
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(9, 170);
+            this.label12.Location = new System.Drawing.Point(12, 209);
+            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(118, 17);
+            this.label12.Size = new System.Drawing.Size(157, 21);
             this.label12.TabIndex = 11;
             this.label12.Text = "Received Date";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1312,9 +1442,10 @@
             // 
             this.LabelStaticReleaseTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelStaticReleaseTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.LabelStaticReleaseTray.Location = new System.Drawing.Point(192, 202);
+            this.LabelStaticReleaseTray.Location = new System.Drawing.Point(256, 249);
+            this.LabelStaticReleaseTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelStaticReleaseTray.Name = "LabelStaticReleaseTray";
-            this.LabelStaticReleaseTray.Size = new System.Drawing.Size(118, 18);
+            this.LabelStaticReleaseTray.Size = new System.Drawing.Size(157, 22);
             this.LabelStaticReleaseTray.TabIndex = 17;
             this.LabelStaticReleaseTray.Text = "Static Location";
             this.LabelStaticReleaseTray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -1324,9 +1455,10 @@
             // 
             this.LabelSlotTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSlotTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.LabelSlotTray.Location = new System.Drawing.Point(9, 200);
+            this.LabelSlotTray.Location = new System.Drawing.Point(12, 246);
+            this.LabelSlotTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelSlotTray.Name = "LabelSlotTray";
-            this.LabelSlotTray.Size = new System.Drawing.Size(160, 18);
+            this.LabelSlotTray.Size = new System.Drawing.Size(213, 22);
             this.LabelSlotTray.TabIndex = 14;
             this.LabelSlotTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1334,9 +1466,10 @@
             // 
             this.LabelPrimeBinTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelPrimeBinTray.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.LabelPrimeBinTray.Location = new System.Drawing.Point(316, 201);
+            this.LabelPrimeBinTray.Location = new System.Drawing.Point(421, 247);
+            this.LabelPrimeBinTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPrimeBinTray.Name = "LabelPrimeBinTray";
-            this.LabelPrimeBinTray.Size = new System.Drawing.Size(92, 18);
+            this.LabelPrimeBinTray.Size = new System.Drawing.Size(123, 22);
             this.LabelPrimeBinTray.TabIndex = 14;
             this.LabelPrimeBinTray.Text = "Prime Bin";
             this.LabelPrimeBinTray.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -1345,11 +1478,11 @@
             // TextBoxHotPickLoc5Tray
             // 
             this.TextBoxHotPickLoc5Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc5Tray.Location = new System.Drawing.Point(339, 164);
-            this.TextBoxHotPickLoc5Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc5Tray.Location = new System.Drawing.Point(452, 202);
+            this.TextBoxHotPickLoc5Tray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc5Tray.Name = "TextBoxHotPickLoc5Tray";
             this.TextBoxHotPickLoc5Tray.ReadOnly = true;
-            this.TextBoxHotPickLoc5Tray.Size = new System.Drawing.Size(22, 26);
+            this.TextBoxHotPickLoc5Tray.Size = new System.Drawing.Size(28, 30);
             this.TextBoxHotPickLoc5Tray.TabIndex = 8;
             this.TextBoxHotPickLoc5Tray.TabStop = false;
             this.TextBoxHotPickLoc5Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1358,10 +1491,11 @@
             // TextBoxHotPickLocationCodeTray
             // 
             this.TextBoxHotPickLocationCodeTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLocationCodeTray.Location = new System.Drawing.Point(552, 199);
+            this.TextBoxHotPickLocationCodeTray.Location = new System.Drawing.Point(736, 245);
+            this.TextBoxHotPickLocationCodeTray.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickLocationCodeTray.Name = "TextBoxHotPickLocationCodeTray";
             this.TextBoxHotPickLocationCodeTray.ReadOnly = true;
-            this.TextBoxHotPickLocationCodeTray.Size = new System.Drawing.Size(180, 22);
+            this.TextBoxHotPickLocationCodeTray.Size = new System.Drawing.Size(239, 26);
             this.TextBoxHotPickLocationCodeTray.TabIndex = 23;
             this.TextBoxHotPickLocationCodeTray.TabStop = false;
             this.TextBoxHotPickLocationCodeTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1369,10 +1503,11 @@
             // TextBoxHotPickLocationQuantityTray
             // 
             this.TextBoxHotPickLocationQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLocationQuantityTray.Location = new System.Drawing.Point(539, 166);
+            this.TextBoxHotPickLocationQuantityTray.Location = new System.Drawing.Point(719, 204);
+            this.TextBoxHotPickLocationQuantityTray.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickLocationQuantityTray.Name = "TextBoxHotPickLocationQuantityTray";
             this.TextBoxHotPickLocationQuantityTray.ReadOnly = true;
-            this.TextBoxHotPickLocationQuantityTray.Size = new System.Drawing.Size(126, 22);
+            this.TextBoxHotPickLocationQuantityTray.Size = new System.Drawing.Size(167, 26);
             this.TextBoxHotPickLocationQuantityTray.TabIndex = 23;
             this.TextBoxHotPickLocationQuantityTray.TabStop = false;
             this.TextBoxHotPickLocationQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1380,11 +1515,11 @@
             // TextBoxHotPickLoc4Tray
             // 
             this.TextBoxHotPickLoc4Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc4Tray.Location = new System.Drawing.Point(600, 35);
-            this.TextBoxHotPickLoc4Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc4Tray.Location = new System.Drawing.Point(800, 43);
+            this.TextBoxHotPickLoc4Tray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc4Tray.Name = "TextBoxHotPickLoc4Tray";
             this.TextBoxHotPickLoc4Tray.ReadOnly = true;
-            this.TextBoxHotPickLoc4Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc4Tray.Size = new System.Drawing.Size(179, 143);
             this.TextBoxHotPickLoc4Tray.TabIndex = 21;
             this.TextBoxHotPickLoc4Tray.TabStop = false;
             this.TextBoxHotPickLoc4Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1392,11 +1527,11 @@
             // TextBoxHotPickLoc3Tray
             // 
             this.TextBoxHotPickLoc3Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc3Tray.Location = new System.Drawing.Point(427, 35);
-            this.TextBoxHotPickLoc3Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc3Tray.Location = new System.Drawing.Point(569, 43);
+            this.TextBoxHotPickLoc3Tray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc3Tray.Name = "TextBoxHotPickLoc3Tray";
             this.TextBoxHotPickLoc3Tray.ReadOnly = true;
-            this.TextBoxHotPickLoc3Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc3Tray.Size = new System.Drawing.Size(179, 143);
             this.TextBoxHotPickLoc3Tray.TabIndex = 19;
             this.TextBoxHotPickLoc3Tray.TabStop = false;
             this.TextBoxHotPickLoc3Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1404,11 +1539,11 @@
             // TextBoxHotPickLoc2Tray
             // 
             this.TextBoxHotPickLoc2Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc2Tray.Location = new System.Drawing.Point(185, 35);
-            this.TextBoxHotPickLoc2Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc2Tray.Location = new System.Drawing.Point(247, 43);
+            this.TextBoxHotPickLoc2Tray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc2Tray.Name = "TextBoxHotPickLoc2Tray";
             this.TextBoxHotPickLoc2Tray.ReadOnly = true;
-            this.TextBoxHotPickLoc2Tray.Size = new System.Drawing.Size(204, 116);
+            this.TextBoxHotPickLoc2Tray.Size = new System.Drawing.Size(271, 143);
             this.TextBoxHotPickLoc2Tray.TabIndex = 16;
             this.TextBoxHotPickLoc2Tray.TabStop = false;
             this.TextBoxHotPickLoc2Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1416,11 +1551,11 @@
             // TextBoxHotPickLoc1Tray
             // 
             this.TextBoxHotPickLoc1Tray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickLoc1Tray.Location = new System.Drawing.Point(12, 35);
-            this.TextBoxHotPickLoc1Tray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.TextBoxHotPickLoc1Tray.Location = new System.Drawing.Point(16, 43);
+            this.TextBoxHotPickLoc1Tray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.TextBoxHotPickLoc1Tray.Name = "TextBoxHotPickLoc1Tray";
             this.TextBoxHotPickLoc1Tray.ReadOnly = true;
-            this.TextBoxHotPickLoc1Tray.Size = new System.Drawing.Size(135, 116);
+            this.TextBoxHotPickLoc1Tray.Size = new System.Drawing.Size(179, 143);
             this.TextBoxHotPickLoc1Tray.TabIndex = 12;
             this.TextBoxHotPickLoc1Tray.TabStop = false;
             this.TextBoxHotPickLoc1Tray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1428,9 +1563,10 @@
             // label16
             // 
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(400, 169);
+            this.label16.Location = new System.Drawing.Point(533, 208);
+            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(133, 16);
+            this.label16.Size = new System.Drawing.Size(177, 20);
             this.label16.TabIndex = 10;
             this.label16.Text = "Location Quantity";
             this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1438,9 +1574,10 @@
             // label17
             // 
             this.label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(636, 12);
+            this.label17.Location = new System.Drawing.Point(848, 15);
+            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(75, 18);
+            this.label17.Size = new System.Drawing.Size(100, 22);
             this.label17.TabIndex = 20;
             this.label17.Text = "Back";
             this.label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1448,9 +1585,10 @@
             // label18
             // 
             this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(458, 12);
+            this.label18.Location = new System.Drawing.Point(611, 15);
+            this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(75, 18);
+            this.label18.Size = new System.Drawing.Size(100, 22);
             this.label18.TabIndex = 18;
             this.label18.Text = "Over";
             this.label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1458,9 +1596,10 @@
             // label19
             // 
             this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(251, 12);
+            this.label19.Location = new System.Drawing.Point(335, 15);
+            this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(75, 18);
+            this.label19.Size = new System.Drawing.Size(100, 22);
             this.label19.TabIndex = 15;
             this.label19.Text = "Tray";
             this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1468,9 +1607,10 @@
             // TextBoxHotPickQuantityTray
             // 
             this.TextBoxHotPickQuantityTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxHotPickQuantityTray.Location = new System.Drawing.Point(894, 518);
+            this.TextBoxHotPickQuantityTray.Location = new System.Drawing.Point(1192, 638);
+            this.TextBoxHotPickQuantityTray.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxHotPickQuantityTray.Name = "TextBoxHotPickQuantityTray";
-            this.TextBoxHotPickQuantityTray.Size = new System.Drawing.Size(241, 116);
+            this.TextBoxHotPickQuantityTray.Size = new System.Drawing.Size(320, 143);
             this.TextBoxHotPickQuantityTray.TabIndex = 0;
             this.TextBoxHotPickQuantityTray.Text = "1";
             this.TextBoxHotPickQuantityTray.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1478,9 +1618,10 @@
             // label7
             // 
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(775, 554);
+            this.label7.Location = new System.Drawing.Point(1033, 682);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(113, 50);
+            this.label7.Size = new System.Drawing.Size(151, 62);
             this.label7.TabIndex = 29;
             this.label7.Text = "Qty";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1488,10 +1629,10 @@
             // MBHotAcceptTray
             // 
             this.MBHotAcceptTray.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBHotAcceptTray.Location = new System.Drawing.Point(958, 660);
-            this.MBHotAcceptTray.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.MBHotAcceptTray.Location = new System.Drawing.Point(1277, 812);
+            this.MBHotAcceptTray.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MBHotAcceptTray.Name = "MBHotAcceptTray";
-            this.MBHotAcceptTray.Size = new System.Drawing.Size(177, 96);
+            this.MBHotAcceptTray.Size = new System.Drawing.Size(236, 118);
             this.MBHotAcceptTray.TabIndex = 2;
             this.MBHotAcceptTray.Text = "Accept";
             this.MBHotAcceptTray.UseSelectable = true;
@@ -1500,9 +1641,10 @@
             // 
             this.LabelHotPickUOITray.BackColor = System.Drawing.Color.White;
             this.LabelHotPickUOITray.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickUOITray.Location = new System.Drawing.Point(991, 394);
+            this.LabelHotPickUOITray.Location = new System.Drawing.Point(1321, 485);
+            this.LabelHotPickUOITray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickUOITray.Name = "LabelHotPickUOITray";
-            this.LabelHotPickUOITray.Size = new System.Drawing.Size(144, 43);
+            this.LabelHotPickUOITray.Size = new System.Drawing.Size(192, 53);
             this.LabelHotPickUOITray.TabIndex = 24;
             this.LabelHotPickUOITray.Text = "EA";
             this.LabelHotPickUOITray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1512,9 +1654,10 @@
             this.LabelHotPickDescriptionTray.BackColor = System.Drawing.SystemColors.Control;
             this.LabelHotPickDescriptionTray.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelHotPickDescriptionTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickDescriptionTray.Location = new System.Drawing.Point(16, 447);
+            this.LabelHotPickDescriptionTray.Location = new System.Drawing.Point(21, 550);
+            this.LabelHotPickDescriptionTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickDescriptionTray.Name = "LabelHotPickDescriptionTray";
-            this.LabelHotPickDescriptionTray.Size = new System.Drawing.Size(1119, 32);
+            this.LabelHotPickDescriptionTray.Size = new System.Drawing.Size(1491, 39);
             this.LabelHotPickDescriptionTray.TabIndex = 26;
             this.LabelHotPickDescriptionTray.Text = "Description";
             this.LabelHotPickDescriptionTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1524,9 +1667,10 @@
             this.LabelHotPickItemTray.BackColor = System.Drawing.SystemColors.Control;
             this.LabelHotPickItemTray.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelHotPickItemTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelHotPickItemTray.Location = new System.Drawing.Point(384, 391);
+            this.LabelHotPickItemTray.Location = new System.Drawing.Point(512, 481);
+            this.LabelHotPickItemTray.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelHotPickItemTray.Name = "LabelHotPickItemTray";
-            this.LabelHotPickItemTray.Size = new System.Drawing.Size(378, 43);
+            this.LabelHotPickItemTray.Size = new System.Drawing.Size(504, 53);
             this.LabelHotPickItemTray.TabIndex = 22;
             this.LabelHotPickItemTray.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1564,9 +1708,10 @@
             this.HotRackTray.Controls.Add(this.label39);
             this.HotRackTray.Controls.Add(this.label36);
             this.HotRackTray.Controls.Add(this.label37);
-            this.HotRackTray.Location = new System.Drawing.Point(4, 22);
+            this.HotRackTray.Location = new System.Drawing.Point(4, 25);
+            this.HotRackTray.Margin = new System.Windows.Forms.Padding(4);
             this.HotRackTray.Name = "HotRackTray";
-            this.HotRackTray.Size = new System.Drawing.Size(1235, 674);
+            this.HotRackTray.Size = new System.Drawing.Size(1649, 833);
             this.HotRackTray.TabIndex = 9;
             this.HotRackTray.Text = "Hot Rack Tray";
             this.HotRackTray.UseVisualStyleBackColor = true;
@@ -1575,19 +1720,21 @@
             // 
             this.PanelTableLayoutRack.Dock = System.Windows.Forms.DockStyle.Left;
             this.PanelTableLayoutRack.Location = new System.Drawing.Point(0, 0);
+            this.PanelTableLayoutRack.Margin = new System.Windows.Forms.Padding(4);
             this.PanelTableLayoutRack.Name = "PanelTableLayoutRack";
-            this.PanelTableLayoutRack.Size = new System.Drawing.Size(467, 674);
+            this.PanelTableLayoutRack.Size = new System.Drawing.Size(623, 833);
             this.PanelTableLayoutRack.TabIndex = 188;
             // 
             // TextBoxPickPos1
             // 
             this.TextBoxPickPos1.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.TextBoxPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos1.Location = new System.Drawing.Point(538, 212);
+            this.TextBoxPickPos1.Location = new System.Drawing.Point(717, 261);
+            this.TextBoxPickPos1.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxPickPos1.Multiline = true;
             this.TextBoxPickPos1.Name = "TextBoxPickPos1";
             this.TextBoxPickPos1.ReadOnly = true;
-            this.TextBoxPickPos1.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos1.Size = new System.Drawing.Size(148, 53);
             this.TextBoxPickPos1.TabIndex = 177;
             this.TextBoxPickPos1.Tag = "0";
             this.TextBoxPickPos1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1598,9 +1745,10 @@
             this.LabelPickPos1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickPos1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelPickPos1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.LabelPickPos1.Location = new System.Drawing.Point(576, 180);
+            this.LabelPickPos1.Location = new System.Drawing.Point(768, 222);
+            this.LabelPickPos1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPickPos1.Name = "LabelPickPos1";
-            this.LabelPickPos1.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos1.Size = new System.Drawing.Size(48, 32);
             this.LabelPickPos1.TabIndex = 176;
             this.LabelPickPos1.Text = "1";
             this.LabelPickPos1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1609,9 +1757,10 @@
             // 
             this.LabelPickPos2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos2.Location = new System.Drawing.Point(717, 180);
+            this.LabelPickPos2.Location = new System.Drawing.Point(956, 222);
+            this.LabelPickPos2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPickPos2.Name = "LabelPickPos2";
-            this.LabelPickPos2.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos2.Size = new System.Drawing.Size(48, 32);
             this.LabelPickPos2.TabIndex = 178;
             this.LabelPickPos2.Text = "2";
             this.LabelPickPos2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1620,11 +1769,12 @@
             // 
             this.TextBoxPickPos2.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.TextBoxPickPos2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos2.Location = new System.Drawing.Point(679, 212);
+            this.TextBoxPickPos2.Location = new System.Drawing.Point(905, 261);
+            this.TextBoxPickPos2.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxPickPos2.Multiline = true;
             this.TextBoxPickPos2.Name = "TextBoxPickPos2";
             this.TextBoxPickPos2.ReadOnly = true;
-            this.TextBoxPickPos2.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos2.Size = new System.Drawing.Size(148, 53);
             this.TextBoxPickPos2.TabIndex = 179;
             this.TextBoxPickPos2.Tag = "1";
             this.TextBoxPickPos2.Text = "1";
@@ -1634,9 +1784,10 @@
             // 
             this.LabelPickPos3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos3.Location = new System.Drawing.Point(858, 180);
+            this.LabelPickPos3.Location = new System.Drawing.Point(1144, 222);
+            this.LabelPickPos3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPickPos3.Name = "LabelPickPos3";
-            this.LabelPickPos3.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos3.Size = new System.Drawing.Size(48, 32);
             this.LabelPickPos3.TabIndex = 180;
             this.LabelPickPos3.Text = "3";
             this.LabelPickPos3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1645,11 +1796,12 @@
             // 
             this.TextBoxPickPos3.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.TextBoxPickPos3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos3.Location = new System.Drawing.Point(820, 212);
+            this.TextBoxPickPos3.Location = new System.Drawing.Point(1093, 261);
+            this.TextBoxPickPos3.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxPickPos3.Multiline = true;
             this.TextBoxPickPos3.Name = "TextBoxPickPos3";
             this.TextBoxPickPos3.ReadOnly = true;
-            this.TextBoxPickPos3.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos3.Size = new System.Drawing.Size(148, 53);
             this.TextBoxPickPos3.TabIndex = 181;
             this.TextBoxPickPos3.Tag = "2";
             this.TextBoxPickPos3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1659,9 +1811,10 @@
             this.LabelPickPos4.BackColor = System.Drawing.Color.Transparent;
             this.LabelPickPos4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickPos4.Location = new System.Drawing.Point(999, 180);
+            this.LabelPickPos4.Location = new System.Drawing.Point(1332, 222);
+            this.LabelPickPos4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelPickPos4.Name = "LabelPickPos4";
-            this.LabelPickPos4.Size = new System.Drawing.Size(36, 26);
+            this.LabelPickPos4.Size = new System.Drawing.Size(48, 32);
             this.LabelPickPos4.TabIndex = 182;
             this.LabelPickPos4.Text = "4";
             this.LabelPickPos4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1670,11 +1823,12 @@
             // 
             this.TextBoxPickPos4.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.TextBoxPickPos4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickPos4.Location = new System.Drawing.Point(961, 212);
+            this.TextBoxPickPos4.Location = new System.Drawing.Point(1281, 261);
+            this.TextBoxPickPos4.Margin = new System.Windows.Forms.Padding(4);
             this.TextBoxPickPos4.Multiline = true;
             this.TextBoxPickPos4.Name = "TextBoxPickPos4";
             this.TextBoxPickPos4.ReadOnly = true;
-            this.TextBoxPickPos4.Size = new System.Drawing.Size(112, 44);
+            this.TextBoxPickPos4.Size = new System.Drawing.Size(148, 53);
             this.TextBoxPickPos4.TabIndex = 183;
             this.TextBoxPickPos4.Tag = "3";
             this.TextBoxPickPos4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1682,41 +1836,46 @@
             // Pos1Display
             // 
             this.Pos1Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos1Display.Location = new System.Drawing.Point(530, 212);
+            this.Pos1Display.Location = new System.Drawing.Point(707, 261);
+            this.Pos1Display.Margin = new System.Windows.Forms.Padding(4);
             this.Pos1Display.Name = "Pos1Display";
-            this.Pos1Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos1Display.Size = new System.Drawing.Size(171, 65);
             this.Pos1Display.TabIndex = 184;
             // 
             // Pos2Display
             // 
             this.Pos2Display.BackColor = System.Drawing.Color.Red;
-            this.Pos2Display.Location = new System.Drawing.Point(671, 212);
+            this.Pos2Display.Location = new System.Drawing.Point(895, 261);
+            this.Pos2Display.Margin = new System.Windows.Forms.Padding(4);
             this.Pos2Display.Name = "Pos2Display";
-            this.Pos2Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos2Display.Size = new System.Drawing.Size(171, 65);
             this.Pos2Display.TabIndex = 185;
             // 
             // Pos3Display
             // 
             this.Pos3Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos3Display.Location = new System.Drawing.Point(812, 212);
+            this.Pos3Display.Location = new System.Drawing.Point(1083, 261);
+            this.Pos3Display.Margin = new System.Windows.Forms.Padding(4);
             this.Pos3Display.Name = "Pos3Display";
-            this.Pos3Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos3Display.Size = new System.Drawing.Size(171, 65);
             this.Pos3Display.TabIndex = 186;
             // 
             // Pos4Display
             // 
             this.Pos4Display.BackColor = System.Drawing.Color.Transparent;
-            this.Pos4Display.Location = new System.Drawing.Point(953, 212);
+            this.Pos4Display.Location = new System.Drawing.Point(1271, 261);
+            this.Pos4Display.Margin = new System.Windows.Forms.Padding(4);
             this.Pos4Display.Name = "Pos4Display";
-            this.Pos4Display.Size = new System.Drawing.Size(128, 53);
+            this.Pos4Display.Size = new System.Drawing.Size(171, 65);
             this.Pos4Display.TabIndex = 187;
             // 
             // label43
             // 
             this.label43.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.Location = new System.Drawing.Point(518, 7);
+            this.label43.Location = new System.Drawing.Point(691, 9);
+            this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(75, 18);
+            this.label43.Size = new System.Drawing.Size(100, 22);
             this.label43.TabIndex = 175;
             this.label43.Text = "Device";
             this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1724,11 +1883,11 @@
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(1004, 30);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox2.Location = new System.Drawing.Point(1339, 37);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(135, 116);
+            this.textBox2.Size = new System.Drawing.Size(179, 143);
             this.textBox2.TabIndex = 174;
             this.textBox2.TabStop = false;
             this.textBox2.Text = "1";
@@ -1737,11 +1896,11 @@
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.Location = new System.Drawing.Point(855, 30);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox3.Location = new System.Drawing.Point(1140, 37);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(135, 116);
+            this.textBox3.Size = new System.Drawing.Size(179, 143);
             this.textBox3.TabIndex = 172;
             this.textBox3.TabStop = false;
             this.textBox3.Text = "1";
@@ -1750,11 +1909,11 @@
             // textBox4
             // 
             this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox4.Location = new System.Drawing.Point(637, 30);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox4.Location = new System.Drawing.Point(849, 37);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(204, 116);
+            this.textBox4.Size = new System.Drawing.Size(271, 143);
             this.textBox4.TabIndex = 170;
             this.textBox4.TabStop = false;
             this.textBox4.Text = "23";
@@ -1763,11 +1922,11 @@
             // textBox5
             // 
             this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox5.Location = new System.Drawing.Point(488, 30);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBox5.Location = new System.Drawing.Point(651, 37);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(135, 116);
+            this.textBox5.Size = new System.Drawing.Size(179, 143);
             this.textBox5.TabIndex = 168;
             this.textBox5.TabStop = false;
             this.textBox5.Text = "1";
@@ -1776,9 +1935,10 @@
             // label44
             // 
             this.label44.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label44.Location = new System.Drawing.Point(1040, 7);
+            this.label44.Location = new System.Drawing.Point(1387, 9);
+            this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(75, 18);
+            this.label44.Size = new System.Drawing.Size(100, 22);
             this.label44.TabIndex = 173;
             this.label44.Text = "Back";
             this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1786,9 +1946,10 @@
             // label45
             // 
             this.label45.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label45.Location = new System.Drawing.Point(892, 7);
+            this.label45.Location = new System.Drawing.Point(1189, 9);
+            this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(75, 18);
+            this.label45.Size = new System.Drawing.Size(100, 22);
             this.label45.TabIndex = 171;
             this.label45.Text = "Over";
             this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1796,9 +1957,10 @@
             // label60
             // 
             this.label60.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label60.Location = new System.Drawing.Point(714, 7);
+            this.label60.Location = new System.Drawing.Point(952, 9);
+            this.label60.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(75, 18);
+            this.label60.Size = new System.Drawing.Size(100, 22);
             this.label60.TabIndex = 169;
             this.label60.Text = "Tray";
             this.label60.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1809,9 +1971,10 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pictureBox1.Image = global::Neutron.Properties.Resources.Neutron_Logo;
             this.pictureBox1.InitialImage = global::Neutron.Properties.Resources.Neutron_Logo;
-            this.pictureBox1.Location = new System.Drawing.Point(486, 515);
+            this.pictureBox1.Location = new System.Drawing.Point(648, 634);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 256);
+            this.pictureBox1.Size = new System.Drawing.Size(340, 314);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 167;
             this.pictureBox1.TabStop = false;
@@ -1820,10 +1983,10 @@
             // 
             this.metroButton1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.metroButton1.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.metroButton1.Location = new System.Drawing.Point(752, 674);
-            this.metroButton1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.metroButton1.Location = new System.Drawing.Point(1003, 830);
+            this.metroButton1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.metroButton1.Name = "metroButton1";
-            this.metroButton1.Size = new System.Drawing.Size(177, 96);
+            this.metroButton1.Size = new System.Drawing.Size(236, 118);
             this.metroButton1.TabIndex = 45;
             this.metroButton1.Text = "Cancel";
             this.metroButton1.UseSelectable = true;
@@ -1832,9 +1995,10 @@
             // textBox1
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 72F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(889, 532);
+            this.textBox1.Location = new System.Drawing.Point(1185, 655);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(241, 116);
+            this.textBox1.Size = new System.Drawing.Size(320, 143);
             this.textBox1.TabIndex = 44;
             this.textBox1.Text = "1";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1842,9 +2006,10 @@
             // label42
             // 
             this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 28F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(770, 568);
+            this.label42.Location = new System.Drawing.Point(1027, 699);
+            this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(113, 50);
+            this.label42.Size = new System.Drawing.Size(151, 62);
             this.label42.TabIndex = 47;
             this.label42.Text = "Qty";
             this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1852,10 +2017,10 @@
             // metroButton2
             // 
             this.metroButton2.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.metroButton2.Location = new System.Drawing.Point(953, 674);
-            this.metroButton2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.metroButton2.Location = new System.Drawing.Point(1271, 830);
+            this.metroButton2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.metroButton2.Name = "metroButton2";
-            this.metroButton2.Size = new System.Drawing.Size(177, 96);
+            this.metroButton2.Size = new System.Drawing.Size(236, 118);
             this.metroButton2.TabIndex = 46;
             this.metroButton2.Text = "Accept";
             this.metroButton2.UseSelectable = true;
@@ -1865,9 +2030,10 @@
             this.label40.BackColor = System.Drawing.SystemColors.Control;
             this.label40.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label40.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.Location = new System.Drawing.Point(492, 461);
+            this.label40.Location = new System.Drawing.Point(656, 567);
+            this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(638, 43);
+            this.label40.Size = new System.Drawing.Size(851, 53);
             this.label40.TabIndex = 43;
             this.label40.Text = "GLOVE SURG HYDRASOFT 6";
             this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1875,9 +2041,10 @@
             // label41
             // 
             this.label41.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label41.Location = new System.Drawing.Point(492, 411);
+            this.label41.Location = new System.Drawing.Point(656, 506);
+            this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(313, 43);
+            this.label41.Size = new System.Drawing.Size(417, 53);
             this.label41.TabIndex = 42;
             this.label41.Text = "Description";
             this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1887,9 +2054,10 @@
             this.label38.BackColor = System.Drawing.Color.White;
             this.label38.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label38.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label38.Location = new System.Drawing.Point(820, 359);
+            this.label38.Location = new System.Drawing.Point(1093, 442);
+            this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(310, 43);
+            this.label38.Size = new System.Drawing.Size(413, 53);
             this.label38.TabIndex = 41;
             this.label38.Text = "EA";
             this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1897,9 +2065,10 @@
             // label39
             // 
             this.label39.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(814, 311);
+            this.label39.Location = new System.Drawing.Point(1085, 383);
+            this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(243, 43);
+            this.label39.Size = new System.Drawing.Size(324, 53);
             this.label39.TabIndex = 40;
             this.label39.Text = "Unit of Issue";
             this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1909,9 +2078,10 @@
             this.label36.BackColor = System.Drawing.SystemColors.Control;
             this.label36.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label36.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(492, 359);
+            this.label36.Location = new System.Drawing.Point(656, 442);
+            this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(313, 43);
+            this.label36.Size = new System.Drawing.Size(417, 53);
             this.label36.TabIndex = 39;
             this.label36.Text = "10034581";
             this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1919,9 +2089,10 @@
             // label37
             // 
             this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(486, 311);
+            this.label37.Location = new System.Drawing.Point(648, 383);
+            this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(142, 43);
+            this.label37.Size = new System.Drawing.Size(189, 53);
             this.label37.TabIndex = 38;
             this.label37.Text = "Item";
             this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1932,19 +2103,20 @@
             this.LabelFormTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LabelFormTitle.Font = new System.Drawing.Font("Comic Sans MS", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormTitle.ForeColor = System.Drawing.Color.White;
-            this.LabelFormTitle.Location = new System.Drawing.Point(471, 10);
+            this.LabelFormTitle.Location = new System.Drawing.Point(628, 12);
+            this.LabelFormTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelFormTitle.Name = "LabelFormTitle";
-            this.LabelFormTitle.Size = new System.Drawing.Size(350, 30);
+            this.LabelFormTitle.Size = new System.Drawing.Size(466, 36);
             this.LabelFormTitle.TabIndex = 28;
             this.LabelFormTitle.Text = "Jobs";
             this.LabelFormTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mlUserInfo
             // 
-            this.mlUserInfo.Location = new System.Drawing.Point(938, 10);
-            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.mlUserInfo.Location = new System.Drawing.Point(1251, 12);
+            this.mlUserInfo.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.mlUserInfo.Name = "mlUserInfo";
-            this.mlUserInfo.Size = new System.Drawing.Size(327, 30);
+            this.mlUserInfo.Size = new System.Drawing.Size(436, 37);
             this.mlUserInfo.TabIndex = 27;
             this.mlUserInfo.Text = "Login ?";
             this.mlUserInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1954,26 +2126,28 @@
             this.LabelFormHeaderText.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelFormHeaderText.Font = new System.Drawing.Font("Comic Sans MS", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelFormHeaderText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelFormHeaderText.Location = new System.Drawing.Point(27, 10);
-            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelFormHeaderText.Location = new System.Drawing.Point(36, 12);
+            this.LabelFormHeaderText.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.LabelFormHeaderText.Name = "LabelFormHeaderText";
-            this.LabelFormHeaderText.Size = new System.Drawing.Size(377, 30);
+            this.LabelFormHeaderText.Size = new System.Drawing.Size(503, 37);
             this.LabelFormHeaderText.TabIndex = 26;
             this.LabelFormHeaderText.Text = "Neutron Warehouse Management";
             this.LabelFormHeaderText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FrmHotAction
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1280, 750);
+            this.ClientSize = new System.Drawing.Size(1707, 923);
             this.Controls.Add(this.LabelRecordCount);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.LabelFormTitle);
             this.Controls.Add(this.mlUserInfo);
             this.Controls.Add(this.LabelFormHeaderText);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmHotAction";
+            this.Padding = new System.Windows.Forms.Padding(27, 74, 27, 25);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmHotAction_FormClosing);
             this.Shown += new System.EventHandler(this.FrmHotAction_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmHotAction_KeyDown);
@@ -2146,5 +2320,10 @@
         private System.Windows.Forms.DataGridView DataGridViewHot;
         private System.Windows.Forms.TextBox TextBoxCostCenter;
         private System.Windows.Forms.Label LabelCostCenter;
+        private MetroFramework.Controls.MetroButton ButtonExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxLotNumber;
+        private System.Windows.Forms.Label LabelExpirationDate;
+        private System.Windows.Forms.Label LabelLotNumber;
     }
 }

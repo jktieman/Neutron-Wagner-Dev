@@ -24,7 +24,7 @@ namespace DeviceIndicatorService
         private readonly Size _panelSize;
         private readonly NeutronVariables _neutronVariables;
         private List<DeviceIndicator> _deviceIndicators;
-        private List<HardwareDevice> _hanelHardwareDevices;
+        private List<HardwareDevice> _hardwareDevices;
         private int _numDevices;
         private int _flashRate;
         private readonly Color _onColor = Color.Yellow;
@@ -57,19 +57,33 @@ namespace DeviceIndicatorService
         {
             //_logger.LogDetailAsync("Initialize Device Indicators - InitDeviceIndicators").SafeFireAndForget();
             _deviceIndicators = new List<DeviceIndicator>();
-            if (_workstationView.Hanels == null || !_workstationView.Hanels.Any())
+            if (_neutronVariables.DeviceDriver == "RCC2")
             {
-                return;
+                if (_workstationView.CarouselShuttles == null || !_workstationView.CarouselShuttles.Any())
+                {
+                    return;
+                }
+
+                _hardwareDevices = _workstationView.CarouselShuttles;
             }
 
-            _hanelHardwareDevices = _workstationView.Hanels;
+            if (_neutronVariables.DeviceDriver == "MP12D")
+            {
+                if (_workstationView.Hanels == null || !_workstationView.Hanels.Any())
+                {
+                    return;
+                }
+                _hardwareDevices = _workstationView.Hanels;
+            }
+
+
 
             _flashRate = _neutronVariables.DeviceFlashRate > 0 ? _neutronVariables.DeviceFlashRate : _defaultFlashRate;
-            _numDevices = _hanelHardwareDevices.Count;
+            _numDevices = _hardwareDevices.Count;
 
             CreatePanel();
 
-            foreach (var hardwareDevice in _hanelHardwareDevices)
+            foreach (var hardwareDevice in _hardwareDevices)
             {
                 try
                 {
@@ -149,7 +163,8 @@ namespace DeviceIndicatorService
         /// </summary>
         private void AddDeviceIndicatorsToPanel(int loc = 0)
         {
-            foreach (var hardwareDevice in _workstationView.Hanels)
+           // foreach (var hardwareDevice in _workstationView.Hanels)
+            foreach (var hardwareDevice in _hardwareDevices)
             {
                 //if (hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12D &&
                 //    hardwareDevice.DeviceTypeId != (int)DeviceTypeEnum.Hanel12N &&

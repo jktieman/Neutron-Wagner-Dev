@@ -64,5 +64,6 @@
         public bool RfidEnabledPicking { get; set; }
         public int BliController { get; set; }
         public uint LogFilesDaysToKeep { get; set; }
+        public bool EnableExpirationDates { get; set; }
     }
 }

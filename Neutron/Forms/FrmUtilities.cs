@@ -46,7 +46,6 @@ using IPTI.Models;
 using Neutron.Ninject;
 using NeutronCore;
 using NeutronEvents;
-using SAPServer.Models;
 using Zen.Barcode;
 using SerialConfiguration = NeutronData.Models.SerialConfiguration;
 using NeutronData.Interfaces;
@@ -100,7 +99,6 @@ namespace Neutron.Forms
         public LoftwarePrinterPreferences LoftwareLabelPrinter;
         private readonly NeutronVariables _neutronVariables;
         private readonly NeutronLicense _neutronLicense;
-        private SapVariables _sapVariables;
 
         //Lookup variables
         private List<LookupTable> _lookupTables = new List<LookupTable>();
@@ -811,6 +809,9 @@ namespace Neutron.Forms
                 case "RadioButtonPrimeBinLast":
                     RadioButtonPrimeBinLast.Checked = true;
                     break;
+                case "RadioButtonFifoFefo":
+                    RadioButtonFifoFefo.Checked = true;
+                    break;
                 case "RadioButtonFifo":
                     RadioButtonFifo.Checked = true;
                     break;
@@ -893,7 +894,8 @@ namespace Neutron.Forms
                 _neutronVariables.RfidEnabledPicking = CheckBoxRfidEnabledPicking.Checked;
                 _neutronVariables.BliController = Convert.ToInt32(numericUpDownBliControllerId.Value);
                 _neutronVariables.LogFilesDaysToKeep = Convert.ToUInt32(TextBoxLogFilesDaysToKeep.Text);
-
+                _neutronVariables.EnableExpirationDates = CheckBoxEnableExpirationDates.Checked;
+                
                 if (!string.IsNullOrWhiteSpace(TextBoxLicenseCode.Text))
                 {
                     _jsonData.SaveFile<NeutronVariables>(_neutronVariables);
@@ -990,6 +992,7 @@ namespace Neutron.Forms
             CheckBoxRfidEnabledPicking.Checked = _neutronVariables.RfidEnabledPicking;
             numericUpDownBliControllerId.Value = _neutronVariables.BliController == 0 ? 1 : _neutronVariables.BliController;
             TextBoxLogFilesDaysToKeep.Text = _neutronVariables.LogFilesDaysToKeep.ToString();
+            CheckBoxEnableExpirationDates.Checked = _neutronVariables.EnableExpirationDates;
         }
 
         private void MBPrintSetUpSave_Click(object sender, EventArgs e)
@@ -3132,71 +3135,7 @@ namespace Neutron.Forms
             _workstationView.ProLiteManager?.TurnOnBlindCycle(deviceNumber, overNumber, backNumber);
         }
 
-        private void MBSapServer_Click(object sender, EventArgs e)
-        {
-            _sapVariables = _jsonData.LoadFile<SapVariables>();
-            var emailAddresses = _jsonData.LoadFile<List<EmailAddressData>>();
-
-            TextBoxSapServerName.Text = _sapVariables.SapServer;
-            TextBoxSapServerSleepTime.Text = _sapVariables.SleepTime.ToString();
-            TextBoxSapServerStartHour.Text = _sapVariables.StartHour.ToString();
-            TextBoxSapServerStartMinute.Text = _sapVariables.StartMinute.ToString();
-            TextBoxSapServerEndHour.Text = _sapVariables.EndHour.ToString();
-            TextBoxSapServerEndMinute.Text = _sapVariables.EndMinute.ToString();
-            TextBoxSapServerUsername.Text = _sapVariables.Username;
-            TextBoxSapServerPassword.Text = _sapVariables.Password;
-            TextBoxSapServerAppServerHost.Text = _sapVariables.AppServerHost;
-            TextBoxSapServerSystemNumber.Text = _sapVariables.SystemNumber;
-            TextBoxSapServerClient.Text = _sapVariables.Client;
-            TextBoxSapServerLanguage.Text = _sapVariables.Language;
-            TextBoxSapServerPoolSize.Text = _sapVariables.PoolSize;
-            TextBoxSapServerPeakConnectionsLimit.Text = _sapVariables.PeakConnectionsLimit;
-            TextBoxSapServerConnectionIdleTimeout.Text = _sapVariables.ConnectionIdleTimeout;
-            TextBoxSapServerNeutronBusyFile.Text = _sapVariables.NeutronBusyFile;
-            TextBoxSapServerSapBusyFile.Text = _sapVariables.SapBusyFile;
-            if (emailAddresses.Count == 3)
-            {
-                TextBoxSapServerEmail1.Text = emailAddresses[0].EmailAddress;
-                TextBoxSapServerEmail2.Text = emailAddresses[1].EmailAddress;
-                TextBoxSapServerEmail3.Text = emailAddresses[2].EmailAddress;
-            }
-
-
-            tabControl1.SelectedTab = SapServer;
-        }
-
-        private void MBSapServerBack_Click(object sender, EventArgs e)
-        {
-            BackToMain();
-        }
-
-        private void MBSapServerSave_Click(object sender, EventArgs e)
-        {
-            var sapVariables = new SapVariables();
-            sapVariables.SapServer = TextBoxSapServerName.Text;
-            sapVariables.SleepTime = TextBoxSapServerSleepTime.Text.ParseInt();
-            sapVariables.StartHour = TextBoxSapServerStartHour.Text.ParseInt();
-            sapVariables.StartMinute = TextBoxSapServerStartMinute.Text.ParseInt();
-            sapVariables.EndHour = TextBoxSapServerEndHour.Text.ParseInt();
-            sapVariables.EndMinute = TextBoxSapServerEndMinute.Text.ParseInt();
-            sapVariables.Username = TextBoxSapServerUsername.Text;
-            sapVariables.Password = TextBoxSapServerPassword.Text;
-            sapVariables.AppServerHost = TextBoxSapServerAppServerHost.Text;
-            sapVariables.SystemNumber = TextBoxSapServerSystemNumber.Text;
-            sapVariables.Client = TextBoxSapServerClient.Text;
-            sapVariables.Language = TextBoxSapServerLanguage.Text;
-            sapVariables.PoolSize = TextBoxSapServerPoolSize.Text;
-            sapVariables.PeakConnectionsLimit = TextBoxSapServerPeakConnectionsLimit.Text;
-            sapVariables.ConnectionIdleTimeout = TextBoxSapServerConnectionIdleTimeout.Text;
-            sapVariables.NeutronBusyFile = TextBoxSapServerNeutronBusyFile.Text;
-            sapVariables.SapBusyFile = TextBoxSapServerSapBusyFile.Text;
-            sapVariables.Email1 = TextBoxSapServerEmail1.Text;
-            sapVariables.Email2 = TextBoxSapServerEmail2.Text;
-            sapVariables.Email3 = TextBoxSapServerEmail3.Text;
-
-
-            _jsonData.SaveFile<SapVariables>(sapVariables);
-        }
+     
 
         //private void ButtonBatchLightTurnOn_ClickAsync(object sender, EventArgs e)
         //{

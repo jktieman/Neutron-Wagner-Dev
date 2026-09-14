@@ -709,7 +709,7 @@
     <value>6, 50</value>
   </data>
   <data name="RadioButtonFrenchCanadian.Size" type="System.Drawing.Size, System.Drawing">
-    <value>138, 21</value>
+    <value>106, 17</value>
   </data>
   <data name="RadioButtonFrenchCanadian.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -739,7 +739,7 @@
     <value>6, 27</value>
   </data>
   <data name="RadioButtonEnglish.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 21</value>
+    <value>59, 17</value>
   </data>
   <data name="RadioButtonEnglish.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -802,7 +802,7 @@
     <value>603, 138</value>
   </data>
   <data name="CheckBoxClientConnected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>193, 29</value>
+    <value>158, 24</value>
   </data>
   <data name="CheckBoxClientConnected.TabIndex" type="System.Int32, mscorlib">
     <value>201</value>

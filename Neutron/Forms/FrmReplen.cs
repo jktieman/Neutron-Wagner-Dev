@@ -53,6 +53,7 @@ using NeutronCore.StaticClasses;
 using NeutronData.UnitOfWorks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using Microsoft.Extensions.Logging;
+using Neutron.Helpers;
 using ReplenService;
 
 
@@ -254,6 +255,7 @@ namespace Neutron.Forms
 
             InitForm();
 
+            ThemeManager.StyleDataGridView(DataGridView1);
 
             //
             //_moveableDeviceTypes = _workstationRepository.GetMoveableDeviceTypeIds();
@@ -5736,7 +5738,7 @@ namespace Neutron.Forms
             //    return;
             //}
 
-            var slot = TextBoxSlot.Text.Trim().ToUpper();
+              var slot = TextBoxSlot.Text.Trim().ToUpper();
             // get the new location based on the scanned in slot number
             if (!string.IsNullOrEmpty(slot))
             {

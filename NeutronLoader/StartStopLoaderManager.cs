@@ -7,7 +7,6 @@ using NeutronData.DataContexts;
 using NeutronData.Interfaces;
 using NeutronData.ModelViews;
 using NeutronEvents;
-using SAPServer;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -25,7 +24,6 @@ namespace NeutronLoader
         private readonly WorkstationView _workstationView;
         private readonly IReplenRepository _replenRepository;
         private readonly IOrdersRepository _ordersRepository;
-        private ISapService _sapService;
         private readonly Func<NeutronDb> _contextFactory;
 
         public StartStopLoaderManager(IJsonData jsonData, NeutronVariables neutronVariables,
@@ -44,7 +42,6 @@ namespace NeutronLoader
 
         private void Init()
         {
-            _sapService = new SAPService(_jsonData);
             _logger = NeutronCore.Global.Logger.SetupLogger("LoaderManager");
             InitInterfaceFile();
             Mediator.GetInstance().StartStopLoader += async (s, e) => await StartStopLoaderAction(e.StartStop);
@@ -75,18 +72,19 @@ namespace NeutronLoader
                 case "PR1":
                     {
                         _interfaceProcessor = new InterfaceProcessorPr1(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
+                        
                         break;
                     }
-                case "MET":
-                    {
-                        _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
-                        break;
-                    }
+                //case "MET":
+                //    {
+                //        _interfaceProcessor = new InterfaceProcessorMET(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _contextFactory);
+                //        break;
+                //    }
                 case "WAG":
                     {
-                        _logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
-                        _interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _replenRepository, _ordersRepository,  _contextFactory);
-                        Mediator.GetInstance().RunLoaderOnceAsync += async (s, e) => await _interfaceProcessor.RunLoaderOnce();
+                        //_logger.LogDetailAsync($"WAG - InterfaceProcessorWAG").SafeFireAndForget();
+                        //_interfaceProcessor = new InterfaceProcessorWAG(_neutronVariables, _neutronLicense, _jsonData, _workstationView, _sapService, _replenRepository, _ordersRepository,  _contextFactory);
+                        //Mediator.GetInstance().RunLoaderOnceAsync += async (s, e) => await _interfaceProcessor.RunLoaderOnce();
                         break;
                     }
                 default:

@@ -389,6 +389,7 @@ namespace Neutron.Forms
             ComboBoxViewEditUnitOfIssue.DataBindings.Add("SelectedValue", _bindingSource, "UnitOfIssueId");
             TextBoxViewEditWeight.DataBindings.Add("Text", _bindingSource, "Weight");
             CheckBoxViewEditScale.DataBindings.Add("Checked", _bindingSource, "Scale", false, DataSourceUpdateMode.OnPropertyChanged);
+            CheckBoxViewEditExpires.DataBindings.Add("Checked", _bindingSource, "Expires", false, DataSourceUpdateMode.OnPropertyChanged);
         }
         private int GetRecordCount(BindingSource bindingSource)
         {
@@ -610,7 +611,8 @@ namespace Neutron.Forms
                             StorageTypeId = storageTypeId,
                             PickMax = pickMax.ParseInt(),
                             Weight = float.Parse(weight),
-                            Scale = CheckBoxNewScale.Checked
+                            Scale = CheckBoxNewScale.Checked,
+                            Expires = CheckBoxNewExpires.Checked
                         };
                         try
                         {
@@ -701,6 +703,7 @@ namespace Neutron.Forms
                             itemDef.PickMax = pickMax.ParseInt();
                             itemDef.Weight = float.Parse(weight);
                             itemDef.Scale = CheckBoxViewEditScale.Checked;
+                            itemDef.Expires = CheckBoxViewEditExpires.Checked;
                             try
                             {
                                 await _repoItemDefinition.UpdateAsync(itemDef);
@@ -857,6 +860,14 @@ namespace Neutron.Forms
                 Name = "Description"
             };
             DataGridView1.Columns.Add(col);
+            var ckcol = new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Expires",
+                HeaderText = "Expires",  // _gridResourceManager.GetString("Expires"),
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter },
+                Name = "Expires"
+            };
+            DataGridView1.Columns.Add(ckcol);
             col = new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "UnitOfIssueName",
@@ -947,7 +958,7 @@ namespace Neutron.Forms
                 Name = "Weight"
             };
             DataGridView1.Columns.Add(col);
-            var ckcol = new DataGridViewCheckBoxColumn
+            ckcol = new DataGridViewCheckBoxColumn
             {
                 DataPropertyName = "Scale",
                 HeaderText = _gridResourceManager.GetString("Scale"),

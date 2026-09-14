@@ -649,8 +649,7 @@ namespace Neutron.Forms
                             {
                                 var loc5 = TextBoxViewEditLoc5.Text.ParseInt();
 
-                                _slotName = GlobalVar.SlotNameFactory.CreateSlotName(areaId, deviceNumber, loc2, loc3, loc4,
-                                    loc5);
+                                _slotName = GlobalVar.SlotNameFactory.CreateSlotName(areaId, deviceNumber, loc2, loc3, loc4, loc5);
                                 var slotName = _slotName.SlotName;
 
                                 loc.AreaId = areaId;

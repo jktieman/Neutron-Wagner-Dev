@@ -91,16 +91,24 @@ namespace Neutron.Controllers
                         var enabledUnitNumbers = _workstation.HardwareDevices.Where(r => r.Enabled == true).Select(s => s.DeviceNumber).ToList();
 
                         Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}Device Count: {serialConfiguration.DeviceCount}"));
+                        try
+                        {
+                            if (Shuttle_1.Init_Controller(serialConfiguration.ControllerId, serialConfiguration.PortNumber, serialConfiguration.BaudRate, serialConfiguration.DataBits,
+                                                       serialConfiguration.Parity.ToString(), serialConfiguration.StopBits, simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("Initialization Requested"));
+                            }
+                            else
+                            {
+                                Task.Run(() => _logger.LogDetailAsync("Problem requesting initialization. " + cError));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"{ex.Message}");
+                            throw;
+                        }
 
-                        if (Shuttle_1.Init_Controller(serialConfiguration.ControllerId, serialConfiguration.PortNumber, serialConfiguration.BaudRate, serialConfiguration.DataBits,
-                            serialConfiguration.Parity.ToString(), serialConfiguration.StopBits, simulationMode, logLevel, enabledUnitNumbers, this, CallBackHandler_Init, ref cError))
-                        {
-                            Task.Run(() => _logger.LogDetailAsync("Initialization Requested"));
-                        }
-                        else
-                        {
-                            Task.Run(() => _logger.LogDetailAsync("Problem requesting initialization. " + cError));
-                        }
                     }
                     else
                     {
@@ -374,25 +382,25 @@ namespace Neutron.Controllers
             try
             {
                 Shuttle_1.Close_Controller(ref cError);
-                
+
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - Success {cError}"));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Task.Run(() => _logger.LogDetailAsync($"Close RCC Controller - cError  {cError}  {Environment.NewLine} {ex.Message}  {Environment.NewLine} {ex.InnerException}"));
             }
-  
+
         }
 
         public Hart_DeviceStatusType GetDeviceStatus(int deviceNumber)
         {
             var msg = string.Empty;
             var deviceStatus = new Hart_DeviceStatusType();
-         _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
+            _ = _logger.LogDetailAsync($"Device Number Status: {deviceNumber}");
             if (!Shuttle_1.Init_Success)
             {
-             _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
-             _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
+                _ = _logger.LogDetailAsync($"Device Status: Not Initialized. Code is: {Shuttle_1.LastStatus_Code.ToString()} Message is: {Shuttle_1.LastStatus_Message}");
+                _ = _logger.LogDetailAsync("Problem getting device status." + "\n\n" + cError);
             }
             else
             {
@@ -403,7 +411,7 @@ namespace Neutron.Controllers
                 if (Shuttle_1.Get_Device_Status(ref myDeviceStatusList, ref cError))
                 {
                     // At this point, you have current status for every device in your list
-                 _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstation.EnabledDevices.Count}");
+                    _ = _logger.LogDetailAsync($"Device Status DeviceNumber: {deviceNumber}   Hardware Count: {_workstation.EnabledDevices.Count}");
                     foreach (var item in myDeviceStatusList)
                     {
                         if (item.Device == deviceNumber)
@@ -421,12 +429,12 @@ namespace Neutron.Controllers
                         }
                     }
 
-                 _ = _logger.LogDetailAsync(msg);
+                    _ = _logger.LogDetailAsync(msg);
                     //ShowMessage(msg);
                 }
                 else
                 {
-                 _ = _logger.LogDetailAsync("Get Device Status request aborted...");
+                    _ = _logger.LogDetailAsync("Get Device Status request aborted...");
                 }
             }
             return deviceStatus;

@@ -128,17 +128,9 @@ namespace Neutron.Forms
             this.TextCurrentTray3 = new System.Windows.Forms.Label();
             this.TextCurrentTray2 = new System.Windows.Forms.Label();
             this.TextCurrentTray1 = new System.Windows.Forms.Label();
-            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.LabelPickMessages = new System.Windows.Forms.Label();
             this.MBShortCut = new MetroFramework.Controls.MetroButton();
             this.LabelNotify = new System.Windows.Forms.Label();
-            this.GroupBoxMultipleLocations = new System.Windows.Forms.GroupBox();
-            this.PanelMultipleLocations = new System.Windows.Forms.Panel();
-            this.ButtonLocationMoveNext = new System.Windows.Forms.Button();
-            this.ButtonLocationMoveLast = new System.Windows.Forms.Button();
-            this.ButtonLocationMoveFirst = new System.Windows.Forms.Button();
-            this.ButtonLocationMovePrevious = new System.Windows.Forms.Button();
-            this.LabelLocationLineOfLines = new System.Windows.Forms.Label();
             this.PanelPickNavigation = new System.Windows.Forms.Panel();
             this.ButtonStopMoveNext = new System.Windows.Forms.Button();
             this.ButtonStopMoveLast = new System.Windows.Forms.Button();
@@ -156,20 +148,31 @@ namespace Neutron.Forms
             this.LabelPickUOI = new System.Windows.Forms.Label();
             this.LabelUOI = new System.Windows.Forms.Label();
             this.LabelPickItemNumber = new System.Windows.Forms.Label();
-            this.LabelItem = new System.Windows.Forms.Label();
             this.TextBoxPickSlot = new System.Windows.Forms.TextBox();
             this.MBLocationCount = new MetroFramework.Controls.MetroButton();
             this.MBResetCarousels = new MetroFramework.Controls.MetroButton();
             this.MBPickScreenHotPick = new MetroFramework.Controls.MetroButton();
             this.MBShowOrderOrQuantityToggle = new MetroFramework.Controls.MetroButton();
             this.GroupBoxLocation = new System.Windows.Forms.GroupBox();
+            this.TextBoxExpirationDate = new System.Windows.Forms.TextBox();
+            this.LabelExpirationDate = new System.Windows.Forms.Label();
+            this.TextBoxLotNumber = new System.Windows.Forms.TextBox();
+            this.LabelLotNumber = new System.Windows.Forms.Label();
             this.LabelStaticRelease = new System.Windows.Forms.Label();
             this.LabelPrimeBin = new System.Windows.Forms.Label();
             this.LabelDevice = new System.Windows.Forms.Label();
+            this.CheckBoxClientConnected = new System.Windows.Forms.CheckBox();
             this.TextBoxReceivedDate = new System.Windows.Forms.TextBox();
             this.LabelReceivedDate = new System.Windows.Forms.Label();
             this.ButtonMove = new System.Windows.Forms.Button();
             this.TextBoxTotalQuantity = new System.Windows.Forms.TextBox();
+            this.GroupBoxMultipleLocations = new System.Windows.Forms.GroupBox();
+            this.PanelMultipleLocations = new System.Windows.Forms.Panel();
+            this.ButtonLocationMoveNext = new System.Windows.Forms.Button();
+            this.ButtonLocationMoveLast = new System.Windows.Forms.Button();
+            this.ButtonLocationMoveFirst = new System.Windows.Forms.Button();
+            this.ButtonLocationMovePrevious = new System.Windows.Forms.Button();
+            this.LabelLocationLineOfLines = new System.Windows.Forms.Label();
             this.LabelTotalQty = new System.Windows.Forms.Label();
             this.ButtonNextInventoryLocation = new System.Windows.Forms.Button();
             this.ButtonPreviousInventoryLocation = new System.Windows.Forms.Button();
@@ -179,6 +182,7 @@ namespace Neutron.Forms
             this.TextBoxPickLoc5 = new System.Windows.Forms.TextBox();
             this.TextBoxPickLoc4 = new System.Windows.Forms.TextBox();
             this.TextBoxPickLoc3 = new System.Windows.Forms.TextBox();
+            this.LabelItem = new System.Windows.Forms.Label();
             this.TextBoxPickLoc2 = new System.Windows.Forms.TextBox();
             this.TextBoxPickLoc1 = new System.Windows.Forms.TextBox();
             this.LabelBack = new System.Windows.Forms.Label();
@@ -289,10 +293,10 @@ namespace Neutron.Forms
             this.PickList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridPickView)).BeginInit();
             this.PickScreen.SuspendLayout();
-            this.GroupBoxMultipleLocations.SuspendLayout();
-            this.PanelMultipleLocations.SuspendLayout();
             this.PanelPickNavigation.SuspendLayout();
             this.GroupBoxLocation.SuspendLayout();
+            this.GroupBoxMultipleLocations.SuspendLayout();
+            this.PanelMultipleLocations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemImage)).BeginInit();
             this.OrderDetails.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewOrderDetails)).BeginInit();
@@ -355,9 +359,9 @@ namespace Neutron.Forms
             this.Main.Controls.Add(this.MBMainNewOrder);
             this.Main.Controls.Add(this.MBMainOrderManager);
             this.Main.Controls.Add(this.MBMainAvailableOrders);
-            this.Main.Location = new System.Drawing.Point(4, 22);
+            this.Main.Location = new System.Drawing.Point(4, 25);
             this.Main.Name = "Main";
-            this.Main.Size = new System.Drawing.Size(1234, 676);
+            this.Main.Size = new System.Drawing.Size(1234, 673);
             this.Main.TabIndex = 8;
             this.Main.Text = "Main";
             this.Main.Enter += new System.EventHandler(this.Main_Enter);
@@ -489,11 +493,11 @@ namespace Neutron.Forms
             this.OrderListing.Controls.Add(this.DataGridView1);
             this.OrderListing.Controls.Add(this.MBDeleteOrder);
             this.OrderListing.Controls.Add(this.MBReturnToStock);
-            this.OrderListing.Location = new System.Drawing.Point(4, 22);
+            this.OrderListing.Location = new System.Drawing.Point(4, 25);
             this.OrderListing.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.OrderListing.Name = "OrderListing";
             this.OrderListing.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.OrderListing.Size = new System.Drawing.Size(1234, 676);
+            this.OrderListing.Size = new System.Drawing.Size(1234, 673);
             this.OrderListing.TabIndex = 0;
             this.OrderListing.Text = "Order Listing";
             // 
@@ -537,7 +541,7 @@ namespace Neutron.Forms
             "8"});
             this.ComboBoxAreaNumber.Location = new System.Drawing.Point(195, 6);
             this.ComboBoxAreaNumber.Name = "ComboBoxAreaNumber";
-            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(58, 32);
+            this.ComboBoxAreaNumber.Size = new System.Drawing.Size(58, 37);
             this.ComboBoxAreaNumber.TabIndex = 1;
             // 
             // MBPrintPick
@@ -703,7 +707,7 @@ namespace Neutron.Forms
             this.TextBoxFind.Location = new System.Drawing.Point(536, 10);
             this.TextBoxFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFind.Name = "TextBoxFind";
-            this.TextBoxFind.Size = new System.Drawing.Size(278, 38);
+            this.TextBoxFind.Size = new System.Drawing.Size(278, 46);
             this.TextBoxFind.TabIndex = 4;
             this.TextBoxFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
@@ -870,11 +874,11 @@ namespace Neutron.Forms
             this.AvailableOrders.Controls.Add(this.DataGridViewAvailableOrders);
             this.AvailableOrders.Controls.Add(this.MBGo);
             this.AvailableOrders.Controls.Add(this.MBAvailableOrdersBack);
-            this.AvailableOrders.Location = new System.Drawing.Point(4, 22);
+            this.AvailableOrders.Location = new System.Drawing.Point(4, 25);
             this.AvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.AvailableOrders.Name = "AvailableOrders";
             this.AvailableOrders.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.AvailableOrders.Size = new System.Drawing.Size(1234, 676);
+            this.AvailableOrders.Size = new System.Drawing.Size(1234, 673);
             this.AvailableOrders.TabIndex = 1;
             this.AvailableOrders.Text = "Available Orders";
             this.AvailableOrders.Enter += new System.EventHandler(this.AvailableOrders_Enter);
@@ -974,7 +978,7 @@ namespace Neutron.Forms
             this.TextBoxFindAvailableOrders.Location = new System.Drawing.Point(433, 10);
             this.TextBoxFindAvailableOrders.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFindAvailableOrders.Name = "TextBoxFindAvailableOrders";
-            this.TextBoxFindAvailableOrders.Size = new System.Drawing.Size(278, 29);
+            this.TextBoxFindAvailableOrders.Size = new System.Drawing.Size(278, 34);
             this.TextBoxFindAvailableOrders.TabIndex = 2;
             this.TextBoxFindAvailableOrders.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1093,11 +1097,11 @@ namespace Neutron.Forms
             this.PickList.Controls.Add(this.MBPrintPickList);
             this.PickList.Controls.Add(this.MBStart);
             this.PickList.Controls.Add(this.MBPickListBack);
-            this.PickList.Location = new System.Drawing.Point(4, 22);
+            this.PickList.Location = new System.Drawing.Point(4, 25);
             this.PickList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickList.Name = "PickList";
             this.PickList.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickList.Size = new System.Drawing.Size(1234, 676);
+            this.PickList.Size = new System.Drawing.Size(1234, 673);
             this.PickList.TabIndex = 3;
             this.PickList.Text = "Pick List";
             // 
@@ -1190,11 +1194,9 @@ namespace Neutron.Forms
             this.PickScreen.Controls.Add(this.TextCurrentTray3);
             this.PickScreen.Controls.Add(this.TextCurrentTray2);
             this.PickScreen.Controls.Add(this.TextCurrentTray1);
-            this.PickScreen.Controls.Add(this.CheckBoxClientConnected);
             this.PickScreen.Controls.Add(this.LabelPickMessages);
             this.PickScreen.Controls.Add(this.MBShortCut);
             this.PickScreen.Controls.Add(this.LabelNotify);
-            this.PickScreen.Controls.Add(this.GroupBoxMultipleLocations);
             this.PickScreen.Controls.Add(this.PanelPickNavigation);
             this.PickScreen.Controls.Add(this.PanelOrderPositions);
             this.PickScreen.Controls.Add(this.TextBoxPickedSoFar);
@@ -1207,7 +1209,6 @@ namespace Neutron.Forms
             this.PickScreen.Controls.Add(this.LabelPickUOI);
             this.PickScreen.Controls.Add(this.LabelUOI);
             this.PickScreen.Controls.Add(this.LabelPickItemNumber);
-            this.PickScreen.Controls.Add(this.LabelItem);
             this.PickScreen.Controls.Add(this.TextBoxPickSlot);
             this.PickScreen.Controls.Add(this.MBLocationCount);
             this.PickScreen.Controls.Add(this.MBResetCarousels);
@@ -1222,11 +1223,11 @@ namespace Neutron.Forms
             this.PickScreen.Controls.Add(this.MBPickNewItem);
             this.PickScreen.Controls.Add(this.MBPickBack);
             this.PickScreen.Controls.Add(this.PictureBoxItemImage);
-            this.PickScreen.Location = new System.Drawing.Point(4, 22);
+            this.PickScreen.Location = new System.Drawing.Point(4, 25);
             this.PickScreen.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.PickScreen.Name = "PickScreen";
             this.PickScreen.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.PickScreen.Size = new System.Drawing.Size(1234, 676);
+            this.PickScreen.Size = new System.Drawing.Size(1234, 673);
             this.PickScreen.TabIndex = 2;
             this.PickScreen.Text = "Pick Screen";
             // 
@@ -1257,18 +1258,6 @@ namespace Neutron.Forms
             this.TextCurrentTray1.TabIndex = 201;
             this.TextCurrentTray1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // CheckBoxClientConnected
-            // 
-            this.CheckBoxClientConnected.AutoSize = true;
-            this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CheckBoxClientConnected.Location = new System.Drawing.Point(7, 374);
-            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
-            this.CheckBoxClientConnected.Size = new System.Drawing.Size(158, 24);
-            this.CheckBoxClientConnected.TabIndex = 200;
-            this.CheckBoxClientConnected.Text = "Transmitter Ready";
-            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
-            this.CheckBoxClientConnected.Visible = false;
-            // 
             // LabelPickMessages
             // 
             this.LabelPickMessages.BackColor = System.Drawing.Color.AliceBlue;
@@ -1296,102 +1285,11 @@ namespace Neutron.Forms
             // 
             this.LabelNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelNotify.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
-            this.LabelNotify.Location = new System.Drawing.Point(648, 471);
+            this.LabelNotify.Location = new System.Drawing.Point(648, 468);
             this.LabelNotify.Name = "LabelNotify";
             this.LabelNotify.Size = new System.Drawing.Size(31, 16);
             this.LabelNotify.TabIndex = 196;
             this.LabelNotify.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // GroupBoxMultipleLocations
-            // 
-            this.GroupBoxMultipleLocations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GroupBoxMultipleLocations.Controls.Add(this.PanelMultipleLocations);
-            this.GroupBoxMultipleLocations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxMultipleLocations.Location = new System.Drawing.Point(169, 359);
-            this.GroupBoxMultipleLocations.Name = "GroupBoxMultipleLocations";
-            this.GroupBoxMultipleLocations.Size = new System.Drawing.Size(173, 48);
-            this.GroupBoxMultipleLocations.TabIndex = 195;
-            this.GroupBoxMultipleLocations.TabStop = false;
-            this.GroupBoxMultipleLocations.Text = "Multiple Locations";
-            this.GroupBoxMultipleLocations.Visible = false;
-            // 
-            // PanelMultipleLocations
-            // 
-            this.PanelMultipleLocations.BackColor = System.Drawing.Color.Transparent;
-            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveNext);
-            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveLast);
-            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveFirst);
-            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMovePrevious);
-            this.PanelMultipleLocations.Controls.Add(this.LabelLocationLineOfLines);
-            this.PanelMultipleLocations.Location = new System.Drawing.Point(8, 19);
-            this.PanelMultipleLocations.Name = "PanelMultipleLocations";
-            this.PanelMultipleLocations.Size = new System.Drawing.Size(158, 22);
-            this.PanelMultipleLocations.TabIndex = 196;
-            // 
-            // ButtonLocationMoveNext
-            // 
-            this.ButtonLocationMoveNext.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_177_forward;
-            this.ButtonLocationMoveNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ButtonLocationMoveNext.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonLocationMoveNext.Location = new System.Drawing.Point(116, 0);
-            this.ButtonLocationMoveNext.Name = "ButtonLocationMoveNext";
-            this.ButtonLocationMoveNext.Size = new System.Drawing.Size(16, 16);
-            this.ButtonLocationMoveNext.TabIndex = 123;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveNext, "Next Stop\r\nUse the Position Device Button if you need to move to the current loca" +
-        "tion\r\n");
-            this.ButtonLocationMoveNext.UseVisualStyleBackColor = true;
-            // 
-            // ButtonLocationMoveLast
-            // 
-            this.ButtonLocationMoveLast.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_178_fast_forward;
-            this.ButtonLocationMoveLast.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ButtonLocationMoveLast.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonLocationMoveLast.Location = new System.Drawing.Point(140, 0);
-            this.ButtonLocationMoveLast.Name = "ButtonLocationMoveLast";
-            this.ButtonLocationMoveLast.Size = new System.Drawing.Size(16, 16);
-            this.ButtonLocationMoveLast.TabIndex = 122;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveLast, "Last Stop\r\nUse the Position Device Button if you need to move to the current loca" +
-        "tion\r\n");
-            this.ButtonLocationMoveLast.UseVisualStyleBackColor = true;
-            // 
-            // ButtonLocationMoveFirst
-            // 
-            this.ButtonLocationMoveFirst.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_172_fast_backward;
-            this.ButtonLocationMoveFirst.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ButtonLocationMoveFirst.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonLocationMoveFirst.Location = new System.Drawing.Point(0, 0);
-            this.ButtonLocationMoveFirst.Name = "ButtonLocationMoveFirst";
-            this.ButtonLocationMoveFirst.Size = new System.Drawing.Size(16, 16);
-            this.ButtonLocationMoveFirst.TabIndex = 121;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveFirst, "First Stop\r\nUse the Position Device Button if you need to move to the current loc" +
-        "ation");
-            this.ButtonLocationMoveFirst.UseVisualStyleBackColor = true;
-            // 
-            // ButtonLocationMovePrevious
-            // 
-            this.ButtonLocationMovePrevious.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_173_rewind;
-            this.ButtonLocationMovePrevious.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ButtonLocationMovePrevious.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonLocationMovePrevious.Location = new System.Drawing.Point(24, 0);
-            this.ButtonLocationMovePrevious.Name = "ButtonLocationMovePrevious";
-            this.ButtonLocationMovePrevious.Size = new System.Drawing.Size(16, 16);
-            this.ButtonLocationMovePrevious.TabIndex = 120;
-            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMovePrevious, "Prev Stop\r\nUse the Position Device Button if you need to move to the current loca" +
-        "tion");
-            this.ButtonLocationMovePrevious.UseVisualStyleBackColor = true;
-            // 
-            // LabelLocationLineOfLines
-            // 
-            this.LabelLocationLineOfLines.BackColor = System.Drawing.SystemColors.Control;
-            this.LabelLocationLineOfLines.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.LabelLocationLineOfLines.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.LabelLocationLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationLineOfLines.Location = new System.Drawing.Point(48, 0);
-            this.LabelLocationLineOfLines.Name = "LabelLocationLineOfLines";
-            this.LabelLocationLineOfLines.Size = new System.Drawing.Size(60, 16);
-            this.LabelLocationLineOfLines.TabIndex = 119;
-            this.LabelLocationLineOfLines.Text = "1 of 4";
-            this.LabelLocationLineOfLines.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PanelPickNavigation
             // 
@@ -1487,10 +1385,10 @@ namespace Neutron.Forms
             // 
             this.TextBoxPickedSoFar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TextBoxPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(762, 552);
+            this.TextBoxPickedSoFar.Location = new System.Drawing.Point(819, 548);
             this.TextBoxPickedSoFar.Name = "TextBoxPickedSoFar";
             this.TextBoxPickedSoFar.ReadOnly = true;
-            this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 22);
+            this.TextBoxPickedSoFar.Size = new System.Drawing.Size(78, 26);
             this.TextBoxPickedSoFar.TabIndex = 107;
             this.TextBoxPickedSoFar.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1499,9 +1397,9 @@ namespace Neutron.Forms
             this.LabelPickedSoFar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelPickedSoFar.BackColor = System.Drawing.Color.Transparent;
             this.LabelPickedSoFar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickedSoFar.Location = new System.Drawing.Point(646, 553);
+            this.LabelPickedSoFar.Location = new System.Drawing.Point(662, 549);
             this.LabelPickedSoFar.Name = "LabelPickedSoFar";
-            this.LabelPickedSoFar.Size = new System.Drawing.Size(110, 20);
+            this.LabelPickedSoFar.Size = new System.Drawing.Size(140, 24);
             this.LabelPickedSoFar.TabIndex = 106;
             this.LabelPickedSoFar.Text = "Picked So Far";
             this.LabelPickedSoFar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1510,24 +1408,23 @@ namespace Neutron.Forms
             // 
             this.TextBoxRequestedQty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TextBoxRequestedQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxRequestedQty.Location = new System.Drawing.Point(762, 510);
+            this.TextBoxRequestedQty.Location = new System.Drawing.Point(819, 509);
             this.TextBoxRequestedQty.Name = "TextBoxRequestedQty";
             this.TextBoxRequestedQty.ReadOnly = true;
-            this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 22);
+            this.TextBoxRequestedQty.Size = new System.Drawing.Size(78, 26);
             this.TextBoxRequestedQty.TabIndex = 105;
             this.TextBoxRequestedQty.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelReqQty
             // 
             this.LabelReqQty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LabelReqQty.AutoSize = true;
             this.LabelReqQty.BackColor = System.Drawing.Color.Transparent;
             this.LabelReqQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelReqQty.Location = new System.Drawing.Point(693, 513);
+            this.LabelReqQty.Location = new System.Drawing.Point(679, 509);
             this.LabelReqQty.Name = "LabelReqQty";
-            this.LabelReqQty.Size = new System.Drawing.Size(63, 16);
+            this.LabelReqQty.Size = new System.Drawing.Size(123, 24);
             this.LabelReqQty.TabIndex = 104;
-            this.LabelReqQty.Text = "Req Qty";
+            this.LabelReqQty.Text = "Requested";
             this.LabelReqQty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // LabelPickDescription
@@ -1536,7 +1433,7 @@ namespace Neutron.Forms
             this.LabelPickDescription.BackColor = System.Drawing.Color.White;
             this.LabelPickDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickDescription.Location = new System.Drawing.Point(441, 415);
+            this.LabelPickDescription.Location = new System.Drawing.Point(441, 412);
             this.LabelPickDescription.Name = "LabelPickDescription";
             this.LabelPickDescription.Size = new System.Drawing.Size(777, 42);
             this.LabelPickDescription.TabIndex = 98;
@@ -1549,9 +1446,9 @@ namespace Neutron.Forms
             this.LabelPickQty.BackColor = System.Drawing.Color.White;
             this.LabelPickQty.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 48F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickQty.Location = new System.Drawing.Point(1031, 471);
+            this.LabelPickQty.Location = new System.Drawing.Point(1031, 468);
             this.LabelPickQty.Name = "LabelPickQty";
-            this.LabelPickQty.Size = new System.Drawing.Size(187, 119);
+            this.LabelPickQty.Size = new System.Drawing.Size(187, 107);
             this.LabelPickQty.TabIndex = 96;
             this.LabelPickQty.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1561,9 +1458,9 @@ namespace Neutron.Forms
             this.LabelQty.AutoSize = true;
             this.LabelQty.BackColor = System.Drawing.Color.Transparent;
             this.LabelQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelQty.Location = new System.Drawing.Point(956, 509);
+            this.LabelQty.Location = new System.Drawing.Point(940, 500);
             this.LabelQty.Name = "LabelQty";
-            this.LabelQty.Size = new System.Drawing.Size(69, 37);
+            this.LabelQty.Size = new System.Drawing.Size(85, 46);
             this.LabelQty.TabIndex = 95;
             this.LabelQty.Text = "Qty";
             this.LabelQty.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1574,7 +1471,7 @@ namespace Neutron.Forms
             this.LabelPickUOI.BackColor = System.Drawing.Color.White;
             this.LabelPickUOI.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickUOI.Location = new System.Drawing.Point(968, 365);
+            this.LabelPickUOI.Location = new System.Drawing.Point(968, 362);
             this.LabelPickUOI.Name = "LabelPickUOI";
             this.LabelPickUOI.Size = new System.Drawing.Size(250, 42);
             this.LabelPickUOI.TabIndex = 94;
@@ -1585,9 +1482,9 @@ namespace Neutron.Forms
             this.LabelUOI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.LabelUOI.AutoSize = true;
             this.LabelUOI.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelUOI.Location = new System.Drawing.Point(755, 368);
+            this.LabelUOI.Location = new System.Drawing.Point(755, 365);
             this.LabelUOI.Name = "LabelUOI";
-            this.LabelUOI.Size = new System.Drawing.Size(207, 37);
+            this.LabelUOI.Size = new System.Drawing.Size(254, 46);
             this.LabelUOI.TabIndex = 93;
             this.LabelUOI.Text = "Unit of Issue";
             this.LabelUOI.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1598,23 +1495,11 @@ namespace Neutron.Forms
             this.LabelPickItemNumber.BackColor = System.Drawing.Color.White;
             this.LabelPickItemNumber.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.LabelPickItemNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelPickItemNumber.Location = new System.Drawing.Point(441, 365);
+            this.LabelPickItemNumber.Location = new System.Drawing.Point(441, 362);
             this.LabelPickItemNumber.Name = "LabelPickItemNumber";
             this.LabelPickItemNumber.Size = new System.Drawing.Size(292, 42);
             this.LabelPickItemNumber.TabIndex = 94;
             this.LabelPickItemNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelItem
-            // 
-            this.LabelItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.LabelItem.AutoSize = true;
-            this.LabelItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelItem.Location = new System.Drawing.Point(348, 365);
-            this.LabelItem.Name = "LabelItem";
-            this.LabelItem.Size = new System.Drawing.Size(82, 37);
-            this.LabelItem.TabIndex = 93;
-            this.LabelItem.Text = "Item";
-            this.LabelItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // TextBoxPickSlot
             // 
@@ -1623,7 +1508,7 @@ namespace Neutron.Forms
             this.TextBoxPickSlot.Location = new System.Drawing.Point(283, 8);
             this.TextBoxPickSlot.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickSlot.Name = "TextBoxPickSlot";
-            this.TextBoxPickSlot.Size = new System.Drawing.Size(640, 116);
+            this.TextBoxPickSlot.Size = new System.Drawing.Size(640, 143);
             this.TextBoxPickSlot.TabIndex = 16;
             this.TextBoxPickSlot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxPickSlot.Click += new System.EventHandler(this.TextBoxPickSlot_Click);
@@ -1680,13 +1565,19 @@ namespace Neutron.Forms
             // 
             this.GroupBoxLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GroupBoxLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
+            this.GroupBoxLocation.Controls.Add(this.TextBoxExpirationDate);
+            this.GroupBoxLocation.Controls.Add(this.LabelExpirationDate);
+            this.GroupBoxLocation.Controls.Add(this.TextBoxLotNumber);
+            this.GroupBoxLocation.Controls.Add(this.LabelLotNumber);
             this.GroupBoxLocation.Controls.Add(this.LabelStaticRelease);
             this.GroupBoxLocation.Controls.Add(this.LabelPrimeBin);
             this.GroupBoxLocation.Controls.Add(this.LabelDevice);
+            this.GroupBoxLocation.Controls.Add(this.CheckBoxClientConnected);
             this.GroupBoxLocation.Controls.Add(this.TextBoxReceivedDate);
             this.GroupBoxLocation.Controls.Add(this.LabelReceivedDate);
             this.GroupBoxLocation.Controls.Add(this.ButtonMove);
             this.GroupBoxLocation.Controls.Add(this.TextBoxTotalQuantity);
+            this.GroupBoxLocation.Controls.Add(this.GroupBoxMultipleLocations);
             this.GroupBoxLocation.Controls.Add(this.LabelTotalQty);
             this.GroupBoxLocation.Controls.Add(this.ButtonNextInventoryLocation);
             this.GroupBoxLocation.Controls.Add(this.ButtonPreviousInventoryLocation);
@@ -1696,24 +1587,65 @@ namespace Neutron.Forms
             this.GroupBoxLocation.Controls.Add(this.TextBoxPickLoc5);
             this.GroupBoxLocation.Controls.Add(this.TextBoxPickLoc4);
             this.GroupBoxLocation.Controls.Add(this.TextBoxPickLoc3);
+            this.GroupBoxLocation.Controls.Add(this.LabelItem);
             this.GroupBoxLocation.Controls.Add(this.TextBoxPickLoc2);
             this.GroupBoxLocation.Controls.Add(this.TextBoxPickLoc1);
             this.GroupBoxLocation.Controls.Add(this.LabelBack);
             this.GroupBoxLocation.Controls.Add(this.LabelOver);
             this.GroupBoxLocation.Controls.Add(this.LabelTray);
             this.GroupBoxLocation.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GroupBoxLocation.Location = new System.Drawing.Point(7, 407);
+            this.GroupBoxLocation.Location = new System.Drawing.Point(7, 355);
             this.GroupBoxLocation.Name = "GroupBoxLocation";
-            this.GroupBoxLocation.Size = new System.Drawing.Size(409, 256);
+            this.GroupBoxLocation.Size = new System.Drawing.Size(409, 305);
             this.GroupBoxLocation.TabIndex = 4;
             this.GroupBoxLocation.TabStop = false;
             this.GroupBoxLocation.Text = "Locations";
+            // 
+            // TextBoxExpirationDate
+            // 
+            this.TextBoxExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxExpirationDate.Location = new System.Drawing.Point(196, 55);
+            this.TextBoxExpirationDate.Name = "TextBoxExpirationDate";
+            this.TextBoxExpirationDate.ReadOnly = true;
+            this.TextBoxExpirationDate.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxExpirationDate.TabIndex = 203;
+            this.TextBoxExpirationDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelExpirationDate
+            // 
+            this.LabelExpirationDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelExpirationDate.Location = new System.Drawing.Point(29, 60);
+            this.LabelExpirationDate.Name = "LabelExpirationDate";
+            this.LabelExpirationDate.Size = new System.Drawing.Size(146, 17);
+            this.LabelExpirationDate.TabIndex = 202;
+            this.LabelExpirationDate.Text = "Expiration Date";
+            this.LabelExpirationDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // TextBoxLotNumber
+            // 
+            this.TextBoxLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TextBoxLotNumber.Location = new System.Drawing.Point(196, 21);
+            this.TextBoxLotNumber.Name = "TextBoxLotNumber";
+            this.TextBoxLotNumber.ReadOnly = true;
+            this.TextBoxLotNumber.Size = new System.Drawing.Size(182, 26);
+            this.TextBoxLotNumber.TabIndex = 204;
+            this.TextBoxLotNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // LabelLotNumber
+            // 
+            this.LabelLotNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLotNumber.Location = new System.Drawing.Point(29, 26);
+            this.LabelLotNumber.Name = "LabelLotNumber";
+            this.LabelLotNumber.Size = new System.Drawing.Size(146, 17);
+            this.LabelLotNumber.TabIndex = 201;
+            this.LabelLotNumber.Text = "Lot Number";
+            this.LabelLotNumber.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // LabelStaticRelease
             // 
             this.LabelStaticRelease.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelStaticRelease.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelStaticRelease.Location = new System.Drawing.Point(248, 11);
+            this.LabelStaticRelease.Location = new System.Drawing.Point(254, 83);
             this.LabelStaticRelease.Name = "LabelStaticRelease";
             this.LabelStaticRelease.Size = new System.Drawing.Size(137, 18);
             this.LabelStaticRelease.TabIndex = 74;
@@ -1724,7 +1656,7 @@ namespace Neutron.Forms
             // 
             this.LabelPrimeBin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelPrimeBin.ForeColor = System.Drawing.Color.Yellow;
-            this.LabelPrimeBin.Location = new System.Drawing.Point(104, 11);
+            this.LabelPrimeBin.Location = new System.Drawing.Point(110, 83);
             this.LabelPrimeBin.Name = "LabelPrimeBin";
             this.LabelPrimeBin.Size = new System.Drawing.Size(101, 18);
             this.LabelPrimeBin.TabIndex = 74;
@@ -1735,39 +1667,52 @@ namespace Neutron.Forms
             // LabelDevice
             // 
             this.LabelDevice.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelDevice.Location = new System.Drawing.Point(23, 31);
+            this.LabelDevice.Location = new System.Drawing.Point(29, 103);
             this.LabelDevice.Name = "LabelDevice";
             this.LabelDevice.Size = new System.Drawing.Size(75, 22);
             this.LabelDevice.TabIndex = 71;
             this.LabelDevice.Text = "Device";
             this.LabelDevice.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // CheckBoxClientConnected
+            // 
+            this.CheckBoxClientConnected.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CheckBoxClientConnected.Location = new System.Drawing.Point(29, 247);
+            this.CheckBoxClientConnected.Name = "CheckBoxClientConnected";
+            this.CheckBoxClientConnected.Size = new System.Drawing.Size(12, 12);
+            this.CheckBoxClientConnected.TabIndex = 200;
+            this.CheckBoxClientConnected.Text = "Transmitter Ready";
+            this.CheckBoxClientConnected.UseVisualStyleBackColor = true;
+            this.CheckBoxClientConnected.Visible = false;
+            // 
             // TextBoxReceivedDate
             // 
             this.TextBoxReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxReceivedDate.Location = new System.Drawing.Point(177, 133);
+            this.TextBoxReceivedDate.Location = new System.Drawing.Point(18, 233);
             this.TextBoxReceivedDate.Name = "TextBoxReceivedDate";
             this.TextBoxReceivedDate.ReadOnly = true;
-            this.TextBoxReceivedDate.Size = new System.Drawing.Size(132, 23);
+            this.TextBoxReceivedDate.Size = new System.Drawing.Size(12, 26);
             this.TextBoxReceivedDate.TabIndex = 70;
             this.TextBoxReceivedDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TextBoxReceivedDate.Visible = false;
             // 
             // LabelReceivedDate
             // 
             this.LabelReceivedDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelReceivedDate.Location = new System.Drawing.Point(45, 135);
+            this.LabelReceivedDate.Location = new System.Drawing.Point(18, 222);
             this.LabelReceivedDate.Name = "LabelReceivedDate";
-            this.LabelReceivedDate.Size = new System.Drawing.Size(126, 17);
+            this.LabelReceivedDate.Size = new System.Drawing.Size(12, 12);
             this.LabelReceivedDate.TabIndex = 69;
             this.LabelReceivedDate.Text = "Received Date";
             this.LabelReceivedDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelReceivedDate.Visible = false;
             // 
             // ButtonMove
             // 
             this.ButtonMove.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_182_download_alt;
             this.ButtonMove.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonMove.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonMove.Location = new System.Drawing.Point(283, 198);
+            this.ButtonMove.Location = new System.Drawing.Point(300, 248);
             this.ButtonMove.Name = "ButtonMove";
             this.ButtonMove.Size = new System.Drawing.Size(78, 51);
             this.ButtonMove.TabIndex = 0;
@@ -1778,17 +1723,108 @@ namespace Neutron.Forms
             // TextBoxTotalQuantity
             // 
             this.TextBoxTotalQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxTotalQuantity.Location = new System.Drawing.Point(283, 166);
+            this.TextBoxTotalQuantity.Location = new System.Drawing.Point(300, 215);
             this.TextBoxTotalQuantity.Name = "TextBoxTotalQuantity";
             this.TextBoxTotalQuantity.ReadOnly = true;
-            this.TextBoxTotalQuantity.Size = new System.Drawing.Size(78, 23);
+            this.TextBoxTotalQuantity.Size = new System.Drawing.Size(78, 26);
             this.TextBoxTotalQuantity.TabIndex = 67;
             this.TextBoxTotalQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // GroupBoxMultipleLocations
+            // 
+            this.GroupBoxMultipleLocations.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.GroupBoxMultipleLocations.Controls.Add(this.PanelMultipleLocations);
+            this.GroupBoxMultipleLocations.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GroupBoxMultipleLocations.Location = new System.Drawing.Point(29, 272);
+            this.GroupBoxMultipleLocations.Name = "GroupBoxMultipleLocations";
+            this.GroupBoxMultipleLocations.Size = new System.Drawing.Size(12, 12);
+            this.GroupBoxMultipleLocations.TabIndex = 195;
+            this.GroupBoxMultipleLocations.TabStop = false;
+            this.GroupBoxMultipleLocations.Text = "Multiple Locations";
+            this.GroupBoxMultipleLocations.Visible = false;
+            // 
+            // PanelMultipleLocations
+            // 
+            this.PanelMultipleLocations.BackColor = System.Drawing.Color.Transparent;
+            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveNext);
+            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveLast);
+            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMoveFirst);
+            this.PanelMultipleLocations.Controls.Add(this.ButtonLocationMovePrevious);
+            this.PanelMultipleLocations.Controls.Add(this.LabelLocationLineOfLines);
+            this.PanelMultipleLocations.Location = new System.Drawing.Point(8, 19);
+            this.PanelMultipleLocations.Name = "PanelMultipleLocations";
+            this.PanelMultipleLocations.Size = new System.Drawing.Size(158, 22);
+            this.PanelMultipleLocations.TabIndex = 196;
+            // 
+            // ButtonLocationMoveNext
+            // 
+            this.ButtonLocationMoveNext.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_177_forward;
+            this.ButtonLocationMoveNext.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ButtonLocationMoveNext.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ButtonLocationMoveNext.Location = new System.Drawing.Point(116, 0);
+            this.ButtonLocationMoveNext.Name = "ButtonLocationMoveNext";
+            this.ButtonLocationMoveNext.Size = new System.Drawing.Size(16, 16);
+            this.ButtonLocationMoveNext.TabIndex = 123;
+            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveNext, "Next Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion\r\n");
+            this.ButtonLocationMoveNext.UseVisualStyleBackColor = true;
+            // 
+            // ButtonLocationMoveLast
+            // 
+            this.ButtonLocationMoveLast.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_178_fast_forward;
+            this.ButtonLocationMoveLast.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ButtonLocationMoveLast.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ButtonLocationMoveLast.Location = new System.Drawing.Point(140, 0);
+            this.ButtonLocationMoveLast.Name = "ButtonLocationMoveLast";
+            this.ButtonLocationMoveLast.Size = new System.Drawing.Size(16, 16);
+            this.ButtonLocationMoveLast.TabIndex = 122;
+            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveLast, "Last Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion\r\n");
+            this.ButtonLocationMoveLast.UseVisualStyleBackColor = true;
+            // 
+            // ButtonLocationMoveFirst
+            // 
+            this.ButtonLocationMoveFirst.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_172_fast_backward;
+            this.ButtonLocationMoveFirst.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ButtonLocationMoveFirst.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ButtonLocationMoveFirst.Location = new System.Drawing.Point(0, 0);
+            this.ButtonLocationMoveFirst.Name = "ButtonLocationMoveFirst";
+            this.ButtonLocationMoveFirst.Size = new System.Drawing.Size(16, 16);
+            this.ButtonLocationMoveFirst.TabIndex = 121;
+            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMoveFirst, "First Stop\r\nUse the Position Device Button if you need to move to the current loc" +
+        "ation");
+            this.ButtonLocationMoveFirst.UseVisualStyleBackColor = true;
+            // 
+            // ButtonLocationMovePrevious
+            // 
+            this.ButtonLocationMovePrevious.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_173_rewind;
+            this.ButtonLocationMovePrevious.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ButtonLocationMovePrevious.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ButtonLocationMovePrevious.Location = new System.Drawing.Point(24, 0);
+            this.ButtonLocationMovePrevious.Name = "ButtonLocationMovePrevious";
+            this.ButtonLocationMovePrevious.Size = new System.Drawing.Size(16, 16);
+            this.ButtonLocationMovePrevious.TabIndex = 120;
+            this.ToolTipPickScreen.SetToolTip(this.ButtonLocationMovePrevious, "Prev Stop\r\nUse the Position Device Button if you need to move to the current loca" +
+        "tion");
+            this.ButtonLocationMovePrevious.UseVisualStyleBackColor = true;
+            // 
+            // LabelLocationLineOfLines
+            // 
+            this.LabelLocationLineOfLines.BackColor = System.Drawing.SystemColors.Control;
+            this.LabelLocationLineOfLines.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.LabelLocationLineOfLines.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.LabelLocationLineOfLines.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelLocationLineOfLines.Location = new System.Drawing.Point(48, 0);
+            this.LabelLocationLineOfLines.Name = "LabelLocationLineOfLines";
+            this.LabelLocationLineOfLines.Size = new System.Drawing.Size(60, 16);
+            this.LabelLocationLineOfLines.TabIndex = 119;
+            this.LabelLocationLineOfLines.Text = "1 of 4";
+            this.LabelLocationLineOfLines.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelTotalQty
             // 
             this.LabelTotalQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTotalQty.Location = new System.Drawing.Point(190, 169);
+            this.LabelTotalQty.Location = new System.Drawing.Point(211, 220);
             this.LabelTotalQty.Name = "LabelTotalQty";
             this.LabelTotalQty.Size = new System.Drawing.Size(71, 16);
             this.LabelTotalQty.TabIndex = 66;
@@ -1800,7 +1836,7 @@ namespace Neutron.Forms
             this.ButtonNextInventoryLocation.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_224_chevron_right;
             this.ButtonNextInventoryLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonNextInventoryLocation.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonNextInventoryLocation.Location = new System.Drawing.Point(212, 205);
+            this.ButtonNextInventoryLocation.Location = new System.Drawing.Point(218, 254);
             this.ButtonNextInventoryLocation.Name = "ButtonNextInventoryLocation";
             this.ButtonNextInventoryLocation.Size = new System.Drawing.Size(28, 36);
             this.ButtonNextInventoryLocation.TabIndex = 46;
@@ -1814,7 +1850,7 @@ namespace Neutron.Forms
             this.ButtonPreviousInventoryLocation.BackgroundImage = global::Neutron.Properties.Resources.glyphicons_225_chevron_left;
             this.ButtonPreviousInventoryLocation.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ButtonPreviousInventoryLocation.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.ButtonPreviousInventoryLocation.Location = new System.Drawing.Point(62, 205);
+            this.ButtonPreviousInventoryLocation.Location = new System.Drawing.Point(68, 254);
             this.ButtonPreviousInventoryLocation.Name = "ButtonPreviousInventoryLocation";
             this.ButtonPreviousInventoryLocation.Size = new System.Drawing.Size(28, 36);
             this.ButtonPreviousInventoryLocation.TabIndex = 46;
@@ -1827,7 +1863,7 @@ namespace Neutron.Forms
             // 
             this.LabelLocationNumber.BackColor = System.Drawing.Color.White;
             this.LabelLocationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationNumber.Location = new System.Drawing.Point(100, 211);
+            this.LabelLocationNumber.Location = new System.Drawing.Point(106, 260);
             this.LabelLocationNumber.Name = "LabelLocationNumber";
             this.LabelLocationNumber.Size = new System.Drawing.Size(100, 24);
             this.LabelLocationNumber.TabIndex = 45;
@@ -1837,17 +1873,17 @@ namespace Neutron.Forms
             // TextBoxLocationQuantity
             // 
             this.TextBoxLocationQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxLocationQuantity.Location = new System.Drawing.Point(101, 166);
+            this.TextBoxLocationQuantity.Location = new System.Drawing.Point(107, 215);
             this.TextBoxLocationQuantity.Name = "TextBoxLocationQuantity";
             this.TextBoxLocationQuantity.ReadOnly = true;
-            this.TextBoxLocationQuantity.Size = new System.Drawing.Size(78, 23);
+            this.TextBoxLocationQuantity.Size = new System.Drawing.Size(78, 26);
             this.TextBoxLocationQuantity.TabIndex = 44;
             this.TextBoxLocationQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // LabelLocationQty
             // 
             this.LabelLocationQty.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelLocationQty.Location = new System.Drawing.Point(30, 169);
+            this.LabelLocationQty.Location = new System.Drawing.Point(36, 218);
             this.LabelLocationQty.Name = "LabelLocationQty";
             this.LabelLocationQty.Size = new System.Drawing.Size(60, 16);
             this.LabelLocationQty.TabIndex = 43;
@@ -1859,11 +1895,11 @@ namespace Neutron.Forms
             this.TextBoxPickLoc5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.TextBoxPickLoc5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBoxPickLoc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc5.Location = new System.Drawing.Point(315, 138);
+            this.TextBoxPickLoc5.Location = new System.Drawing.Point(29, 215);
             this.TextBoxPickLoc5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc5.Name = "TextBoxPickLoc5";
             this.TextBoxPickLoc5.ReadOnly = true;
-            this.TextBoxPickLoc5.Size = new System.Drawing.Size(70, 13);
+            this.TextBoxPickLoc5.Size = new System.Drawing.Size(10, 16);
             this.TextBoxPickLoc5.TabIndex = 24;
             this.TextBoxPickLoc5.TabStop = false;
             this.TextBoxPickLoc5.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1872,10 +1908,10 @@ namespace Neutron.Forms
             // TextBoxPickLoc4
             // 
             this.TextBoxPickLoc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc4.Location = new System.Drawing.Point(305, 57);
+            this.TextBoxPickLoc4.Location = new System.Drawing.Point(311, 129);
             this.TextBoxPickLoc4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc4.Name = "TextBoxPickLoc4";
-            this.TextBoxPickLoc4.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxPickLoc4.Size = new System.Drawing.Size(67, 75);
             this.TextBoxPickLoc4.TabIndex = 22;
             this.TextBoxPickLoc4.TabStop = false;
             this.TextBoxPickLoc4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1883,21 +1919,33 @@ namespace Neutron.Forms
             // TextBoxPickLoc3
             // 
             this.TextBoxPickLoc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc3.Location = new System.Drawing.Point(214, 57);
+            this.TextBoxPickLoc3.Location = new System.Drawing.Point(220, 129);
             this.TextBoxPickLoc3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc3.Name = "TextBoxPickLoc3";
-            this.TextBoxPickLoc3.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxPickLoc3.Size = new System.Drawing.Size(67, 75);
             this.TextBoxPickLoc3.TabIndex = 21;
             this.TextBoxPickLoc3.TabStop = false;
             this.TextBoxPickLoc3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // LabelItem
+            // 
+            this.LabelItem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.LabelItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LabelItem.Location = new System.Drawing.Point(29, 267);
+            this.LabelItem.Name = "LabelItem";
+            this.LabelItem.Size = new System.Drawing.Size(12, 12);
+            this.LabelItem.TabIndex = 93;
+            this.LabelItem.Text = "Item";
+            this.LabelItem.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LabelItem.Visible = false;
+            // 
             // TextBoxPickLoc2
             // 
             this.TextBoxPickLoc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc2.Location = new System.Drawing.Point(108, 57);
+            this.TextBoxPickLoc2.Location = new System.Drawing.Point(114, 129);
             this.TextBoxPickLoc2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc2.Name = "TextBoxPickLoc2";
-            this.TextBoxPickLoc2.Size = new System.Drawing.Size(88, 62);
+            this.TextBoxPickLoc2.Size = new System.Drawing.Size(88, 75);
             this.TextBoxPickLoc2.TabIndex = 18;
             this.TextBoxPickLoc2.TabStop = false;
             this.TextBoxPickLoc2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1906,10 +1954,10 @@ namespace Neutron.Forms
             // 
             this.TextBoxPickLoc1.BackColor = System.Drawing.SystemColors.Control;
             this.TextBoxPickLoc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextBoxPickLoc1.Location = new System.Drawing.Point(23, 57);
+            this.TextBoxPickLoc1.Location = new System.Drawing.Point(29, 129);
             this.TextBoxPickLoc1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxPickLoc1.Name = "TextBoxPickLoc1";
-            this.TextBoxPickLoc1.Size = new System.Drawing.Size(67, 62);
+            this.TextBoxPickLoc1.Size = new System.Drawing.Size(67, 75);
             this.TextBoxPickLoc1.TabIndex = 16;
             this.TextBoxPickLoc1.TabStop = false;
             this.TextBoxPickLoc1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1917,7 +1965,7 @@ namespace Neutron.Forms
             // LabelBack
             // 
             this.LabelBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelBack.Location = new System.Drawing.Point(302, 31);
+            this.LabelBack.Location = new System.Drawing.Point(308, 103);
             this.LabelBack.Name = "LabelBack";
             this.LabelBack.Size = new System.Drawing.Size(75, 22);
             this.LabelBack.TabIndex = 12;
@@ -1927,7 +1975,7 @@ namespace Neutron.Forms
             // LabelOver
             // 
             this.LabelOver.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelOver.Location = new System.Drawing.Point(209, 31);
+            this.LabelOver.Location = new System.Drawing.Point(215, 103);
             this.LabelOver.Name = "LabelOver";
             this.LabelOver.Size = new System.Drawing.Size(75, 22);
             this.LabelOver.TabIndex = 11;
@@ -1937,7 +1985,7 @@ namespace Neutron.Forms
             // LabelTray
             // 
             this.LabelTray.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LabelTray.Location = new System.Drawing.Point(116, 31);
+            this.LabelTray.Location = new System.Drawing.Point(122, 103);
             this.LabelTray.Name = "LabelTray";
             this.LabelTray.Size = new System.Drawing.Size(75, 22);
             this.LabelTray.TabIndex = 10;
@@ -1949,10 +1997,10 @@ namespace Neutron.Forms
             this.MBPickChangeQuantity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBPickChangeQuantity.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.MBPickChangeQuantity.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickChangeQuantity.Location = new System.Drawing.Point(689, 594);
+            this.MBPickChangeQuantity.Location = new System.Drawing.Point(689, 591);
             this.MBPickChangeQuantity.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickChangeQuantity.Name = "MBPickChangeQuantity";
-            this.MBPickChangeQuantity.Size = new System.Drawing.Size(150, 76);
+            this.MBPickChangeQuantity.Size = new System.Drawing.Size(150, 71);
             this.MBPickChangeQuantity.TabIndex = 0;
             this.MBPickChangeQuantity.Text = "Change &Quantity";
             this.MBPickChangeQuantity.UseSelectable = true;
@@ -1962,7 +2010,7 @@ namespace Neutron.Forms
             // 
             this.MBShortPick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBShortPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBShortPick.Location = new System.Drawing.Point(851, 638);
+            this.MBShortPick.Location = new System.Drawing.Point(851, 630);
             this.MBShortPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBShortPick.Name = "MBShortPick";
             this.MBShortPick.Size = new System.Drawing.Size(150, 32);
@@ -1975,7 +2023,7 @@ namespace Neutron.Forms
             // 
             this.MBSkipPick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBSkipPick.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBSkipPick.Location = new System.Drawing.Point(851, 594);
+            this.MBSkipPick.Location = new System.Drawing.Point(851, 591);
             this.MBSkipPick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBSkipPick.Name = "MBSkipPick";
             this.MBSkipPick.Size = new System.Drawing.Size(150, 32);
@@ -1988,7 +2036,7 @@ namespace Neutron.Forms
             // 
             this.MBPickAccept.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MBPickAccept.FontSize = MetroFramework.MetroButtonSize.Tall;
-            this.MBPickAccept.Location = new System.Drawing.Point(1031, 594);
+            this.MBPickAccept.Location = new System.Drawing.Point(1030, 586);
             this.MBPickAccept.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MBPickAccept.Name = "MBPickAccept";
             this.MBPickAccept.Size = new System.Drawing.Size(187, 76);
@@ -2042,7 +2090,7 @@ namespace Neutron.Forms
             // 
             this.PictureBoxItemImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.PictureBoxItemImage.InitialImage = ((System.Drawing.Image)(resources.GetObject("PictureBoxItemImage.InitialImage")));
-            this.PictureBoxItemImage.Location = new System.Drawing.Point(440, 476);
+            this.PictureBoxItemImage.Location = new System.Drawing.Point(441, 462);
             this.PictureBoxItemImage.Name = "PictureBoxItemImage";
             this.PictureBoxItemImage.Size = new System.Drawing.Size(200, 200);
             this.PictureBoxItemImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -2062,9 +2110,9 @@ namespace Neutron.Forms
             this.OrderDetails.Controls.Add(this.MBReturnToStockOrderDetail);
             this.OrderDetails.Controls.Add(this.DataGridViewOrderDetails);
             this.OrderDetails.Controls.Add(this.MBOrderDetailsBack);
-            this.OrderDetails.Location = new System.Drawing.Point(4, 22);
+            this.OrderDetails.Location = new System.Drawing.Point(4, 25);
             this.OrderDetails.Name = "OrderDetails";
-            this.OrderDetails.Size = new System.Drawing.Size(1234, 676);
+            this.OrderDetails.Size = new System.Drawing.Size(1234, 673);
             this.OrderDetails.TabIndex = 5;
             this.OrderDetails.Text = "Order Details";
             // 
@@ -2209,9 +2257,9 @@ namespace Neutron.Forms
             this.NewOrder.Controls.Add(this.GroupBoxOrderInformation);
             this.NewOrder.Controls.Add(this.MBNewOrderSave);
             this.NewOrder.Controls.Add(this.MBNewOrderClose);
-            this.NewOrder.Location = new System.Drawing.Point(4, 22);
+            this.NewOrder.Location = new System.Drawing.Point(4, 25);
             this.NewOrder.Name = "NewOrder";
-            this.NewOrder.Size = new System.Drawing.Size(1234, 676);
+            this.NewOrder.Size = new System.Drawing.Size(1234, 673);
             this.NewOrder.TabIndex = 6;
             this.NewOrder.Text = "New Order";
             // 
@@ -2256,7 +2304,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderFind.Location = new System.Drawing.Point(7, 52);
             this.TextBoxNewOrderFind.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxNewOrderFind.Name = "TextBoxNewOrderFind";
-            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(463, 37);
+            this.TextBoxNewOrderFind.Size = new System.Drawing.Size(463, 45);
             this.TextBoxNewOrderFind.TabIndex = 0;
             this.TextBoxNewOrderFind.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewOrderFind.TextChanged += new System.EventHandler(this.TextBoxNewOrderQuantity_TextChanged);
@@ -2366,7 +2414,7 @@ namespace Neutron.Forms
             this.LabelNewOrderStationNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelNewOrderStationNumber.Location = new System.Drawing.Point(528, 65);
             this.LabelNewOrderStationNumber.Name = "LabelNewOrderStationNumber";
-            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(102, 17);
+            this.LabelNewOrderStationNumber.Size = new System.Drawing.Size(120, 20);
             this.LabelNewOrderStationNumber.TabIndex = 68;
             this.LabelNewOrderStationNumber.Text = "StationNumber";
             this.LabelNewOrderStationNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2378,7 +2426,7 @@ namespace Neutron.Forms
             this.LabelNewOrderItemId.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelNewOrderItemId.Location = new System.Drawing.Point(528, 45);
             this.LabelNewOrderItemId.Name = "LabelNewOrderItemId";
-            this.LabelNewOrderItemId.Size = new System.Drawing.Size(45, 17);
+            this.LabelNewOrderItemId.Size = new System.Drawing.Size(54, 20);
             this.LabelNewOrderItemId.TabIndex = 68;
             this.LabelNewOrderItemId.Text = "ItemId";
             this.LabelNewOrderItemId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -2412,7 +2460,7 @@ namespace Neutron.Forms
             this.ComboBoxCostCenter.FormattingEnabled = true;
             this.ComboBoxCostCenter.Location = new System.Drawing.Point(308, 103);
             this.ComboBoxCostCenter.Name = "ComboBoxCostCenter";
-            this.ComboBoxCostCenter.Size = new System.Drawing.Size(64, 28);
+            this.ComboBoxCostCenter.Size = new System.Drawing.Size(64, 33);
             this.ComboBoxCostCenter.TabIndex = 69;
             this.ComboBoxCostCenter.Visible = false;
             // 
@@ -2433,7 +2481,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderDescription.Location = new System.Drawing.Point(150, 65);
             this.TextBoxNewOrderDescription.Name = "TextBoxNewOrderDescription";
             this.TextBoxNewOrderDescription.ReadOnly = true;
-            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(302, 26);
+            this.TextBoxNewOrderDescription.Size = new System.Drawing.Size(302, 30);
             this.TextBoxNewOrderDescription.TabIndex = 66;
             // 
             // TextBoxNewOrderItem
@@ -2441,7 +2489,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderItem.Location = new System.Drawing.Point(150, 28);
             this.TextBoxNewOrderItem.Name = "TextBoxNewOrderItem";
             this.TextBoxNewOrderItem.ReadOnly = true;
-            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 26);
+            this.TextBoxNewOrderItem.Size = new System.Drawing.Size(200, 30);
             this.TextBoxNewOrderItem.TabIndex = 66;
             // 
             // ButtonAddDetail
@@ -2461,7 +2509,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderQuantity.Location = new System.Drawing.Point(150, 103);
             this.TextBoxNewOrderQuantity.Name = "TextBoxNewOrderQuantity";
-            this.TextBoxNewOrderQuantity.Size = new System.Drawing.Size(88, 26);
+            this.TextBoxNewOrderQuantity.Size = new System.Drawing.Size(88, 30);
             this.TextBoxNewOrderQuantity.TabIndex = 0;
             this.TextBoxNewOrderQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxNewOrderQuantity.TextChanged += new System.EventHandler(this.TextBoxNewOrderQuantity_TextChanged);
@@ -2518,7 +2566,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderPriority.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderPriority.Location = new System.Drawing.Point(150, 103);
             this.TextBoxNewOrderPriority.Name = "TextBoxNewOrderPriority";
-            this.TextBoxNewOrderPriority.Size = new System.Drawing.Size(88, 26);
+            this.TextBoxNewOrderPriority.Size = new System.Drawing.Size(88, 30);
             this.TextBoxNewOrderPriority.TabIndex = 2;
             this.TextBoxNewOrderPriority.Text = "99";
             this.TextBoxNewOrderPriority.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -2539,7 +2587,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderOrd2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderOrd2.Location = new System.Drawing.Point(150, 65);
             this.TextBoxNewOrderOrd2.Name = "TextBoxNewOrderOrd2";
-            this.TextBoxNewOrderOrd2.Size = new System.Drawing.Size(200, 26);
+            this.TextBoxNewOrderOrd2.Size = new System.Drawing.Size(200, 30);
             this.TextBoxNewOrderOrd2.TabIndex = 1;
             this.TextBoxNewOrderOrd2.TextChanged += new System.EventHandler(this.TextBoxNewOrderOrd2_TextChanged);
             // 
@@ -2558,7 +2606,7 @@ namespace Neutron.Forms
             this.TextBoxNewOrderOrd1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TextBoxNewOrderOrd1.Location = new System.Drawing.Point(150, 28);
             this.TextBoxNewOrderOrd1.Name = "TextBoxNewOrderOrd1";
-            this.TextBoxNewOrderOrd1.Size = new System.Drawing.Size(200, 26);
+            this.TextBoxNewOrderOrd1.Size = new System.Drawing.Size(200, 30);
             this.TextBoxNewOrderOrd1.TabIndex = 0;
             this.TextBoxNewOrderOrd1.TextChanged += new System.EventHandler(this.TextBoxNewOrderOrd1_TextChanged);
             // 
@@ -2615,9 +2663,9 @@ namespace Neutron.Forms
             this.AvailableRack.Controls.Add(this.MBRackOrderComplete);
             this.AvailableRack.Controls.Add(this.MbPrintAvailableOrdersRack);
             this.AvailableRack.Controls.Add(this.MBRackBack);
-            this.AvailableRack.Location = new System.Drawing.Point(4, 22);
+            this.AvailableRack.Location = new System.Drawing.Point(4, 25);
             this.AvailableRack.Name = "AvailableRack";
-            this.AvailableRack.Size = new System.Drawing.Size(1234, 676);
+            this.AvailableRack.Size = new System.Drawing.Size(1234, 673);
             this.AvailableRack.TabIndex = 11;
             this.AvailableRack.Text = "Available Rack";
             // 
@@ -2718,7 +2766,7 @@ namespace Neutron.Forms
             this.TextBoxFindAvailableOrdersRack.Location = new System.Drawing.Point(298, 11);
             this.TextBoxFindAvailableOrdersRack.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextBoxFindAvailableOrdersRack.Name = "TextBoxFindAvailableOrdersRack";
-            this.TextBoxFindAvailableOrdersRack.Size = new System.Drawing.Size(344, 49);
+            this.TextBoxFindAvailableOrdersRack.Size = new System.Drawing.Size(344, 60);
             this.TextBoxFindAvailableOrdersRack.TabIndex = 2;
             this.TextBoxFindAvailableOrdersRack.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TextBoxFindAvailableOrdersRack.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindAvailableOrdersRack_KeyDown);
@@ -2831,10 +2879,10 @@ namespace Neutron.Forms
             this.AdjustOrder.Controls.Add(this.DataGridViewAdjust);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderSave);
             this.AdjustOrder.Controls.Add(this.MBAdjustOrderBack);
-            this.AdjustOrder.Location = new System.Drawing.Point(4, 22);
+            this.AdjustOrder.Location = new System.Drawing.Point(4, 25);
             this.AdjustOrder.Name = "AdjustOrder";
             this.AdjustOrder.Padding = new System.Windows.Forms.Padding(3);
-            this.AdjustOrder.Size = new System.Drawing.Size(1234, 676);
+            this.AdjustOrder.Size = new System.Drawing.Size(1234, 673);
             this.AdjustOrder.TabIndex = 12;
             this.AdjustOrder.Text = "Adjust Order";
             // 
@@ -2902,10 +2950,10 @@ namespace Neutron.Forms
             this.Skip.Controls.Add(this.MBInventorySkip);
             this.Skip.Controls.Add(this.MBPickComplete);
             this.Skip.Controls.Add(this.MBBackSkip);
-            this.Skip.Location = new System.Drawing.Point(4, 22);
+            this.Skip.Location = new System.Drawing.Point(4, 25);
             this.Skip.Name = "Skip";
             this.Skip.Padding = new System.Windows.Forms.Padding(3);
-            this.Skip.Size = new System.Drawing.Size(1234, 676);
+            this.Skip.Size = new System.Drawing.Size(1234, 673);
             this.Skip.TabIndex = 13;
             this.Skip.Text = "Skip";
             // 
@@ -3064,10 +3112,10 @@ namespace Neutron.Forms
             this.SkipInventory.Controls.Add(this.MBSkipInventoryPickComplete);
             this.SkipInventory.Controls.Add(this.DataGridViewSkipInventory);
             this.SkipInventory.Controls.Add(this.MBSkipInventoryBack);
-            this.SkipInventory.Location = new System.Drawing.Point(4, 22);
+            this.SkipInventory.Location = new System.Drawing.Point(4, 25);
             this.SkipInventory.Name = "SkipInventory";
             this.SkipInventory.Padding = new System.Windows.Forms.Padding(3);
-            this.SkipInventory.Size = new System.Drawing.Size(1234, 676);
+            this.SkipInventory.Size = new System.Drawing.Size(1234, 673);
             this.SkipInventory.TabIndex = 14;
             this.SkipInventory.Text = "Skip Inventory";
             // 
@@ -3087,7 +3135,7 @@ namespace Neutron.Forms
             this.LabelSkipInventoryPicked.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSkipInventoryPicked.Location = new System.Drawing.Point(799, 143);
             this.LabelSkipInventoryPicked.Name = "LabelSkipInventoryPicked";
-            this.LabelSkipInventoryPicked.Size = new System.Drawing.Size(112, 37);
+            this.LabelSkipInventoryPicked.Size = new System.Drawing.Size(141, 46);
             this.LabelSkipInventoryPicked.TabIndex = 64;
             this.LabelSkipInventoryPicked.Text = "Picked";
             // 
@@ -3107,7 +3155,7 @@ namespace Neutron.Forms
             this.LabelSkipInventoryRequired.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
             this.LabelSkipInventoryRequired.Location = new System.Drawing.Point(488, 143);
             this.LabelSkipInventoryRequired.Name = "LabelSkipInventoryRequired";
-            this.LabelSkipInventoryRequired.Size = new System.Drawing.Size(145, 37);
+            this.LabelSkipInventoryRequired.Size = new System.Drawing.Size(181, 46);
             this.LabelSkipInventoryRequired.TabIndex = 64;
             this.LabelSkipInventoryRequired.Text = "Required";
             // 
@@ -3126,7 +3174,7 @@ namespace Neutron.Forms
             this.LabelSkipInventoryItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LabelSkipInventoryItem.Location = new System.Drawing.Point(136, 143);
             this.LabelSkipInventoryItem.Name = "LabelSkipInventoryItem";
-            this.LabelSkipInventoryItem.Size = new System.Drawing.Size(78, 37);
+            this.LabelSkipInventoryItem.Size = new System.Drawing.Size(96, 46);
             this.LabelSkipInventoryItem.TabIndex = 62;
             this.LabelSkipInventoryItem.Text = "Item";
             // 
@@ -3308,11 +3356,11 @@ namespace Neutron.Forms
             ((System.ComponentModel.ISupportInitialize)(this.DataGridPickView)).EndInit();
             this.PickScreen.ResumeLayout(false);
             this.PickScreen.PerformLayout();
-            this.GroupBoxMultipleLocations.ResumeLayout(false);
-            this.PanelMultipleLocations.ResumeLayout(false);
             this.PanelPickNavigation.ResumeLayout(false);
             this.GroupBoxLocation.ResumeLayout(false);
             this.GroupBoxLocation.PerformLayout();
+            this.GroupBoxMultipleLocations.ResumeLayout(false);
+            this.PanelMultipleLocations.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.PictureBoxItemImage)).EndInit();
             this.OrderDetails.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DataGridViewOrderDetails)).EndInit();
@@ -3559,5 +3607,9 @@ namespace Neutron.Forms
         private System.Windows.Forms.Label TextCurrentTray3;
         private System.Windows.Forms.Label TextCurrentTray2;
         private System.Windows.Forms.Label TextCurrentTray1;
+        private System.Windows.Forms.TextBox TextBoxExpirationDate;
+        private System.Windows.Forms.Label LabelExpirationDate;
+        private System.Windows.Forms.TextBox TextBoxLotNumber;
+        private System.Windows.Forms.Label LabelLotNumber;
     }
 }

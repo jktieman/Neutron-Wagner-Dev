@@ -4,7 +4,7 @@ using NeutronData.Models;
 
 namespace NeutronData.SqlModelViews
 {
-    public class SqlInventoryView
+    public class SqlInventoryView : Expiration
     {
         public int Id { get; set; }
         public string Item { get; set; }

@@ -99,7 +99,7 @@ namespace Neutron.Controllers
             
             if (serialConfigurationId == null) return false;
 
-            var serialConfiguration = _repoSerial.FindByKey(serialConfigurationId);
+            var serialConfiguration = _repoSerial.FindByKey((int)serialConfigurationId);
             if (serialConfiguration == null) return false;
 
             Task.Run(() => _logger.LogDetailAsync($"Serial Address: {serialConfiguration.PortName} Baud Rate: {serialConfiguration.BaudRate.ToString()}"));

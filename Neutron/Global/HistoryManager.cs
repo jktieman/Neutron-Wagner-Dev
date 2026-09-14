@@ -1,23 +1,24 @@
-﻿using NeutronData.DataContexts;
+﻿using AlliedLogger;
+using AlliedPostOffice;
+using NeutronCore.Enums;
+using NeutronCore.Extensions;
+using NeutronData.DataContexts;
+using NeutronData.Interfaces;
 using NeutronData.Models;
+using NeutronData.ModelViews;
+using NeutronData.PrintModels;
 using NeutronData.Repositories;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using NeutronData.ModelViews;
-using NeutronCore.Enums;
 using System.Data.SqlClient;
-using System.Threading;
-using AlliedPostOffice;
-using NeutronCore.Extensions;
-using NeutronData.Interfaces;
-using NeutronData.PrintModels;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Neutron.Global
 {
@@ -35,12 +36,19 @@ namespace Neutron.Global
         private readonly IHistoryRepository _historyRepository;
         private BlockingCollection<History> _historyQueue;
         private static readonly object StreamLock = new object();
+        private IDynamicLogger _logger;
 
 
-        public HistoryManager(IInventoryRepository inventoryRepository, WorkstationView workstationView, Func<NeutronDb> contextFactory, IHistoryRepository historyRepository)
+
+        public HistoryManager(IInventoryRepository inventoryRepository
+            , WorkstationView workstationView
+            , Func<NeutronDb> contextFactory
+            , IHistoryRepository historyRepository
+            , IDynamicLogger logger)
         {
             _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
             _historyRepository = historyRepository;
+            _logger = logger;
             _historyQueue = new BlockingCollection<History>(new ConcurrentQueue<History>(), 1000);
             _inventoryRepository = inventoryRepository;
 
@@ -1164,19 +1172,32 @@ namespace Neutron.Global
             Save(history);
         }
 
-        private Task SaveAsync(History history)
+        private async Task SaveAsync(History history)
         {
+            if (history == null)
+            {
+                throw new ArgumentNullException(nameof(history), "History cannot be null.");
+            }
             try
             {
                 _historyQueue.Add(history);
-                Thread.Sleep(50);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error, unable to save history record. " + ex.Message);
+                await LogErrorAsync(ex);
             }
-
-            return Task.CompletedTask;
+        }
+        private async Task LogErrorAsync(Exception ex)
+        {
+            if (_logger != null)
+            {
+                await _logger.LogDetailAsync($"Error saving history record asynchronously. {ex.Message}");
+            }
+            else
+            {
+                // Fallback logging mechanism
+                Console.WriteLine($"Error: {ex.Message}\nStack Trace: {ex.StackTrace}");
+            }
         }
 
         private void Save(History history)
@@ -1184,7 +1205,6 @@ namespace Neutron.Global
             try
             {
                 _historyQueue.Add(history);
-                Thread.Sleep(50);
             }
             catch (Exception ex)
             {

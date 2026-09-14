@@ -33,5 +33,6 @@ namespace NeutronData.ModelViews
         public string SizeCodeName { get; set; }
         public string VelocityCodeName { get; set; }
         public string HeightCodeName { get; set; }
+        public bool  Expires { get; set; }
     }
 }
