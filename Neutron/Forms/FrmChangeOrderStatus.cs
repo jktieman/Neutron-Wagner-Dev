@@ -1,10 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using Neutron.Global;
+﻿using Neutron.Global;
 using NeutronCore.Enums;
 using NeutronData.DataContexts;
 using NeutronData.Models;
 using NeutronData.Repositories;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 using OrderStatus = NeutronData.Models.Lookups.OrderStatus;
 
 namespace Neutron.Forms
@@ -33,9 +34,9 @@ namespace Neutron.Forms
 
         private void SetupStatusComboBox()
         {
-            var statusTypes = _repoStatus.All();
-
-            ComboBoxStatus.DataSource = statusTypes;
+            var statusTypes = _repoStatus.All(null, null, null);
+            
+            ComboBoxStatus.DataSource = statusTypes.OrderBy(s => s.Name).ToList();
             ComboBoxStatus.DisplayMember = "Name";
             ComboBoxStatus.ValueMember = "Id";
         }
