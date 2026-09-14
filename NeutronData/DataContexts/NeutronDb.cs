@@ -15,8 +15,8 @@ namespace NeutronData.DataContexts
         public NeutronDb() : base("Neutron")
         {
             Database.SetInitializer(new NullDatabaseInitializer<NeutronDb>());
-            //this.Configuration.LazyLoadingEnabled = false;
-            //this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
 
         }
 
