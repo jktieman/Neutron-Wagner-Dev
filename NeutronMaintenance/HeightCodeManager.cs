@@ -26,7 +26,7 @@ namespace NeutronMaintenance
         /// <returns>HeightCode or First HeightCode in Table</returns>
         public HeightCode Get(string name)
         {
-            var rec = string.IsNullOrEmpty(name) ? null : _repoHeightCode.All().FirstOrDefault(r => r.Name == name);
+            var rec = string.IsNullOrEmpty(name) ? null : _repoHeightCode.All(r => r.Name == name).FirstOrDefault();
             if (rec != null) return rec;
             {
                 var seq = _repoHeightCode.All().Select(r => r.Sequence).Max();
@@ -44,7 +44,7 @@ namespace NeutronMaintenance
         /// <returns>HeightCode or null</returns>
         public HeightCode Get(int id)
         {
-            return _repoHeightCode.All().FirstOrDefault(r => r.Id == id);
+            return _repoHeightCode.All(r => r.Id == id).FirstOrDefault();
         }
     }
 }
