@@ -4,6 +4,7 @@ using NeutronData.Models;
 using NeutronData.ModelViews;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using AlliedLogger;
@@ -45,11 +46,17 @@ namespace NeutronData.Repositories
             WorkstationView workstationView = null;
 
             // Dictionary of Communication Types
-            var dicCommunicationTypes = _repoCommunicationTypes.All().ToDictionary(d => d.Id, d => d.Name);
+            //var dicCommunicationTypes = _repoCommunicationTypes.All().AsNoTracking().ToDictionary(d => d.Id, d => d.Name);
 
             try
             {
-                var workstation = _repoWorkstation.FindByKey(workstationId);
+               // var workstation = _repoWorkstation.FindByKey(workstationId);
+
+                var workstation = _repoWorkstation.FindByKeyInclude(
+                    r => r.Id == workstationId,
+                    r => r.Area,
+                    r => r.StationType);
+
 
                 if (workstation != null)
                 {
@@ -97,12 +104,15 @@ namespace NeutronData.Repositories
 
         public Workstation GetStation(int id)
         {
-            return _repoWorkstation.FindByKey(id);
+            return _repoWorkstation.FindByKeyInclude(
+                r => r.Id == id,
+                w => w.Area,
+                w => w.StationType);
         }
 
         public List<Workstation> Lookup()
         {
-            var stations = _repoWorkstation.All().ToList();
+            var stations = _repoWorkstation.AllInclude(null, w => w.Area, w => w.StationType).ToList();
             return stations;
         }
 
@@ -127,13 +137,33 @@ namespace NeutronData.Repositories
             return result;
         }
 
+        //public List<Workstation> GetPickStations()
+        //{
+
+        //    var result = new List<Workstation>();
+        //    var stations = _repoWorkstation.All().Where(r => r.StationType.Name == StationType.Carousel.ToString()
+        //                                                 || r.StationType.Name == StationType.RackTablet.ToString()
+        //                                                 || r.StationType.Name == StationType.Vertical.ToString())
+        //        .ToList();
+
+        //    if (stations.Count > 0)
+        //    {
+        //        result = stations;
+        //    }
+        //    return result;
+        //}
+
         public List<Workstation> GetPickStations()
         {
+            var pickableTypeIds = new[]
+            {
+                (int)StationType.Carousel,
+                (int)StationType.RackTablet,
+                (int)StationType.Vertical
+            };
 
             var result = new List<Workstation>();
-            var stations = _repoWorkstation.All().Where(r => r.StationType.Name == StationType.Carousel.ToString()
-                                                         || r.StationType.Name == StationType.RackTablet.ToString()
-                                                         || r.StationType.Name == StationType.Vertical.ToString())
+            var stations = _repoWorkstation.All(r => pickableTypeIds.Contains(r.StationTypeId))
                 .ToList();
 
             if (stations.Count > 0)
@@ -143,13 +173,35 @@ namespace NeutronData.Repositories
             return result;
         }
 
+        //public List<Workstation> GetAllPickStations()
+        //{
+
+        //    var result = new List<Workstation>();
+
+        //    //var stations = _repoWorkstation.AllInclude(r => r.StationType)
+        //    //    .Where(r => r.StationType.Name != StationType.Supervisor.ToString()).ToList();
+
+        //    var stations = _repoWorkstation.AllInclude(
+        //            r => r.StationType.Name != StationType.Supervisor, // Filtering logic moved here
+        //            r => r.StationType)                                           // Include related StationType entity
+        //        .ToList();
+
+
+        //    if (stations.Count > 0)
+        //    {
+        //        result = stations;
+        //    }
+        //    return result;
+        //}
         public List<Workstation> GetAllPickStations()
         {
+            var supervisorTypeId = (int)StationType.Supervisor;
 
             var result = new List<Workstation>();
-
-            var stations = _repoWorkstation.AllInclude(r => r.StationType)
-                .Where(r => r.StationType.Name != StationType.Supervisor.ToString()).ToList();
+            var stations = _repoWorkstation.AllInclude(
+                    r => r.StationTypeId != supervisorTypeId,
+                    r => r.StationType)
+                .ToList();
 
             if (stations.Count > 0)
             {
@@ -157,7 +209,6 @@ namespace NeutronData.Repositories
             }
             return result;
         }
-
         public int[] GetAllPickStationIds()
         {
             var result = GetAllPickStations().Select(r => r.Id).ToArray();
@@ -175,30 +226,55 @@ namespace NeutronData.Repositories
         public List<Workstation> GetMovablePickStations()
         {
             var deviceTypesThatMove = new[] { (int)StationType.Carousel,
-                (int)StationType.Vertical };  // 1-Carousel 2-Vertical
+                (int)StationType.Vertical };
+
             var result = new List<Workstation>();
+            var workstations = _repoWorkstation.AllInclude(null, w => w.HardwareDevices).OrderBy(o => o.Sequence).ToList();
 
-
-            foreach (var workstation in _repoWorkstation.All().OrderBy(o => o.Sequence))
+            foreach (var workstation in workstations)
             {
-                var devices = _repoHardwareDevices.All().Where(r => deviceTypesThatMove.Contains(r.DeviceTypeId) && r.WorkstationId == workstation.Id)
+                var devices = workstation.HardwareDevices
+                    .Where(r => deviceTypesThatMove.Contains(r.DeviceTypeId))
                     .ToList();
+
                 if (!devices.Any()) continue;
-                workstation.HardwareDevices.AddRange(devices);
                 result.Add(workstation);
             }
             return result;
+
+            //var deviceTypesThatMove = new[] { (int)StationType.Carousel,
+            //    (int)StationType.Vertical };  // 1-Carousel 2-Vertical
+            //var result = new List<Workstation>();
+
+
+            //foreach (var workstation in _repoWorkstation.All().OrderBy(o => o.Sequence))
+            //{
+            //    var devices = _repoHardwareDevices.All().Where(r => deviceTypesThatMove.Contains(r.DeviceTypeId) && r.WorkstationId == workstation.Id)
+            //        .ToList();
+            //    if (!devices.Any()) continue;
+            //    workstation.HardwareDevices.AddRange(devices);
+            //    result.Add(workstation);
+            //}
+            //return result;
         }
 
         public Workstation GetRackStation(int workstationId)
         {
-            return _repoWorkstation.FindByKey(workstationId);
+            return _repoWorkstation.FindByKeyInclude(
+                r => r.Id == workstationId,
+                w => w.Area,
+                w => w.StationType);
         }
 
         public WorkstationView GetRackStationView()
         {
-            var workstation = _repoWorkstation.All().FirstOrDefault(r => r.StationTypeId == (int)StationType.RackTablet);
+            var workstation = _repoWorkstation.AllInclude(
+                    r => r.StationTypeId == (int)StationType.RackTablet,
+                    w => w.StationType)
+                .FirstOrDefault();
+
             if (workstation == null) return new WorkstationView();
+
             var workstationView = new WorkstationView
             {
                 WorkstationId = workstation.Id,
