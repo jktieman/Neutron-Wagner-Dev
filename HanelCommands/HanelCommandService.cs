@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 
 namespace HanelCommands
@@ -19,7 +16,9 @@ namespace HanelCommands
        // private List<HanelCommand> _hanelCommands = new List<HanelCommand>();
         private List<HanelDeviceStatus> _currentHanelDeviceStatusList;
         private readonly IDynamicLogger _logger;
-        private readonly bool _testing;
+        #pragma warning disable CS0414
+                private readonly bool _testing;
+        #pragma warning restore CS0414
 
         public HanelCommandService(int numberOfDevices, List<HanelDeviceStatus> currentHanelDeviceStatusList)
         {
@@ -47,7 +46,7 @@ namespace HanelCommands
 
         public HanelDeviceStatus GetDeviceStatus(string deviceNumber)
         {
-            var num = int.Parse(deviceNumber);
+            if (!int.TryParse(deviceNumber, out var num)) return null;
             return _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == num);
         }
 
@@ -126,8 +125,6 @@ namespace HanelCommands
                         {
                             if (s.Length >= 3 && IsValidSubCommand(s[2]))
                             {
-                                var subCmd = s[2];
-
                                 switch (s[2])
                                 {
                                     case "E11":
@@ -272,7 +269,7 @@ namespace HanelCommands
 
         private bool IsValidResponse(IReadOnlyList<string> s)
         {
-            var result = s.Count >= 1;
+            var result = s.Count >= 2;
             return result;
         }
 
@@ -337,7 +334,8 @@ namespace HanelCommands
         public string GetResponse(byte[] dataIn)
         {
             IHanelResponse hanelCommand = GetHanelResponse(dataIn);
-            var l = int.Parse(hanelCommand.Lift);
+            if (hanelCommand == null) return string.Empty;
+            if (!int.TryParse(hanelCommand.Lift, out var l)) return string.Empty;
             var device = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == l);
             if (device != null)
             {
@@ -348,16 +346,7 @@ namespace HanelCommands
                         device.LastHanelCommand.Accepted = true;
                         return device.LastHanelCommand.CommandAccepted;
                     }
-                    //else
-                    //{
-                    //    device.LastHanelCommand.Accepted = true;
-                    //    return device.LastHanelCommand.CommandAccepted;
-                    //}
                 }
-
-
-
-
             }
 
             return string.Empty;
@@ -368,7 +357,7 @@ namespace HanelCommands
 
             try
             {
-                var l = int.Parse(command.Lift);
+                if (!int.TryParse(command.Lift, out var l)) return null;
                 var device = _currentHanelDeviceStatusList.FirstOrDefault(r => r.DeviceNumber == l);
                 if (device != null)
                 {
