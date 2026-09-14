@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System;
-using System.Runtime.InteropServices.ComTypes;
+﻿using System;
 
 namespace HanelCommands
 {
@@ -12,16 +10,18 @@ namespace HanelCommands
         private const string HostCommand = "P XS";
         private const int MinSegments = 3;
         private string[] _dataIn;
-        public string SubCommand = string.Empty;
+        public string SubCommand { get; set; } = string.Empty;
 
         public HanelResponseAccepted(string[] dataIn)
         {
+            Lift = string.Empty;
+            AccessPoint = string.Empty;
             if (dataIn.Length < MinSegments) return;
             _dataIn = dataIn;
+            var firstSegment = dataIn[0];
             SubCommand = dataIn[2];
-            Lift = dataIn[0].Substring(2, 2);
-            AccessPoint = dataIn[0].Substring(4, 1);
-
+            Lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            AccessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
         }
 
         public HanelResponseAccepted(string lift, string accessPoint)
@@ -35,13 +35,12 @@ namespace HanelCommands
 
         public void Response(string[] dataIn)
         {
-
             if (dataIn.Length < MinSegments) return;
             _dataIn = dataIn;
+            var firstSegment = dataIn[0];
             SubCommand = dataIn[2];
-            Lift = dataIn[0].Substring(2, 2);
-            AccessPoint = dataIn[0].Substring(4, 1);
-
+            Lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            AccessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
         }
 
         public bool IsSuccess()
