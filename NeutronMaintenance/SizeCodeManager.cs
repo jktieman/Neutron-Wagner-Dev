@@ -27,7 +27,7 @@ namespace NeutronMaintenance
         /// <returns>SizeCode or First SizeCode in Table</returns>
         public SizeCode Get(string name)
         {
-            var rec = string.IsNullOrEmpty(name) ? null : _repoSizeCode.All().FirstOrDefault(r => r.Name == name);
+            var rec = string.IsNullOrEmpty(name) ? null : _repoSizeCode.All(r => r.Name == name).FirstOrDefault();
             if (rec != null) return rec;
             {
                 var seq = _repoSizeCode.All().Select(r => r.Sequence).Max();
@@ -45,7 +45,7 @@ namespace NeutronMaintenance
         /// <returns>SizeCode or null</returns>
         public SizeCode Get(int id)
         {
-            return _repoSizeCode.All().FirstOrDefault(r => r.Id == id);
+            return _repoSizeCode.All(r => r.Id == id).FirstOrDefault();
         }
     }
 }
