@@ -322,7 +322,7 @@ namespace NeutronLoader
 
         private void RemoveOldOrders(List<HostOrder> hostOrderlist)
         {
-            var orders = _repoOrder.All().Where(r => r.OrderStatusId == 1).ToList();
+            var orders = _repoOrder.All(r => r.OrderStatusId == 1).ToList();
             if (orders.Count == 0) return;
             foreach (var rec in orders)
             {
@@ -335,7 +335,7 @@ namespace NeutronLoader
 
         private void DeleteDetailRecords(int id)
         {
-            var recs = _repoOrderDetail.All().Where(r => r.OrderId == id).ToList();
+            var recs = _repoOrderDetail.All(r => r.OrderId == id).ToList();
             foreach (var r in recs)
             {
                 _repoOrderDetail.Delete(r.Id);
