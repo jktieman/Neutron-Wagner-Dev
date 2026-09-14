@@ -38,7 +38,15 @@ namespace NeutronData.Repositories
         {
             List<InventoryView> projection;
 
-            IEnumerable<Inventory> task = _repo.All().ToList();
+            IEnumerable<Inventory> task = _repo.AllInclude(
+                null,
+                r => r.ItemDefinition,
+                r => r.Location,
+                r => r.Location.Area,
+                r => r.Location.SizeCode,
+                r => r.Location.VelocityCode,
+                r => r.Location.HeightCode,
+                r => r.StorageType).ToList();
 
             projection = task.Select(r => new InventoryView
             {
@@ -86,7 +94,15 @@ namespace NeutronData.Repositories
         {
             var inventoryView = new InventoryView();
 
-            Inventory r = _repo.FindByKey(id);
+            Inventory r = _repo.FindByKeyInclude(
+                inv => inv.Id == id,
+                inv => inv.ItemDefinition,
+                inv => inv.Location,
+                inv => inv.Location.Area,
+                inv => inv.Location.SizeCode,
+                inv => inv.Location.VelocityCode,
+                inv => inv.Location.HeightCode,
+                inv => inv.StorageType);
 
             if (r != null)
             {
@@ -181,9 +197,12 @@ namespace NeutronData.Repositories
         {
             var projection = new List<HotStoreListView>();
 
-            IEnumerable<Inventory> task = _repo.All().Where(d => d.ItemDefinition.Item.ToLower().Contains(s)
-                            || d.ItemDefinition.Description.ToLower().Contains(s)
-                            || d.Location.Slot.Contains(s)).ToList();
+            IEnumerable<Inventory> task = _repo.AllInclude(
+                d => d.ItemDefinition.Item.ToLower().Contains(s)
+                     || d.ItemDefinition.Description.ToLower().Contains(s)
+                     || d.Location.Slot.Contains(s),
+                inv => inv.ItemDefinition,
+                inv => inv.Location).ToList();
 
             if (task.Any())
             {
@@ -293,7 +312,9 @@ namespace NeutronData.Repositories
         {
             var slot = string.Empty;
             // Get a list of Inventory records that have this Item
-            var recs = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).ToList();
+            var recs = _repo.FindByInclude(
+                r => r.ItemDefinitionId == itemDefinitionId,
+                inv => inv.Location).ToList();
 
             if (recs.Count <= 0) return slot;
             // If there are records, find the first one that is a PrimeBin
@@ -322,8 +343,10 @@ namespace NeutronData.Repositories
         public int GetAreaNumber(int itemDefinitionId)
         {
             var areaNumber = 1;
-            var rec = _repo.FindBy(r => r.ItemDefinitionId == itemDefinitionId).FirstOrDefault();
-
+            var rec = _repo.FindByInclude(
+                r => r.ItemDefinitionId == itemDefinitionId,
+                inv => inv.Location,
+                inv => inv.Location.Area).FirstOrDefault();
             if (rec != null)
             {
                 areaNumber = rec.Location.Area.AreaNumber;
