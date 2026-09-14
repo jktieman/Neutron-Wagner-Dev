@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Resources;
@@ -41,7 +42,7 @@ namespace Neutron.Forms
             mtbPin.Focus();
         }
 
-        private void mButtonLogin_Click(object sender, EventArgs e)
+        private async void mButtonLogin_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(mtbPin.Text))
             {
@@ -57,8 +58,9 @@ namespace Neutron.Forms
                 {
                     using (var db = new SecureDb())
                     {
-                        CurrentUser = db.Users
-                            .FirstOrDefault(u => u.Username == mtbUsername.Text && u.Password == mtbPassword.Text);
+                        CurrentUser = await db.Users
+                            .Include("Language")
+                            .FirstOrDefaultAsync(u => u.Username == mtbUsername.Text && u.Password == mtbPassword.Text);
 
                         if (CurrentUser == null)
                         {
