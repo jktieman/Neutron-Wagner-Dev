@@ -49,7 +49,6 @@ namespace NeutronLoader
         private readonly NeutronLicense _neutronLicense;
         private readonly IJsonData _jsonData;
         private readonly WorkstationView _workstationView;
-        private Timer _timer;
         private bool _loadOrdersBusy;
         private readonly ISapService _sapService;
         private readonly IReplenRepository _replenRepository;
@@ -103,52 +102,7 @@ namespace NeutronLoader
             }
 
         }
-        /// <summary>
-        /// Asynchronously loads orders from the SAP service and updates the Neutron orders and Neutron Replen orders.
-        /// </summary>
-        /// <remarks>
-        /// This method first checks if the loading process is already busy. If it is, it logs a message and returns.
-        /// If not, it sets the loading process to busy and starts loading orders from the SAP service.
-        /// After loading, it updates the Neutron orders and Neutron Replen orders based on the loaded orders.
-        /// If any exceptions occur during this process, it logs the error message and sends an email with the error message.
-        /// Finally, it sets the loading process to not busy.
-        /// </remarks>
-        /// <returns>A Task representing the asynchronous operation.</returns>
-        //public async Task StartProcessingInterfaceFiles()
-        //{
-        //    try
-        //    {
-        //        if (_neutronVariables.LoaderDelay <= 0)
-        //        {
-        //            throw new ArgumentException("LoaderDelay must be greater than zero.");
-        //        }
-        //        _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
-        //        _timer.Elapsed += async (sender, e) =>
-        //        {
-        //            await _semaphore.WaitAsync();
-        //            try
-        //            {
-        //                Debug.WriteLine("Starting LoadOrders...");
-        //                await LoadOrders();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogDetailAsync($"Error in LoadOrders: {ex.Message}").SafeFireAndForget();
-        //            }
-        //            finally
-        //            {
-        //                _semaphore.Release();
-        //            }
-        //        };
-        //        Debug.WriteLine($"Timer started with interval: {_neutronVariables.LoaderDelay} seconds");
-        //        _timer.Start();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}").SafeFireAndForget();
-        //    }
-        //}
-
+        
         public async Task StartProcessingInterfaceFiles()
         {
             try
@@ -206,64 +160,7 @@ namespace NeutronLoader
             }
         }
 
-        //public async Task StartProcessingInterfaceFiles()
-        //{
-        //    try
-        //    {
-        //        if (_neutronVariables.LoaderDelay <= 0)
-        //        {
-        //            throw new ArgumentException("LoaderDelay must be greater than zero.");
-        //        }
-        //        _timer = new Timer(_neutronVariables.LoaderDelay * 1000);
-        //        _timer.Elapsed += async (sender, e) =>
-        //        {
-        //            // Stop timer to prevent overlap
-        //            _timer.Stop();
-
-        //            await _semaphore.WaitAsync();
-        //            try
-        //            {
-        //                Debug.WriteLine("Starting LoadOrders...");
-        //                await LoadOrders();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogDetailAsync($"Error in LoadOrders: {ex.Message}{Environment.NewLine}{ex.StackTrace}").SafeFireAndForget();
-        //            }
-        //            finally
-        //            {
-        //                _semaphore.Release();
-
-        //                // Add delay before restarting timer
-        //                try
-        //                {
-        //                    await Task.Delay(TimeSpan.FromSeconds(30));
-        //                }
-        //                catch (Exception delayEx)
-        //                {
-        //                    _logger.LogDetailAsync($"Error during delay: {delayEx.Message}").SafeFireAndForget();
-        //                }
-
-        //                // Restart timer if not disposed
-        //                try
-        //                {
-        //                    _timer?.Start();
-        //                }
-        //                catch (ObjectDisposedException)
-        //                {
-        //                    _logger.LogDetailAsync("Timer was disposed, stopping loader.").SafeFireAndForget();
-        //                }
-        //            }
-        //        };
-        //        Debug.WriteLine($"Timer started with interval: {_neutronVariables.LoaderDelay} seconds");
-        //        _timer.Start();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogDetailAsync($"Error Processing Interface File. {Environment.NewLine} {ex.Message}").SafeFireAndForget();
-        //    }
-        //}
-
+        
         /// <summary>
         /// Asynchronously loads and processes orders from the SAP service.
         /// </summary>
@@ -910,8 +807,6 @@ namespace NeutronLoader
         {
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
-            _timer?.Stop();
-            _timer?.Dispose();
             Debug.WriteLine($"Loader Disposed");
         }
 
