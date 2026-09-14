@@ -41,6 +41,7 @@ using NeutronEvents;
 using IPTI.Models;
 using NeutronCore.StaticClasses;
 using JetBrains.Annotations;
+using NeutronData.Models.Lookups;
 using RadioButton = System.Windows.Forms.RadioButton;
 using Timer = System.Windows.Forms.Timer;
 using NeutronData.UnitOfWorks;
@@ -108,9 +109,10 @@ namespace Neutron.Forms
         private HeaderTextManager _headerTextManager;
         private List<SqlInventoryView> _currentList;
         private bool _startup = true;
+        private bool _lookupsLoaded;
         private IIptiDisplayFunctions _iptiDisplayFunctions;
         private const int AreaEight = AreaNumber.Eight;
-
+        private ToolTip _toolTip;
         private Timer _clickTimer; // Timer to delay single-click action
         private const int DoubleClickTimeout = 300; // Timeout in milliseconds
         private bool _doubleClickDetected; // Flag to track double-clicks
@@ -149,8 +151,9 @@ namespace Neutron.Forms
             KeyPreview = true;
             CloseButtonPressed = false;
             Console.WriteLine($"4: {DateTime.Now}");
-
+            //Shown += async (sender, args) => await LoadLookupDataAsync();
             Init();
+
         }
 
 
@@ -170,52 +173,23 @@ namespace Neutron.Forms
         //    return frm;
         //}
 
-        private void Init()
+        private async void Init()
         {
-            //InitializeComponent();
-            //_cultureInfo = Thread.CurrentThread.CurrentCulture;
-            //SetCulture(_cultureInfo.Name);
-            //Console.WriteLine($"1: {DateTime.Now}");
-            //_jsonData = jsonData;
-            //Console.WriteLine($"2: {DateTime.Now}");
-            //_akaRepository = akaRepository;
-            //Console.WriteLine($"3: {DateTime.Now}");
-            //_lacProcessor = lacProcessor;
-            //Console.WriteLine($"4: {DateTime.Now}");
-            //_workstationRepository = workstationRepository;
-            //Console.WriteLine($"5: {DateTime.Now}");
-            //_workstationView = workstationView;
-            //Console.WriteLine($"6: {DateTime.Now}");
-            //_neutronVariables = neutronVariables;
-            //Console.WriteLine($"7: {DateTime.Now}");
-            //_areaRepository = areaRepository;
-            //Console.WriteLine($"8: {DateTime.Now}");
-            //_rfidManager = rfidManager;
-            //Console.WriteLine($"9: {DateTime.Now}");
-            //_locationsRepository = locationsRepository;
-            //Console.WriteLine($"10: {DateTime.Now}");
-            //_iptiDisplayFunctions = iptiDisplayFunctions;
-            //Console.WriteLine($"11: {DateTime.Now}");
-            //_inventoryUnitOfWork = inventoryUnitOfWork;
-            //Console.WriteLine($"12: {DateTime.Now}");
-            //KeyPreview = true;
-            //CloseButtonPressed = false;
-            //Console.WriteLine($"13: {DateTime.Now}");
-            //-------------------
             InitializeStationName();
             InitializeHeaderTextManager();
             ConfigureTabControl();
             ConfigureForms();
             ConfigureUserInfo();
             InitializeLogger();
-            _logger.LogDetailAsync("Logger Finished Initializing").SafeFireAndForget();
             InitializeInventoryRepository();
             ConfigureRfidControls();
-            ConfigureAreaComboBox();
+            await LoadLookupDataAsync();
+
             SetupGrids();
             SetupRadioButtons();
-            // Initialize the timer
-            _clickTimer = new Timer
+            _toolTip = new ToolTip();
+        // Initialize the timer
+        _clickTimer = new Timer
             {
                 Interval = DoubleClickTimeout
             };
@@ -226,9 +200,106 @@ namespace Neutron.Forms
             //{
             //    await RefreshData();
             //}).Wait();
-             RefreshData();
+            await RefreshData();
             _startup = false;
-            _logger.LogDetailAsync($"After Constructor Refresh");
+
+        }
+
+        private async Task LoadLookupDataAsync()
+        {
+           // if (_lookupsLoaded) return;
+            _lookupsLoaded = true;
+
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                var sizeCodesTask = Task.Run(() => _inventoryUnitOfWork.SizeCodes.All().ToList());
+                var velocityCodesTask = Task.Run(() => _inventoryUnitOfWork.VelocityCodes.All().ToList());
+                var heightCodesTask = Task.Run(() => _inventoryUnitOfWork.HeightCodes.All().ToList());
+                var storageTypesTask = Task.Run(() => _inventoryUnitOfWork.StorageTypes.All().ToList());
+                var unitOfIssueTask = Task.Run(() => _inventoryUnitOfWork.UnitOfIssue.All().ToList());
+                var areaNumbersTask = Task.Run(() => _inventoryUnitOfWork.Areas.All().ToList());
+                var addDetailAreasTask = Task.Run(() => _areaRepository.Lookup().ToList());
+
+                await Task.WhenAll(sizeCodesTask, velocityCodesTask, heightCodesTask, storageTypesTask, unitOfIssueTask, areaNumbersTask, addDetailAreasTask);
+
+                var sizeCodes = sizeCodesTask.Result;
+                var velocityCodes = velocityCodesTask.Result;
+                var heightCodes = heightCodesTask.Result;
+                var storageTypes = storageTypesTask.Result;
+                var unitOfIssues = unitOfIssueTask.Result;
+                var areaNumbers = areaNumbersTask.Result;
+                var addDetailAreas = addDetailAreasTask.Result;
+
+                ComboBoxNewSizeCode.DisplayMember = "Name";
+                ComboBoxNewSizeCode.ValueMember = "Id";                
+                ComboBoxNewSizeCode.DataSource = sizeCodes;
+
+                ComboBoxAddDetailSizeCode.DisplayMember = "Name";
+                ComboBoxAddDetailSizeCode.ValueMember = "Id";
+                ComboBoxAddDetailSizeCode.DataSource = sizeCodes;
+
+                ComboBoxNewVelocityCode.DisplayMember = "Name";
+                ComboBoxNewVelocityCode.ValueMember = "Id";
+                ComboBoxNewVelocityCode.DataSource = velocityCodes;
+
+                ComboBoxAddDetailVelocityCode.DisplayMember = "Name";
+                ComboBoxAddDetailVelocityCode.ValueMember = "Id";
+                ComboBoxAddDetailVelocityCode.DataSource = velocityCodes;
+
+                ComboBoxNewHeightCode.DisplayMember = "Name";
+                ComboBoxNewHeightCode.ValueMember = "Id";
+                ComboBoxNewHeightCode.DataSource = heightCodes;
+
+                ComboBoxAddDetailHeightCode.DisplayMember = "Name";
+                ComboBoxAddDetailHeightCode.ValueMember = "Id";
+                ComboBoxAddDetailHeightCode.DataSource = heightCodes;
+
+                ComboBoxNewStorageType.DisplayMember = "Name";
+                ComboBoxNewStorageType.ValueMember = "Id";
+                ComboBoxNewStorageType.DataSource = new List<NeutronData.Models.Lookups.StorageType>(storageTypes);
+
+                ComboBoxInventoryNewLocationsStorageType.DisplayMember = "Name";
+                ComboBoxInventoryNewLocationsStorageType.ValueMember = "Id";
+                ComboBoxInventoryNewLocationsStorageType.DataSource = new List<NeutronData.Models.Lookups.StorageType>(storageTypes);
+
+                ComboBoxAddDetailStorageType.DisplayMember = "Name";
+                ComboBoxAddDetailStorageType.ValueMember = "Id";
+                ComboBoxAddDetailStorageType.DataSource = new List<NeutronData.Models.Lookups.StorageType>(storageTypes);
+
+                ComboBoxNewUnitOfIssue.DisplayMember = "Name";
+                ComboBoxNewUnitOfIssue.ValueMember = "Id";
+                ComboBoxNewUnitOfIssue.DataSource = unitOfIssues;
+
+                ComboBoxAreaNumber.ValueMember = "Id";
+                ComboBoxAreaNumber.DisplayMember = "Name";
+                ComboBoxAreaNumber.DataSource = areaNumbers;
+
+                ComboBoxAreaNumber.SelectedIndex = 0;
+
+                if (_workstationView.StationType.Id == (int)StationType.Supervisor)
+                {
+                    ComboBoxAreaNumber.SelectedIndex = ComboBoxAreaNumber.FindStringExact("All Areas");
+                }
+                else
+                {
+                    ComboBoxAreaNumber.SelectedValue = _workstationView.AreaId;
+                }
+                ComboBoxAddDetailArea.DisplayMember = "Name";
+                ComboBoxAddDetailArea.ValueMember = "Id";
+                ComboBoxAddDetailArea.DataSource = addDetailAreas;
+
+            }
+            catch (Exception ex)
+            {
+                var message = $"Error loading lookup data: {Environment.NewLine}{ex.Message}";
+                _logger.LogDetailAsync(message).SafeFireAndForget();
+                Mediator.GetInstance().OnGeneralError(this, message);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void SetupRadioButtons()
@@ -605,12 +676,14 @@ namespace Neutron.Forms
         }
         private void SetCurrentLocation(Location location)
         {
-            //check if location is null
             if (location != null)
             {
                 CurrentLocation = location;
             }
-            CurrentLocation = null;
+            else
+            {
+                CurrentLocation = null;
+            }
         }
 
         public int IndexOf(BindingSource bs, int id)
@@ -1140,10 +1213,12 @@ namespace Neutron.Forms
             DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             DataGridView1.AllowUserToAddRows = false;
             var position = _gridResourceManager.GetString($"Position");
-            var bCol = new DataGridViewButtonColumn
+            DataGridViewButtonColumn bCol = new DataGridViewButtonColumn
             {
                 HeaderText = _gridResourceManager.GetString($""),
-                Visible = _moveableAreas.Contains(_workstationView.AreaId) && _moveableAreas.Contains((int)ComboBoxAreaNumber.SelectedValue) && _workstationView.AreaId == (int)ComboBoxAreaNumber.SelectedValue,
+                Visible = _moveableAreas.Contains(_workstationView.AreaId) 
+                          && _moveableAreas.Contains((int)ComboBoxAreaNumber.SelectedValue) 
+                          && _workstationView.AreaId == (int)ComboBoxAreaNumber.SelectedValue,
                 Name = $"Position",
                 Text = position,
                 // AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
@@ -1731,47 +1806,12 @@ namespace Neutron.Forms
 
         private void SetupNewForm()
         {
-            //LabelFindDescription.Text = "Search any part of the Item or Description field";
-            ComboBoxNewSizeCode.DataSource = _inventoryUnitOfWork.SizeCodes.All();
-            ComboBoxNewSizeCode.DisplayMember = "Name";
-            ComboBoxNewSizeCode.ValueMember = "Id";
-            ComboBoxNewVelocityCode.DataSource = _inventoryUnitOfWork.VelocityCodes.All();
-            ComboBoxNewVelocityCode.DisplayMember = "Name";
-            ComboBoxNewVelocityCode.ValueMember = "Id";
-            ComboBoxNewHeightCode.DataSource = _inventoryUnitOfWork.HeightCodes.All();
-            ComboBoxNewHeightCode.DisplayMember = "Name";
-            ComboBoxNewHeightCode.ValueMember = "Id";
-            //ComboBoxNewArea.DataSource = _areaRepository.Lookup();
-            //ComboBoxNewArea.DisplayMember = "Name";
-            //ComboBoxNewArea.ValueMember = "Id";
-            ComboBoxNewStorageType.DataSource = _inventoryUnitOfWork.StorageTypes.All();
-            ComboBoxNewStorageType.DisplayMember = "Name";
-            ComboBoxNewStorageType.ValueMember = "Id";
-            ComboBoxInventoryNewLocationsStorageType.DataSource = _inventoryUnitOfWork.StorageTypes.All();
-            ComboBoxInventoryNewLocationsStorageType.DisplayMember = "Name";
-            ComboBoxInventoryNewLocationsStorageType.ValueMember = "Id";
-            ComboBoxNewUnitOfIssue.DataSource = _inventoryUnitOfWork.UnitOfIssue.All();
-            ComboBoxNewUnitOfIssue.DisplayMember = "Name";
-            ComboBoxNewUnitOfIssue.ValueMember = "Id";
+            _ = LoadLookupDataAsync();
         }
 
         private void SetupAddDetailForm()
         {
-            ComboBoxAddDetailSizeCode.DataSource = _inventoryUnitOfWork.SizeCodes.All();
-            ComboBoxAddDetailSizeCode.DisplayMember = "Name";
-            ComboBoxAddDetailSizeCode.ValueMember = "Id";
-            ComboBoxAddDetailVelocityCode.DataSource = _inventoryUnitOfWork.VelocityCodes.All();
-            ComboBoxAddDetailVelocityCode.DisplayMember = "Name";
-            ComboBoxAddDetailVelocityCode.ValueMember = "Id";
-            ComboBoxAddDetailHeightCode.DataSource = _inventoryUnitOfWork.HeightCodes.All();
-            ComboBoxAddDetailHeightCode.DisplayMember = "Name";
-            ComboBoxAddDetailHeightCode.ValueMember = "Id";
-            ComboBoxAddDetailArea.DataSource = _areaRepository.Lookup();
-            ComboBoxAddDetailArea.DisplayMember = "Name";
-            ComboBoxAddDetailArea.ValueMember = "Id";
-            ComboBoxAddDetailStorageType.DataSource = _inventoryUnitOfWork.StorageTypes.All();
-            ComboBoxAddDetailStorageType.DisplayMember = "Name";
-            ComboBoxAddDetailStorageType.ValueMember = "Id";
+            _ = LoadLookupDataAsync();
         }
 
         private void SetupViewEditForm()
@@ -2129,7 +2169,9 @@ namespace Neutron.Forms
             var item = inventoryViewItem;
             try
             {
-                var rec = await _inventoryUnitOfWork.ItemDefinitions.FindByFirstOrDefaultAsync(f => f.Item == item && f.AreaId == areaId);
+                var rec = await Task.Run(() => _inventoryUnitOfWork.ItemDefinitions
+                    .FindByInclude(f => f.Item == item && f.AreaId == areaId, i => i.Area)
+                    .FirstOrDefault());
                 // if the item Definition is null, check the AKA table
                 //var itemDefinitions = recs.ToList();
                 //if (!itemDefinitions.Any()) return;
@@ -2269,7 +2311,7 @@ namespace Neutron.Forms
         private ItemDefinition GetItemDefinition(int itemDefinitionId)
         {
             var itemDefinition = _inventoryUnitOfWork.ItemDefinitions
-                .FindBy(f => f.Id == itemDefinitionId)
+                .FindByInclude(f => f.Id == itemDefinitionId, i => i.Area)
                 .FirstOrDefault();
             if (itemDefinition == null)
             {
@@ -2278,7 +2320,7 @@ namespace Neutron.Forms
                 {
                     TextBoxNewItem.Text = akaItem;
                     itemDefinition = _inventoryUnitOfWork.ItemDefinitions
-                        .FindBy(r => r.Item == akaItem)
+                        .FindByInclude(r => r.Item == akaItem, i => i.Area)
                         .FirstOrDefault();
                 }
             }
