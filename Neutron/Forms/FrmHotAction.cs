@@ -1983,21 +1983,27 @@ namespace Neutron.Forms
             {
                 using (var db = new NeutronDb())
                 {
-                    //_quantity = _quantityToPick;
-                    var itemDefinition = db.ItemDefinitions.FirstOrDefault(r => r.Id == invItem.ItemDefinitionId);
+                    var itemDefinition = db.ItemDefinitions
+                        .Include(i => i.Area.LocationType)
+                        .Include(i => i.UnitOfIssue)
+                        .Include(i => i.SizeCode)
+                        .Include(i => i.VelocityCode)
+                        .Include(i => i.HeightCode)
+                        .FirstOrDefault(r => r.Id == invItem.ItemDefinitionId);
+                    
                     if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
-                    var location = db.Locations.FirstOrDefault(r => r.Id == invItem.LocationId);
+                    var location = db.Locations
+                        .Include(l => l.Area.LocationType)
+                        .Include(l => l.SizeCode)
+                        .Include(l => l.VelocityCode)
+                        .Include(l => l.HeightCode)
+                        .FirstOrDefault(r => r.Id == invItem.LocationId);
+
                     if (location == null) throw new ArgumentNullException(nameof(location));
                     LabelHotPickDescription.Text = itemDefinition.Description;
                     LabelHotPickItem.Text = itemDefinition.Item;
                     LabelHotPickUOI.Text = itemDefinition.UnitOfIssue.Name;
 
-                    //TextBoxHotPickLoc1.Text = location.Loc1.ToString();
-                    //TextBoxHotPickLoc2.Text = location.Loc2.ToString();
-                    //TextBoxHotPickLoc3.Text = location.Loc3.ToString();
-                    //TextBoxHotPickLoc4.Text = location.Loc4.ToString();
-                    //TextBoxHotPickLoc5.Text = location.Loc5.ToString();
-                    //LabelSlot.Text = location.Slot;
                     //----------------------                 
                     UpdateGroupBoxLocation(location);
 
@@ -2163,9 +2169,15 @@ namespace Neutron.Forms
             {
                 using (var db = new NeutronDb())
                 {
-                    var itemDefinition = db.ItemDefinitions.FirstOrDefault(r => r.Id == invItem.ItemDefinitionId);
+                    var itemDefinition = db.ItemDefinitions
+                        .Include(i => i.UnitOfIssue)
+                        .FirstOrDefault(r => r.Id == invItem.ItemDefinitionId);
                     if (itemDefinition == null) throw new ArgumentNullException(nameof(itemDefinition));
-                    var location = db.Locations.FirstOrDefault(r => r.Id == invItem.LocationId);
+                    var location = db.Locations
+                        .Include(l => l.SizeCode)
+                        .Include(l => l.VelocityCode)
+                        .Include(l => l.HeightCode)
+                        .FirstOrDefault(r => r.Id == invItem.LocationId);
                     if (location == null) throw new ArgumentNullException(nameof(location));
                     LabelHotPickDescriptionTray.Text = itemDefinition.Description;
                     LabelHotPickItemTray.Text = itemDefinition.Item;
@@ -2499,7 +2511,10 @@ namespace Neutron.Forms
                         await _repoInventory.UpdateAsync(inventory);
 
                         await _locationsRepository.SetLocationInUse(inventory.LocationId, true);
-                        inv = _repoInventory.FindByKey(inventory.Id);
+                        inv = await _repoInventory.FindByKeyIncludeAsync(r => r.Id == inventory.Id
+                        , i => new[] { "ItemDefinition.Item", "Location", "StorageType" }
+                        , i => i.ItemDefinition, i => i.Location, i => i.StorageType
+                        );
 
                         if (_pickList == null)
                         {
