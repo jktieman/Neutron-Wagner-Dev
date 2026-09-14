@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HanelCommands
 {
@@ -35,8 +33,9 @@ namespace HanelCommands
             _dataIn = dataIn;
             _commandString = Encoding.UTF8.GetString(_dataIn);
             _commandSegments = _commandString.Split('$');
-            _lift = _commandSegments[0].Substring(2, 2);
-            _accessPoint = _commandSegments[0].Substring(4, 1);
+            var firstSegment = _commandSegments.Length > 0 ? _commandSegments[0] : string.Empty;
+            _lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            _accessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
             GetDisplayLines();
         }
 
@@ -44,8 +43,9 @@ namespace HanelCommands
         {
             _lift = lift.PadLeft(2, '0');
             _accessPoint = accessPoint;
-            _displayLines = displayLines;
-
+            _displayLines = displayLines ?? new List<DisplayLine>();
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
 
         public string HostCommand => "M XO";
@@ -66,7 +66,7 @@ namespace HanelCommands
                 var segments = _commandSegments.Where(r => r.StartsWith("X")).ToList();
                 foreach (var segment in segments)
                 {
-                    if (segment.Length >= 5)
+                    if (segment.Length >= 6)
                     {
                         var line = segment.Substring(1, 2);
                         var column = segment.Substring(3, 3);
@@ -78,8 +78,7 @@ namespace HanelCommands
             }
             catch (Exception ex)
             {
-                var str = ex.Message;
-
+                System.Diagnostics.Debug.WriteLine($"[XOCommand] GetDisplayLines failed: {ex.Message}");
             }
         }
         public List<DisplayLine> DisplayLines => _displayLines;
@@ -94,7 +93,7 @@ namespace HanelCommands
             return text;
         }
         public string Lift => _lift;
-        public int Device => int.Parse(_lift);
+        public int Device => int.TryParse(_lift, out var d) ? d : 0;
         public string AccessPoint => _accessPoint;
         public string Tray
         {
