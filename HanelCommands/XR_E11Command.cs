@@ -17,11 +17,11 @@ namespace HanelCommands
         private readonly string[] _commandSegments;
         private readonly string _lift;
         private readonly string _accessPoint;
-        private string _tray;
-        private string _over;
-        private string _back;
-        private string _width;
-        private string _screenSize ;
+        private string _tray = string.Empty;
+        private string _over = string.Empty;
+        private string _back = string.Empty;
+        private string _width = string.Empty;
+        private string _screenSize = string.Empty;
         private string _displayText = String.Empty;
         private List<DisplayLine> _displayLines = new List<DisplayLine>();
 
@@ -33,19 +33,21 @@ namespace HanelCommands
         {
             _commandString = Encoding.UTF8.GetString(dataIn);
             _commandSegments = _commandString.Split('$');
-            _lift = _commandSegments[0].Substring(2, 2);
-            _accessPoint = _commandSegments[0].Substring(4, 1);
-            _tray =  GetSegmentValue("T"); 
-            _over  = GetSegmentValue("F"); 
-            _back  = GetSegmentValue("O"); 
-            _width = GetSegmentValue("H"); 
-
+            var firstSegment = _commandSegments.Length > 0 ? _commandSegments[0] : string.Empty;
+            _lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            _accessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
+            _tray  = GetSegmentValue("T");
+            _over  = GetSegmentValue("F");
+            _back  = GetSegmentValue("O");
+            _width = GetSegmentValue("H");
         }
 
         public XR_E11Command(string lift, string accessPoint)
         {
             _lift = lift.PadLeft(2, '0');
             _accessPoint = accessPoint;
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
 
         private string GetSegmentValue(string segmentType)
@@ -60,8 +62,8 @@ namespace HanelCommands
         public string Command => $"{AST}G{Lift}{AccessPoint}$M XR$E11${CR}{LF}";
         public string[] CommandSegments => _commandSegments;
         public string CommandString => _commandString;
-        public string CommandAccepted => $"{AST}G{Lift}{AccessPoint}$P XS$E00{CR}{LF}";
-        public string CommandFailed => $"{AST}G{Lift}{AccessPoint}$P XS$E02{CR}{LF}";
+        public string CommandAccepted => $"{AST}G{Lift}{AccessPoint}$P XS$E00${CR}{LF}";
+        public string CommandFailed => $"{AST}G{Lift}{AccessPoint}$P XS$E02${CR}{LF}";
         public string CommandBufferEmpty => $"{AST}BE${CR}{LF}";
         public string CommandExecuted => $"{AST}G{Lift}{AccessPoint}$P XA$A11$E00${CR}{LF}";
         public string DisplayText()
@@ -75,7 +77,7 @@ namespace HanelCommands
         }
         public List<DisplayLine> DisplayLines => _displayLines;
         public string Lift => _lift;
-        public int Device => int.Parse(_lift);
+        public int Device => int.TryParse(_lift, out var d) ? d : 0;
         public string AccessPoint => _accessPoint;
         public string Tray
         {
