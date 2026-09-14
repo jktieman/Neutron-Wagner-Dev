@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HanelCommands
 {
@@ -15,9 +10,10 @@ namespace HanelCommands
         private const string HostCommand = "P XA";
         private const int MinSegments = 4;
         private string[] _dataIn;
-        public string SubCommand = string.Empty;
-        public string Lift { get; set; }
-        public string AccessPoint { get; set; }
+        public string SubCommand { get; set; } = string.Empty;
+        public string ErrorCode { get; set; } = string.Empty;
+        public string Lift { get; set; } = string.Empty;
+        public string AccessPoint { get; set; } = string.Empty;
 
         public HanelResponseExecuted(string lift, string accessPoint)
         {
@@ -29,25 +25,26 @@ namespace HanelCommands
         {
             if (dataIn.Length < MinSegments) return;
             _dataIn = dataIn;
+            var firstSegment = dataIn[0];
             SubCommand = dataIn[2];
-            Lift = dataIn[0].Substring(2, 2);
-            AccessPoint = dataIn[0].Substring(4, 1);
+            ErrorCode = dataIn[3];
+            Lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            AccessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
         }
 
         public void Response(string[] dataIn)
         {
-
             if (dataIn.Length < MinSegments) return;
-
             _dataIn = dataIn;
+            var firstSegment = dataIn[0];
             SubCommand = dataIn[2];
-            Lift = dataIn[0].Substring(2, 2);
-            AccessPoint = dataIn[0].Substring(4, 1);
-
+            ErrorCode = dataIn[3];
+            Lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            AccessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
         }
         public bool IsSuccess()
         {
-            return SubCommand == "E00";
+            return ErrorCode == "E00";
         }
         public string ErrorMessage()
         {
