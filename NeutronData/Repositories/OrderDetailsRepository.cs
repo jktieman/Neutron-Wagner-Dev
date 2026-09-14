@@ -204,8 +204,11 @@ namespace NeutronData.Repositories
                 var recs = new List<OrderDetailsView>();
                 try
                 {
-                    recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
-                        .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
+                    recs = _repoOrderDetails.AllInclude(
+                            r => r.OrderId == orderId, // Filtering logic moved here
+                            r => r.Order,              // Include related Order entity
+                            r => r.ItemDefinition)     // Include related ItemDefinition entity
+                        .Select(s => new OrderDetailsView
                         {
                             OrderId = s.OrderId,
                             Ord1 = s.Order.Ord1,
@@ -219,10 +222,30 @@ namespace NeutronData.Repositories
                             LineStatusId = s.LineStatusId,
                             LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                             AreaId = s.AreaId
-                        }).OrderBy(o => o.AreaId).ThenBy(p => p.Item).ToList();
+                        })
+                        .OrderBy(o => o.AreaId)
+                        .ThenBy(p => p.Item)
+                        .ToList();
 
-                }
-                catch (Exception)
+                //recs = _repoOrderDetails.AllInclude(r => r.Order, r => r.ItemDefinition)
+                //    .Where(r => r.OrderId == orderId).Select(s => new OrderDetailsView
+                //    {
+                //        OrderId = s.OrderId,
+                //        Ord1 = s.Order.Ord1,
+                //        Ord2 = s.Order.Ord2,
+                //        OrderDetailId = s.Id,
+                //        ItemId = s.ItemDefinitionId,
+                //        Item = s.ItemDefinition.Item,
+                //        Description = s.ItemDefinition.Description,
+                //        Quantity = s.Quantity,
+                //        PickedQuantity = s.PickedQuantity,
+                //        LineStatusId = s.LineStatusId,
+                //        LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
+                //        AreaId = s.AreaId
+                //    }).OrderBy(o => o.AreaId).ThenBy(p => p.Item).ToList();
+
+            }
+            catch (Exception)
                 {
                     // ignored
                 }
