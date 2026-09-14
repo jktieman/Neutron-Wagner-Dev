@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using NeutronData.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using NeutronCore.Enums;
 
 namespace NeutronData.Models
 {
@@ -43,8 +44,12 @@ namespace NeutronData.Models
         
         [ForeignKey("OrderId")]
         public virtual Order Order { get; set; }
+        
         [ForeignKey("ItemDefinitionId")]
         public virtual ItemDefinition ItemDefinition { get; set; }
-       
+        
+        [ForeignKey("AreaId")]
+        public virtual Area Area { get; set; }
+
     }
 }
