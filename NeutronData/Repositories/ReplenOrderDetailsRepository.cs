@@ -26,9 +26,33 @@ namespace NeutronData.Repositories
         }
         public List<ReplenOrderDetailsView> GetOrderDetailsView()
         {
+            //var statusToGet = new int[] { 1, 2, 3, 4 };
+            //IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
+            //    .Where(r => statusToGet.Contains(r.LineStatusId))
+            //    .Select(s => new ReplenOrderDetailsView
+            //    {
+            //        OrderId = s.ReplenOrderId,
+            //        Ord1 = s.ReplenOrder.Ord1,
+            //        Ord2 = s.ReplenOrder.Ord2,
+            //        OrderDetailId = s.Id,
+            //        ItemId = s.ItemDefinitionId,
+            //        Item = s.ItemDefinition.Item,
+            //        Description = s.ItemDefinition.Description,
+            //        Quantity = s.Quantity,
+            //        PickedQuantity = s.PickedQuantity,
+            //        LineStatusId = s.LineStatusId,
+            //        LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
+            //        AreaId = s.AreaId
+            //    }).Where(s => statusToGet.Contains(s.LineStatusId))
+            //.OrderBy(o => o.Ord1);
+
+            //return recs.ToList();
+
             var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
-                .Where(r => statusToGet.Contains(r.LineStatusId))
+            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(
+                    r => statusToGet.Contains(r.LineStatusId), // Filtering logic moved here
+                    r => r.ReplenOrder,                        // Include related ReplenOrder entity
+                    r => r.ItemDefinition)                     // Include related ItemDefinition entity
                 .Select(s => new ReplenOrderDetailsView
                 {
                     OrderId = s.ReplenOrderId,
@@ -43,10 +67,10 @@ namespace NeutronData.Repositories
                     LineStatusId = s.LineStatusId,
                     LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                     AreaId = s.AreaId
-                }).Where(s => statusToGet.Contains(s.LineStatusId))
-            .OrderBy(o => o.Ord1);
-
+                })
+                .OrderBy(o => o.Ord1);
             return recs.ToList();
+
         }
 
         //public List<ReplenOrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
@@ -80,9 +104,31 @@ namespace NeutronData.Repositories
         public List<ReplenOrderDetailsView> GetOrderDetailsViewByOrder(int orderId)
         {
             //var statusToGet = new int[] { 1, 2, 3, 4 };
-            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
-                .Where(r => r.ReplenOrderId == orderId).Select(s => new ReplenOrderDetailsView
-                //.Where(r => r.OrderId == orderId && statusToGet.Contains(r.LineStatusId)).Select(s => new OrderDetailsView
+            //IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(r => r.ReplenOrder, r => r.ItemDefinition)
+            //    .Where(r => r.ReplenOrderId == orderId).Select(s => new ReplenOrderDetailsView
+            //    //.Where(r => r.OrderId == orderId && statusToGet.Contains(r.LineStatusId)).Select(s => new OrderDetailsView
+            //    {
+            //        OrderId = s.ReplenOrderId,
+            //        Ord1 = s.ReplenOrder.Ord1,
+            //        Ord2 = s.ReplenOrder.Ord2,
+            //        OrderDetailId = s.Id,
+            //        ItemId = s.ItemDefinitionId,
+            //        Item = s.ItemDefinition.Item,
+            //        Description = s.ItemDefinition.Description,
+            //        Quantity = s.Quantity,
+            //        PickedQuantity = s.PickedQuantity,
+            //        LineStatusId = s.LineStatusId,
+            //        LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
+            //        AreaId = s.AreaId
+            //    }).OrderBy(o => o.AreaId).ThenBy(p => p.Item);
+
+            //return recs.ToList();
+
+            IEnumerable<ReplenOrderDetailsView> recs = _repoReplenOrderDetails.AllInclude(
+                    r => r.ReplenOrderId == orderId, // Filtering logic moved here
+                    r => r.ReplenOrder,              // Include related ReplenOrder entity
+                    r => r.ItemDefinition)           // Include related ItemDefinition entity
+                .Select(s => new ReplenOrderDetailsView
                 {
                     OrderId = s.ReplenOrderId,
                     Ord1 = s.ReplenOrder.Ord1,
@@ -96,9 +142,11 @@ namespace NeutronData.Repositories
                     LineStatusId = s.LineStatusId,
                     LineStatusName = ((LineStatus)s.LineStatusId).GetEnumDescription(),
                     AreaId = s.AreaId
-                }).OrderBy(o => o.AreaId).ThenBy(p => p.Item);
-
+                })
+                .OrderBy(o => o.AreaId)
+                .ThenBy(p => p.Item);
             return recs.ToList();
+
         }
 
         //public List<ReplenOrderDetail> GetOrderDetailsByOrderAndWorkstation(int orderId, WorkstationView workstationView)
@@ -139,7 +187,7 @@ namespace NeutronData.Repositories
             //{
                 //foreach (var areaId in areaIds)
                // {
-                    var orderDetails = _repoReplenOrderDetails.All().Where(r => r.ReplenOrderId == orderId && r.AreaId == areaId
+                    var orderDetails = _repoReplenOrderDetails.All(r => r.ReplenOrderId == orderId && r.AreaId == areaId
                         && r.LineStatusId != (int)LineStatus.Complete).ToList();
                    // orderDetails.AddRange(recs);
                // }
