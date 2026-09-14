@@ -30,14 +30,17 @@ namespace HanelCommands
             _dataIn = dataIn;
             _commandString = Encoding.UTF8.GetString(_dataIn);
             _commandSegments = _commandString.Split('$');
-            _lift = _commandSegments[0].Substring(2, 2);
-            _accessPoint = _commandSegments[0].Substring(4, 1);
+            var firstSegment = _commandSegments.Length > 0 ? _commandSegments[0] : string.Empty;
+            _lift = firstSegment.Length >= 4 ? firstSegment.Substring(2, 2) : string.Empty;
+            _accessPoint = firstSegment.Length >= 5 ? firstSegment.Substring(4, 1) : string.Empty;
         }
 
         public XICommand(string lift, string accessPoint)
         {
             _lift = lift.PadLeft(2, '0');
             _accessPoint = accessPoint;
+            _commandString = string.Empty;
+            _commandSegments = new string[0];
         }
 
         public string HostCommand => "M XI";
@@ -60,7 +63,7 @@ namespace HanelCommands
         }
         public List<DisplayLine> DisplayLines => _displayLines;
         public string Lift => _lift;
-        public int Device => int.Parse(_lift);
+        public int Device => int.TryParse(_lift, out var d) ? d : 0;
         public string AccessPoint => _accessPoint;
         public string Tray
         {
