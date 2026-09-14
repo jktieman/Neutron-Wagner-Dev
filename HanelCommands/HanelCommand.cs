@@ -25,11 +25,11 @@ namespace HanelCommands
 
         public string[] CommandSegments => CommandString.Split('$');
 
-        public virtual string CommandAccepted => $"{AST}G{Lift}{AccessPoint}$P XS$E00{Tray}{CR}{LF}";
-        public virtual string CommandFailed => $"{AST}G{Lift}{AccessPoint}$P XS$E02{CR}{LF}";
+        public virtual string CommandAccepted => $"{AST}G{Lift}{AccessPoint}$P XS$E00${CR}{LF}";
+        public virtual string CommandFailed => $"{AST}G{Lift}{AccessPoint}$P XS$E02${CR}{LF}";
         public string CommandBufferEmpty => $"{AST}BE${CR}{LF}";
         public virtual string CommandExecuted => $"{AST}G{Lift}{AccessPoint}$P XA$A12$E00${CR}{LF}";
-        public virtual string Lift => CommandString.Substring(2, 2);
+        public virtual string Lift => CommandString.Length >= 4 ? CommandString.Substring(2, 2) : string.Empty;
         public virtual int Device
         {
             get
@@ -41,7 +41,7 @@ namespace HanelCommands
                 throw new InvalidOperationException("Invalid Lift value.");
             }
         }
-        public virtual string AccessPoint => CommandString.Substring(4, 1);
+        public virtual string AccessPoint => CommandString.Length >= 5 ? CommandString.Substring(4, 1) : string.Empty;
 
         public virtual string Tray
         {
@@ -85,7 +85,7 @@ namespace HanelCommands
 
         string IHanelCommand.Command => throw new NotImplementedException();
 
-        string IHanelCommand.Tray { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        string IHanelCommand.Tray { get => Tray; set { } }
 
         public string DisplayText()
         {
