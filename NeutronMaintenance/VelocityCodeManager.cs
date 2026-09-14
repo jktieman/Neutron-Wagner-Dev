@@ -27,7 +27,7 @@ namespace NeutronMaintenance
         /// <returns>VelocityCode or First VelocityCode in Table</returns>
         public VelocityCode Get(string name)
         {
-            var rec = string.IsNullOrEmpty(name) ? null : _repoVelocityCode.All().FirstOrDefault(r => r.Name == name);
+            var rec = string.IsNullOrEmpty(name) ? null : _repoVelocityCode.All(r => r.Name == name).FirstOrDefault();
             if (rec != null) return rec;
             {
                 var seq = _repoVelocityCode.All().Select(r => r.Sequence).Max();
@@ -45,7 +45,7 @@ namespace NeutronMaintenance
         /// <returns>VelocityCode or null</returns>
         public VelocityCode Get(int id)
         {
-            return _repoVelocityCode.All().FirstOrDefault(r => r.Id == id);
+            return _repoVelocityCode.All(r => r.Id == id).FirstOrDefault();
         }
     }
 }
