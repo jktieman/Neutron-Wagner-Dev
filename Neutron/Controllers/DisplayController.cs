@@ -94,8 +94,9 @@ namespace Neutron.Controllers
         {
             var result = false;
 
-            var serialConfigurationId = _repoHardwareDevice.All().FirstOrDefault(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceTypeEnum.RemstarDisplays && r.WorkstationId == _workstationView.WorkstationId)?.SerialConfigurationId;
-
+            var serialConfigurationId = _repoHardwareDevice.All(r => r.DeviceTypeId == (int)NeutronCore.Enums.DeviceTypeEnum.RemstarDisplays && r.WorkstationId == _workstationView.WorkstationId)
+                .FirstOrDefault()?.SerialConfigurationId;
+            
             if (serialConfigurationId == null) return false;
 
             var serialConfiguration = _repoSerial.FindByKey(serialConfigurationId);
